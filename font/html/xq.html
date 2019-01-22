@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,user-scalable=no,initial-scale=1.0, maximum-scale=1" name="viewport" />    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- bootstrap样式表 -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> 
+    <!-- 图片 -->
+    <link rel="shortcut icon" href="../img/sfc.jpg">
+    <!-- 公共的css -->
+    <link rel="stylesheet" href="../css/react.css">
+    <!-- 自定义样式表 -->
+    <link rel="stylesheet" href="../css/xq.css">
+    <title>
+            光大旅游-顺风车详情
+    </title>
+</head>
+<body>
+    <!-- 详情页 -->
+    <div class="showsjdata clearfix">
+        <!-- 输入查询 -->
+        <div class="srselect clearfix">
+            <div class="changzleft cleafix">
+                <div class="changz"> </div>
+            </div>
+            <div class="fanhuisyj clearfix">
+              <a href="../../sfc.html" class="fhusyjd">
+                返回
+              </a>
+            </div>
+        </div>
+        <!-- 地图显示图 -->
+        <div id="sdcontainer">
+        </div> 
+        <div class="showmoredata clearfix" >
+                <div class="sdstatus clearfix">
+                    <span class="sdstatuss">订单结果:</span>
+                    <div class="sdstatusd"></div>
+                </div>
+                <!-- 显示出发地 -->
+               <div class="cfdsdm clearfix" style="font-size: 16px;">
+                    <span class="cfdsdmspan">出发地:</span>
+                    <div class="cfdsdmdiv"></div>
+                    <button class="cfdsdmdivbt btn btn-success">查看位置</button>
+               </div>
+               <!-- 目的地 -->
+               <div class="mddsdm clearfix"  style="font-size: 16px;">
+                    <span class="mdddsdmspan">目的地:</span>
+                    <div class="mddsdmdiv "></div>
+                    <button class="mddsdmdivbt btn btn-primary ">查看位置</button>
+               </div>
+               <!-- 出发时间 -->
+               <div class="cftimesdm clearfix">
+                    <span class="cftimesdms">出发时间:</span>
+                    <div class="cftimesdmd"></div>
+               </div>
+               <!-- 到达时间 -->
+               <div  class="ddcfdsdm clearfix">
+                    <span class="cfdsdms">期望时间:</span>
+                    <div class="cfdsdmd"></div>
+               </div>
+               <div class="cfcity clearfix">
+                   <div class="cfcitysp">出发城市:</div>
+                   <div class="cfcitydv"></div>
+               </div>
+               <div class="mdcity clearfix">
+                    <div class="mdcitysp">目的城市:</div>
+                    <div class="mdcitydv"></div>
+               </div>
+               <div  class="sfval clearfix">
+                    <span class="sfvalspan">手机号:</span>
+                    <div class="sfvaldiv"></div>
+                </div>
+                <div class="by-car clearfix">
+                    <span class="by-carnum">乘车人数:</span>
+                    <div class="by-carpersondv"></div>
+                </div>
+                <!-- 参考价地方 -->
+                <div class="reference-price clearfix">
+                    <div class="reference-priceicon">参考价(元):</div>
+                    <div class="reference-pricejo"></div>
+                </div>
+               <!-- 点击取消   -->
+               <div class="clickqxx clearfix">
+                    <!-- 取消订单的地方 -->
+               </div>
+               <!-- 发送始发地经纬度的input  name="chufadijwd" -->
+               <input id='lnglat' type="text" style="display:none" name="chufadijwd">
+        </div>
+    </div>
+    <script type="text/javascript" src="../../js/jquery.min.js"></script>
+    <!-- 引入后台定义的js -->
+    <script type="text/javascript" src="../../js/app.js"></script>
+    <!-- 高德地图的两个引入 -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.11&key=5eeab4fb86fdb2ea40bb70b720de1927&plugin=AMap.Geocoder"></script>
+    <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+    <!-- 自己定义的js -->
+    <script type="text/javascript" src="../js/xq.js"></script>
+</body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,user-scalable=no,initial-scale=1.0, maximum-scale=1" name="viewport" />    
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- bootstrap样式表 -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">    
+    <!-- 时间选择器样式表 -->
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
+    <!-- 图片 -->
+    <link rel="shortcut icon" href="./font/fontjs/sfc.jpg">   
+    <!-- 时间css的引入 -->
+    <link rel="stylesheet" href="css/mobiscroll.custom-2.16.1.min.css">
+    <link rel="stylesheet" href="css/mobiscroll.android-ics-2.5.2.css">
+    <!--  自己定义的css文件 -->
+    <link rel="stylesheet" href="./font/css/react.css">
+    <link rel="stylesheet" href="./font/css/sfc.css"> 
+    <title>
+        光大旅游-顺风车
+    </title>
+    <style>
+        .amap-touch-toolbar .amap-zoomcontrol {
+            bottom: -39px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部切换的锚点 -->
+    <div class="header clearfix" style="z-index:9999">
+        <div  class="hpassenger">
+            <div style="width:100%;" class="hpassengerxsaaa clearfix">
+                    乘客
+                    <span class="glyphicon glyphicon-triangle-bottom" id="hpassengericon"></span>
+            </div>
+            <div class="hvowner clearfix" style="display:none;z-index:999;height:80px;">
+                <div class="hvownerleft clearfix">
+                    <a href="#passenger" style="display: inline-block;flex:1;" class="hvownermyrun">我的行程</a>
+                    <a href="#run?diver" class="runpsgone hrunqbcar">
+                        查看车主
+                    </a> 
+                    <a class="hvownerleftone hvownermypay"  href="#ddxq?passger" style="display: inline-block;flex:1;">
+                        支付订单
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div  class="hrun">
+            <div class="htogglethree">
+                车主
+                <span class="glyphicon glyphicon-triangle-bottom hrunoneicon"></span>
+            </div>
+             <div class="runluyouaa clearfix" style="display: none">
+                <div style="display:flex;width:100%;height:100%;" class="clearfix">
+                    <a href="#vowner" class="hrunmycar" style="font-size: 16px;">车主行程</a>
+                    <a  href="#run?passger" class="hactive htoggleone hvownerqbrun" style="display: inline-block;flex:1;color:#555;">
+                        查看乘客
+                    </a>
+                    <a href="#ddxq?diver" class="rundvone hrucarpay">
+                        支付订单
+                    </a>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- 显示切换的div -->
+    <div class="center clearfix">
+        <!-- 乘客的div -->
+        <div class="passenger clearfix">
+            <!-- 表单 -->
+            <div class="select">
+                <div class="departure clearfix">
+                    <span class="sfc-icon"></span>
+                    <div id="pformcontrolsr" class="pform-bd passenger-bindingone">从哪儿出发？</div>
+                </div>
+                <div class="departure clearfix">
+                    <span class="sfc-icon select-sicontwo"></span>
+                    <div id="pformcontrolsr"  class="pform-bd passenger-bindingtwo">想要去哪儿？</div>
+                </div>
+                <a href="javascript:;"  class="sbutton  btn btn-info" id="sbutnaone">
+                    我是乘客,我要预约顺风车
+                </a>
+            </div>
+            <!-- 常用路线 -->
+            <div class="cylx clearfix">
+                <div class="chd">
+                    <sapn class="glyphicon glyphicon-map-marker cylx-icon"></sapn>
+                    <span class="circle">
+                        已发布行程
+                    </span>
+                </div>
+                <div id="passengerNode"  class="clearfix">
+                    <!-- 乘客div内容嵌套区 -->
+                </div>
+                <div class="page-load-status">
+                    <p class="infinite-scroll-request jzxsjgaa" style="display:none">稍等...</p>
+                    <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
+                    <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
+                </div>
+            </div>
+        </div>
+        <!-- 车主的div -->
+        <div class="vowner clearfix" style="display:none;">
+            <!-- 表单 -->
+            <div class="select clearfix">
+                <div class="departure clearfix">
+                    <span class="sfc-icon"></span>
+                    <div id="pformcontrolsr" class="pform-bd vowner-bindingone">从哪儿出发？</div>
+                </div>
+                <div class="departure clearfix">
+                    <span class="sfc-icon select-sicontwo"></span>
+                    <div id="pformcontrolsr"  class="pform-bd vowner-bindingtwo" >想要去哪儿？</div>
+                </div>
+                <a href="javascript:;"  class="sbutton  btn btn-info" id="sbuttonatwo">
+                    我是车主,我要发布行程
+                </a>
+            </div>
+            <div class="vonpondclxc clearfix">
+                <div class="top clearfix"> 
+                    <span class="iconfont icon-xingcheng top-icon"></span>
+                    <span class="deng">
+                        已发布行程
+                    </span>
+                </div>
+                <div id="vownperNode"  class="clearfix">
+                    <!-- 复用添加地方 -->
+                </div>
+                <div class="vowpage-load-status">
+                    <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
+                    <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
+                    <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
+                </div>
+            </div>    
+        </div>
+        <!-- 全部行程的div -->
+        <div class="run clearfix" style="display:none;">
+            <div class="runscreen clearfix">
+                <div class="runscsxsj clerfix">
+                   <span class="runscsxsjone">
+                       筛选(不选显示全部数据)
+                    </span>
+                   <div  class="btn btn-primary rscsxsjofhu">
+                       返回
+                    </div>
+                </div>
+                <div class="runscrqfw clearfix">
+                    <span class="runscrqss">
+                        选择数据日期范围
+                    </span>
+                    <div class="runscrqdv clearfix">
+                        <span class="runscrqdvo">
+                            今天
+                        </span>
+                        <span class="runscrqdvt">
+                            一周内
+                        </span>
+                        <span class="runscrqdvtr">
+                            一个月之内
+                        </span>
+                    </div>
+                </div>
+                <div class="runsccfcs clearfix">
+                    <span class="runsccfcsone" style="color: #23beae;
+                    font-size: 16px">
+                        出发城市(输入框输入/直接点击)
+                    </span>
+                    <div class="runsccfcdva clearfix">
+                        <input type="text" class="form-control rscfcdaipt" placeholder="请填写以市为结尾的数据"
+                        style="color:#23beae;background: #f2f2f2;">
+                        <span class="glyphicon glyphicon-triangle-bottom" style="color:#23beae"></span>
+                        <div class="runsccficondv clearfix">
+                            <ul>
+                                <li class="rsfidvlo">
+                                    常州市
+                                </li>
+                                <li class="rsfidvlt">
+                                    苏州市
+                                </li>
+                                <li class="rsfidvltr">
+                                    上海市
+                                </li>
+                                <li class="rsfidvf">
+                                    无锡市
+                                </li>
+                                <li class="rsfidvlfif">
+                                    南京市
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div  class="runscrqdvtddcs clearfix">
+                    <span class="runscrqdvtddcsone" style="font-size:16px;color:#ff4a39">
+                        到达城市(输入框输入/直接点击)
+                    </span>
+                    <div  class="runsddcsone clearfix">
+                        <input type="text" class="form-control rsdcsoipt" placeholder="请填写以市为结尾的数据"
+                        style="color:#ff4a39;background: #f2f2f2;">
+                        <span class="glyphicon glyphicon-triangle-bottom" style="color:#ff4a39"></span>
+                        <div class="runsddcsondv clearfix">
+                            <ul>
+                                <li class="rsdcsdlo">
+                                    常州市
+                                </li>
+                                <li class="rsdcsdlt">
+                                    苏州市
+                                </li>
+                                <li class="rsdcsdltr">
+                                    上海市
+                                </li>
+                                <li class="rsdcsdlf">
+                                    无锡市
+                                </li>
+                                <li class="rsdcsdlfi">
+                                    南京市
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div  class="runscjwfbsx clearfix">
+                    <span class="runscjwfbsxqx">
+                        取消
+                    </span>
+                    <span class="runscjwfbsxdd">
+                        确定
+                    </span>
+                </div>
+            </div>
+            <!-- 乘客全部行程 -->
+            <div class="runpassenger clearfix">
+                <div class="dclxc clearfix">
+                    
+                    <div class="top clearfix"> 
+                        <span class="glyphicon glyphicon-user top-icon"></span>
+                        <span class="deng">
+                            全部乘客行程
+                        </span>
+                        <!-- 进入筛选页面 -->
+                        <div class=" runpasgscreen clearfix">
+                            <a href="#run?passgeran"   class="btn btn-primary ">
+                                筛选
+                            </a>
+                        </div>
+                    </div>
+                    <!-- 复用创建部分 -->
+                    <div id="runpassengerNode" class="clearfix">
+                            <!-- div填充地方 -->
+                    </div>
+                    <div class="runpaspage-load-status">
+                        <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
+                        <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
+                        <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
+                    </div>
+                </div> 
+            </div>
+            <!-- <div class="runxian"></div> -->
+            <!-- 车主全部行程 -->
+            <div class="runvowner clearfix" style="display:none">  
+                    <div class="dclxc clearfix">
+                            <div class="top clearfix"> 
+                                <span class="iconfont icon-qiche
+                                top-icon"></span>
+                                <span class="deng">
+                                    全部车主行程
+                                </span>
+                                <!-- 点击按钮进入筛选页面 -->
+                                <div class="runvownerscreen">
+                                    <a href="#run?diveran"  class="btn btn-primary ">
+                                        筛选
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- 复用创建部分 -->
+                            <div id="runvownerNode" class="clearfix" >
+                             <!-- div填充地方 -->
+                            </div>
+                            <div class="runvownerNode-load-status">
+                                <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
+                                <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
+                                <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
+                            </div>
+                    </div>     
+            </div>
+        </div>
+        <!-- 订单详情的div details -->
+        <div class="details" style="display:none;">
+            <!-- 地图显示图 -->
+            <div id="container">
+                <div id="ctxz" style="display:none;">
+                    点击查看地址名
+                </div>
+            </div>
+            <div class="input-card clearfix">
+                <!-- 进去选择的样式区 -->
+                <div class="chufadi-total clearfix">
+                    <div class="clearfix free-ride">
+                            <div class="free-sfc">顺风车</div>
+                            <div class="clearfix free-select">
+                                <div class="clearfix free-incity">
+                                    市内
+                                </div>
+                                <div class="clearfix free-intercity">
+                                    城际
+                                </div>
+                            </div>
+                    </div>
+                    <div class="chufadi-body clearfix"  style="margin-top:20px;" >
+                        <span class="chufadi-dicon"></span>
+                        <div class="chufadi-city" id="chufadi-cfcity">常州市</div>
+                        <div class="chufadi-xicon"></div>
+                        <div id="chufadi" class="chufadi-cfd">
+                            从哪儿出发?
+                        </div>
+                    </div>
+                    <div class="chufadi-body clearfix" >
+                        <span class="chufadi-dicon" style="background:#444b63;"></span>
+                        <div class="chufadi-city" id="address-mdcity">常州市</div>
+                        <div class="chufadi-xicon"></div>
+                        <div id='address' class="chufadi-cfd">
+                            想要去哪儿?
+                        </div>
+                    </div>
+                    <!-- 发送始发地经纬度的input  name="chufadijwd" -->
+                    <input id='lnglat' type="text" style="display:none" name="chufadijwd">
+                </div>
+
+                <!-- 选择完成后的显示样式 -->
+                <div class="clearfix completed" style="display:none;">
+                    <div class="clearfix completed-delete">
+                        <span class="glyphicon glyphicon-remove completed-deicon"></span>
+                    </div>
+                    <div class="clearfix completed-select">
+                        <!-- 动态获取他的身份 -->
+                        <div id="completed-sesf" class="completed-sefy">乘客</div>
+                        <!-- 点击这个可以到选择地点修改地址 -->
+                        <div id="completed-seaddress"  class="completed-sefy">
+                            市内
+                        </div>
+                        <!-- 点击可修改乘车人数  -->
+                        <div id="completed-number" class="completed-sefy">1人乘车</div>
+                    </div>
+                    <div class="clearfix mileage">
+                        <div class="clearfix" style="width:100%">
+                            <div class="iconfont icon-zuoyelicheng mileage-lefticon"></div>
+                            <div class="mileage-price">24.5</div>
+                            <div class="glyphicon glyphicon-info-sign mileage-righticon"></div>
+                        </div>
+                        <div>
+                            参考行程里数(公里)
+                        </div>
+                    </div>
+                    <div class="clearfix completed-price">
+                        <div>
+                            <div class="glyphicon glyphicon-yen completed-prmb"></div>
+                            <!-- 价格 -->
+                            <div class="completed-pprice">6.8</div>
+                            <div class="glyphicon glyphicon-info-sign completed-pbecarefu"></div>
+                        </div>
+                        <div>参考价(只做参考)</div>
+                    </div>
+                    <div class="clearfix completed-makepmt">
+                        <!-- 根据身份来修改词语 -->
+                        <div id="gaodesubmit"  class="sbutton1 completed-subtton">发布行程,预约顺风车</div>
+                        <div class="glyphicon glyphicon-dashboard completed-searchdate" id="searchsetdate"></div>
+                    </div>
+                </div>
+
+                <!-- 修改乘车钱数页 -->
+                <div class="clearfix tramount">
+                    <div class="clearfix tramount-deletezh">
+                        <span class="glyphicon glyphicon-remove tramount-delete"></span>
+                    </div>
+                    <div class="clearfix tramount-center">
+                        <span class="glyphicon glyphicon-plus tramount-lefticon"></span>
+                        <span class="tramount-money">11.8</span>
+                        <span class="glyphicon glyphicon-minus tramount-righticon"></span>
+                    </div>
+                    <div class="clearfix tramount-footer">
+                        <span class="tramount-ftmoney">金额(元):</span>
+                        <input type="text" placeholder="可输入金额" class="form-control tramount-ftinput">  
+                    </div>
+                    <div class="clearfix tramount-confirm">
+                        <span class="confirm-cfmoney">确定金额</span>
+                        <span class="glyphicon glyphicon-trash confirm-cficon"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 选择城市页 -->
+        <div id="searchcity" class="clearfix" style="display:none;">
+            
+            <div class="nowcity clearfix">
+                <div class="dangq">当前</div>
+                <div class="nowcityval clearfix">
+                    <div></div>
+                </div>
+            </div>
+            <div class="xzcity clearfix">
+                <div class="quanbu">全部</div>
+                <ul class="ulone clearfix">
+                    <li class="ulliwx">
+                       杭州市
+                    </li>
+                    <li class="ullish">
+                        常州市
+                    </li>
+                    <li  class="ullisz">
+                        苏州市
+                    </li>
+                </ul>
+                <ul class="ultwo clearfix">
+                    <li  class="ullinj">
+                        南京市
+                    </li>
+                    <li  class="ullint">
+                        上海市
+                    </li>
+                    <li  class="ulliyz">
+                        无锡市
+                    </li>
+                </ul>
+                <ul class="ulthree clearfix">
+                    <li  class="ullitz">
+                       南通市
+                    </li>
+                    <li  class="ullizjg">
+                        镇江市
+                    </li>
+                    <li  class="ullics">
+                        泰州市
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- 选择出发地 目的地页 -->
+        <div id="searchxincheng" class="clearfix" style="display:none;">
+            <div class="nowcheckcity clearfix">
+                    <div class="xcheader clearfix">
+                        <span class="xcspanleft">
+                        常州市
+                        </span>
+                        <span class="glyphicon glyphicon-triangle-bottom scspanright">
+                        </span>
+                    </div>   
+                    <div class="xcbody clearfix" >
+                        <input type="text" id="inxcbody" class="form-control" placeholder="查询地址">    
+                    </div>     
+                    <div class="xcqx">
+                        取消 
+                    </div>
+            </div>
+            <div class="changzhou-city clearfix">
+                <div class="clearfix changzhou-cf">
+                    <span class="changzhou-cficon"></span>
+                    <span class="chzh-onecity" id="cgz-cfcity"></span>
+                    <span class="glyphicon glyphicon-minus chzh-onetp"></span>
+                    <input class="chzh-onecfd form-control" placeholder="从哪儿出发？"  id="cgz-cfd">
+                    <span class="glyphicon glyphicon-remove chzh-onezh"  id="cgz-cfdelete"></span>
+                </div>
+                <div class="clearfix changzhou-md">
+                    <span class="changzhou-cficon changzhou-mdicon"></span>
+                    <span class="chzh-onecity changzhou-mdcity" id="cgz-mdcity"></span>
+                    <span class="glyphicon glyphicon-minus chzh-onetp changzhou-mdtp"></span>
+                    <input class="chzh-onecfd changzhou-mdmdd form-control" placeholder="想要去哪儿？" id="cgz-mdd">
+                    <span class="glyphicon glyphicon-remove chzh-onezh changzhou-mdzh" id="cgz-mddelete"></span>
+                </div>
+            </div>
+            <div class="searchcfd clearfix">
+                <div class="cityshow clearfix">
+                    <div class="scheader clearfix">
+                        <span>当前城市:</span>
+                        <div class="dqcsval"></div>
+                    </div>
+                    <div class="cityxuzhe clearfix">
+                        <div class="cityxzone">附近城市</div>
+                        <ul class="xzulone clearfix">
+                            <li class="xzli1">
+                                常州市
+                            </li>
+                            <li  class="xzli2">
+                                苏州市
+                            </li>
+                            <li  class="xzli3">
+                                无锡市
+                            </li>
+                            <li  class="xzli4">
+                                上海市
+                            </li>
+                            <li class="xzli5">
+                                南京市
+                            </li>
+                            <li class="xzli6">
+                                泰州市
+                            </li>
+                            <li class="xzli7">
+                                南通市
+                            </li>
+                            <li class="xzli8">
+                                镇江市
+                            </li>
+                        </ul>
+                        <div class="cityxztwo">其他城市</div>
+                        <ul class="xzultwo clearfix">
+                            <li class="xzli9">
+                                杭州市
+                            </li>
+                            <li class="xzli10">
+                                北京市
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="searchweizhi clearfix">
+                <!-- 显示具体城市的页面 -->
+            </div>
+            <div class="searchtime clearfix">
+                <!-- 出现时间选择的页面 -->
+                <div class="timeheader clearfix">
+                    <div class="timeheader-icon clearfix">
+                        <span class="timequx glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div class="timexz">
+                        选择出发时间/期望到达时间
+                    </div>
+                    <div class="timeheader-body clearfix">
+                        <div class="timebody clearfix">
+                            <div class="glyphicon glyphicon-time timebodyicon"></div>
+                            <div id="dt-a-0" class="start_time_default pfull" data-val="">
+                                选择出发时间
+                            </div>
+                        </div>
+                        <div class="timebody clearfix">
+                            <div class="glyphicon glyphicon-time timebodyicon timebodytwoicon"></div>
+                            <div  id="dt-c-1" class="start_time_default pfull" data-val="">
+                                选择期望到达时间
+                            </div>
+                        </div>
+                        <div class="time-ride clearfix">
+                            <div class="timeqr">下一步</div>
+                            <span class="glyphicon glyphicon-trash time-delete"></span>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+             <!-- 乘车人数页面 -->
+             <div class="personNum clearfix" >
+                <div class="clearfix pnum-return">
+                    <span class="glyphicon glyphicon-remove personnum-quxiao"></span>
+                </div>
+                <div class="pnum-choice clearfix">
+                    <span class="pnum-choicexz"> 选择你的乘车人数</span>   
+                    <span class="glyphicon glyphicon-triangle-bottom pnum-choiceicon"></span>   
+                </div>
+                <div  class="pnum-number clearfix">
+                    <div class="clearfix" style="width:100%;">
+                        <div class="pnum-numrs pnum-numone">
+                            1
+                        </div>
+                        <div class="pnum-numrs pnum-numtwo">
+                            2
+                        </div>
+                        <div  class="pnum-numrs pnum-numthree">
+                            3
+                        </div>
+                        <div class="pnum-numrs pnum-numfour">
+                            4 
+                        </div> 
+                    </div>
+                    <div class="pnum-center clearfix">
+                        <span class="glyphicon glyphicon-plus pnum-ctlefticon"></span>
+                        <span class="pnum-ctnumber">5</span>
+                        <span class="glyphicon glyphicon-minus pnum-ctrighticon"></span>
+                    </div> 
+                    <div class="clearfix pnum-footer">
+                        <span class="pnum-fticon">人数:</span> 
+                        <input type="text" class="form-control pnum-ftinput" placeholder="可输入人数">   
+                    </div>         
+                </div>
+                <div class="pnum-ride clearfix">
+                    <div class="pnum-rdnum">
+                        请选择...
+                    </div>
+                    <span class="glyphicon glyphicon-trash pnum-rdicon"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 支付主页 -->
+        <div class="paymentzy clearfix" style="display: none">
+            <!-- 上不头部 -->
+            <div class="phdicon clearfix">
+                <span class="ptbicon  iconfont icon-zhifu1"></span>
+                <div class="mypay">
+                    我的支付
+                </div>
+            </div>
+            <!-- 复用区 -->
+            <div class="phdiconfyq clearfix">
+
+            </div>
+        </div>
+        <!-- 支付详情页 -->
+        <div class="pdetails clearfix"  style="display: none">
+            <div class="pdetailsfh clearfix">
+                <span class="pdetailsfhicon glyphicon glyphicon-shopping-cart"></span>
+                <span class="pdetailszdxq">账单详情</span>
+                <a href="#ddxq" class="pdetailssyj">
+                    <span>返回</span>
+                </a>
+            </div>
+            <div class="pdetailsbody">
+                <div class="pdetailsdad pdetailsone clearfix">
+                    <span class="pdetailspan">付款号:</span>
+                    <div class="pdetaildiv pdtvpno" id="pdfkh"></div>
+                </div>
+                <div class="pdetailsdad pdetailstwo clearfix" >
+                    <span class="pdetailspan">支付价格:</span>
+                    <div class="pdetaildiv" id="pdzfjo"></div>
+                </div>  
+                <div  class="pdetailsdad pdetailsthree clearfix">
+                     <span class="pdetailspan">支付类型:</span>
+                     <div class="pdetaildiv" id="pdzflx"></div>
+                </div>
+                <div  class="pdetailsdad pdetailsthree clearfix">
+                    <span class="pdetailspan">支付日期:</span>
+                    <div class="pdetaildiv" id="pdzfrq"></div>
+               </div>
+               <div  class="pdetailsdad pdetailsfour clearfix">
+                    <span class="pdetailspan">支付结果:</span>
+                    <div class="pdetaildiv" id="pdzfqk"></div>
+               </div>
+               <div class="pdetailsdad  pdetlsdadlook clearfix">
+                   <!-- 添加填充button的地方 -->
+               </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="./js/jquery.min.js"></script>
+    <!-- bootstrap脚本 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- 时间选择器前置脚本 -->
+    <script src="https://cdn.bootcss.com/moment.js/2.22.1/moment-with-locales.min.js"></script>
+    <!-- 时间选择器核心脚本 -->
+    <script src="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    
+    <!-- 后台给的调用的js -->
+    <script src="js/app.js"></script>
+    <!-- 高德地图的两个引入 -->
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.11&key=5eeab4fb86fdb2ea40bb70b720de1927&plugin=AMap.Geocoder"></script>
+    <script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+
+    <!-- 秒支付button的使用 -->
+    <script id='spay-script' src='https://jspay.beecloud.cn/1/pay/jsbutton/returnscripts?appId=dbf34cab-2454-4f97-88f0-0a7e34aa426e'></script>
+
+    <!-- 转换md5引入的文件 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.10.0/js/md5.js"></script>
+
+    <!-- jquery时间插件 的使用 -->
+        <script src="js/mobiscroll.custom-2.16.1.min.js"></script>
+        <script src="js/mobiscroll.android-ics-2.5.2.js"></script>
+    <!-- 无限滚动插件的使用 -->
+        <script src="js/infinite-scroll.pkgd.min.js"></script>
+    <!-- 自定义js的引入 -->
+    <script src="./font/js/sfc.js"></script>
+    <script src="./font/js/dizselect.js"></script>
+</body>
+</html>

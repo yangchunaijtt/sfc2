@@ -1,0 +1,291 @@
+/* 顺风车页详情信息设置 */
+.showsjdata {
+  width: 100%;
+}
+.showsjdata .srselect {
+  height: 56px;
+  background: #fff;
+  border-radius: 4px;
+}
+.showsjdata .srselect .changz,.fanhuisyj a {
+  width: 63px;
+  height: 30px;
+  background: #979797;
+  color: #fff;
+  border-radius: 4px;
+  margin-top: 13px;
+  text-align: center;
+  line-height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* 样式设置 */
+  .showsjdata  .srselect  .fanhuisyj  .fhusyjd{
+    background: #5cb85c;
+  }
+  .changz{
+    margin-left: 11%;
+  }
+.showsjdata #sdcontainer {
+  width: 100%;
+  height: 350px;
+}
+.showsjdata .showmoredata {
+  background-color: #fff;
+  border-radius: 4px;
+  margin: 10px 6px;
+}
+.showsjdata .showmoredata .cfdsdm {
+  width: 100%;
+  border-bottom: 1px solid #f2f2f2;
+  border-top: 1px solid #f2f2f2;
+}
+.showsjdata .showmoredata .cfdsdm .cfdsdmspan {
+  width: 25%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 50px;
+  line-height: 50px;
+  float:left;
+}
+.showsjdata .showmoredata .cfdsdm .cfdsdmdiv {
+  width: 48%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 50px;
+  line-height: 50px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  float:left;
+}
+.showsjdata .showmoredata .mddsdm {
+  width: 100%;
+  border-bottom: 1px solid #f2f2f2;
+}
+.showsjdata .showmoredata .mddsdm .mdddsdmspan {
+  width: 25%;
+  display: inline-block;
+  height: 50px;
+  line-height: 50px;
+  text-indent: 10px;
+  float: left;
+}
+.showsjdata .showmoredata .mddsdm .mddsdmdiv {
+  width: 48%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 50px;
+  line-height: 50px;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  float: left;
+}
+.showsjdata .showmoredata .cftimesdm {
+  width: 100%;
+}
+.showsjdata .showmoredata .cftimesdm .cftimesdms {
+  width: 25%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+}
+.showsjdata .showmoredata .cftimesdm .cftimesdmd {
+  width: 72%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+}
+.showsjdata .showmoredata .ddcfdsdm {
+  width: 100%;
+}
+.showsjdata .showmoredata .ddcfdsdm .cfdsdms {
+  width: 25%;
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  text-indent: 10px;
+  float: left;
+}
+.showsjdata .showmoredata .ddcfdsdm .cfdsdmd {
+  width: 72%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+}
+/* 颜色切换s */
+/* 成功的背景颜色 */
+.showsjdatastate0 {
+  background: #5cb85c;
+}
+/* 失效下的背景颜色 */
+.showsjdatastate1 {
+  background: #f9f9f9;
+}
+/* 剩下设置 */
+.showsjdata .srselect {
+  width: 100%;
+}
+.showsjdata .srselect .changzleft {
+  width: 72%;
+  display: inline-block;
+}
+.showsjdata .srselect .fanhuisyj {
+  width: 22%;
+  display: inline-block;
+}
+.showsjdata .srselect .fanhuisyj .fhusyjd {
+  display: inline-block;
+}
+.sdstatus {
+  width: 100%;
+}
+.sdstatus .sdstatuss {
+  width: 25%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+}
+.sdstatus .sdstatusd {
+  width: 72%;
+  display: inline-block;
+  text-indent: 10px;
+  height: 40px;
+  line-height: 40px;
+  float: left;
+}
+.clickqxx {
+  width: 100%;
+  margin:10px 0px;
+  padding-bottom: 20px;
+}
+.clickqxx #qxsfcxinxi {
+  width: 150px;
+  height: 36px;
+  line-height: 36px;
+  color: #fff;
+  background: #31b0d5;
+  text-align: center;
+  border-radius: 6px;
+  margin:0  auto;
+  font-size: 16px;
+}
+  .cfcity, .mdcity{
+    width: 100%;
+    line-height: 40px;
+    height: 40px;
+  }
+  .cfcity .cfcitysp, .mdcity .mdcitysp{
+    width: 25%;
+    display: inline-block;
+    text-indent: 10px;
+    float: left;
+  }
+  .cfcity  .cfcitydv, .mdcity .mdcitydv{
+    width: 72%;
+    display: inline-block;
+    text-indent: 10px;
+    float: left;
+  }
+  .sfval{
+    width: 100%;
+    line-height: 40px;
+    height: 40px;
+  }
+  .sfval  .sfvalspan{
+    width: 25%;
+    display: inline-block;
+    text-indent: 10px;
+    float: left;
+  }
+  .sfval .sfvaldiv{
+    width: 72%;
+    display: inline-block;
+    text-indent: 10px;
+    float: left;
+    }
+    /* 按钮的处理 */
+  .cfdsdmdivbt,.mddsdmdivbt{
+    display: inline-block;
+    width: 22%;
+    float: right;
+    margin-right: 14px;
+    margin-top: 8px;
+  }
+  /* 按钮提示 css样式 */
+.mydiv {
+  background-color: #fff;
+  border: 1px solid #DCDCDC;
+  text-align: center;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 99;
+  width: 70%;
+  min-height: 120px;
+  left: 15%;
+  top: 40%;
+  margin-top: 0px;
+  position: fixed!important;
+  position: absolute;
+  border-radius: 7px;
+  padding: 10px;
+}
+.bg {
+  background-color: #C0C0C0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+  z-index: 1;
+  position: fixed!important;
+  position: absolute;
+}
+/* 乘车人数 */
+.by-car{
+  width: 100%;
+  line-height: 40px;
+  height: 40px;
+}
+.by-car .by-carnum{
+  width: 25%;
+  display: inline-block;
+  text-indent: 10px;
+  float: left;
+}
+.by-car .by-carpersondv{
+  width: 72%;
+  display: inline-block;
+  text-indent: 10px;
+  float: left;
+}
+/* 金额*/
+.reference-price{
+  width: 100%;
+  line-height: 40px;
+  height: 40px;
+}
+.reference-price .reference-priceicon{
+  width: 25%;
+  display: inline-block;
+  text-indent: 10px;
+  float: left;
+}
+.reference-price  .reference-pricejo{
+  width: 72%;
+  display: inline-block;
+  text-indent: 10px;
+  float: left;
+}
