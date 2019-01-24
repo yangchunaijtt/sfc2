@@ -36,11 +36,14 @@
                 hactive();
                 formcontrol();
                 created();
+                getqbVowner();
+                getqbPassenger();
+                //  判断注册了没
+                owneridentity.ownerajax();
             }
         },location.search);
             // 先记录一下当前页面地址在跳转
             // http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html
-           
 
         // 初始化时设置默认值 
         $(".dqcsval").text($(".xcspanleft").text());
@@ -74,11 +77,11 @@
         if($(".timeheader").height()<440){
             $(".timeheader").height(440);
         }
-        
-        // 无需id值，直接取全部数据 
-        getqbVowner();
-        getqbPassenger();
-       
+        // 车主注册页
+        $(".owner-register").height($(document.body).height()-$(".header").height());
+        // 审核页的样式
+        $(".to-examine").height($(document.body).height());
+
         // 当 hash变化时切换显示
     // 页面初始化时就执行这些数据 
     $(".searchtime #datetime").datetimepicker({
@@ -104,13 +107,21 @@
    // 给导航条绑定事件 
    var hrunxuzval = 1;
     $(".hrun").bind("touch click",function(){
-        hrunxuzval ++;
-        if(hrunxuzval%2===0){
-            $(".hrunoneicon").attr('class',"glyphicon glyphicon-triangle-top hrunoneicon");
-        }else {
-            $(".hrunoneicon").attr('class',"glyphicon glyphicon-triangle-bottom hrunoneicon");
+        hashlycolorsz();
+        $(".hrun").css("color","#e39f7a");
+        if(owneridentity.states===0){
+            window.location.hash = "#register";
+        }else if(owneridentity.states===1){
+            hrunxuzval ++;
+            if(hrunxuzval%2===0){
+                $(".hrunoneicon").attr('class',"glyphicon glyphicon-triangle-top hrunoneicon");
+            }else {
+                $(".hrunoneicon").attr('class',"glyphicon glyphicon-triangle-bottom hrunoneicon");
+            }
+            $(".runluyouaa").slideToggle("normal");
+        }else if(owneridentity.states===2){
+            window.location.hash = "#examine";
         }
-        $(".runluyouaa").slideToggle("normal");
     })
         
     
@@ -192,10 +203,6 @@
             hashlycolorsz();
             $("#ddxq").css("color","#e39f7a");
             $("#ddxq a").css("color","#e39f7a");
-        })
-        $(".hrun").bind("touch click",function(){
-            hashlycolorsz();
-            $(".hrun").css("color","#e39f7a");
         })
 
 // 绑定事件都放在这里面 
@@ -377,6 +384,16 @@
         $("#cgz-mddelete").bind("touch click",function(){
             FreeRide.searchweizhi(1);
         })
+        // 返回操作
+        $(".changzhou-return").bind("touch click",function(){
+            if(fabuxiaoxi.amoney === 0 ){   //没有到那一步
+                FreeRide.searchweizhi(0);
+                FreeRide.searchweizhi(1);
+                window.location.hash = "#details?"+locationqjval.val;
+            }else{
+                window.location.hash = "#details?settle";
+            }
+        })
         // 点击跳到选择城市页
         $("#cgz-cfcity").bind("touch click",function(){
             FreeRide.clickdirection = 0;
@@ -472,6 +489,7 @@
         $(".pnum-ctlefticon").bind("touch click",function(){
             personnum.personnumber++;
             $(".pnum-ctnumber").text(personnum.personnumber);
+            $(".pnum-ftinput").val(personnum.personnumber);
             if(personnum.personnumber<=4){
                 personnum.clear();
                 personnum.updated(personnum.personnumber);
@@ -497,7 +515,14 @@
         $(".pnum-ctrighticon").bind("touch click",function(){
             personnum.personnumber--;
             $(".pnum-ctnumber").text(personnum.personnumber);
-            if(personnum.personnumber<=4){
+            $(".pnum-ftinput").val(personnum.personnumber);
+            if(personnum.personnumber<=0){
+                personnum.clear();
+                personnum.personnumber = 0;
+                $(".pnum-ctnumber").text(personnum.personnumber);
+                $(".pnum-ftinput").val(personnum.personnumber);
+                return false;
+            }else if(personnum.personnumber<=4 && personnum.personnumber >0){
                 personnum.clear();
                 personnum.updated(personnum.personnumber);
                 if(personnum.personnumber===1){
@@ -564,25 +589,30 @@
     // 结账页绑定的数据
         // 跳转到人数页
         $("#completed-number").bind("touch click",function(){
+            settleAccounts.rendertimes = 1;
             window.location.hash = "#personnum";
         })
         //  绑定到选择地址页
         $("#completed-seaddress").bind("touch click",function(){
+            settleAccounts.rendertimes = 0;
             window.location.hash ="#sxxwz";
         })
         // 不发布，删除掉数据
         $(".completed-deicon").bind('touch click',function(){
             settleAccounts.clear();
             window.location.hash = "#details?"+locationqjval.val;
+            settleAccounts.rendertimes = 0;
             sfclocation();
         })
          // 时间页绑定
          $("#searchsetdate").bind("touch click",function(){
+            settleAccounts.rendertimes = 1;
             window.location.hash = "#time";
         })
 
     // 金额页设置  设置最小金额为9元
         $(".completed-price").bind("touch click",function(){
+            settleAccounts.rendertimes = 1;
             window.location.hash = "#details?tramount";
         })
         // 删除 回到初始化状态
@@ -604,7 +634,7 @@
         $(".tramount-righticon").bind("touch click",function(){
             tramount.amont--;
             // 我的计算金额会出现问题，最多让减到9元
-            if(tramount.amont<=9){
+            if(tramount.amont<9){
                 showMessage1btn("已经底线了,不能再减了","",0);
                 tramount.amont = fabuxiaoxi.amoney;
                 $(".tramount-money").text(tramount.amont);
@@ -617,7 +647,7 @@
         // 发布出去
         $(".confirm-cfmoney").bind("touch click",function(){
             fabuxiaoxi.amoney = tramount.amont;
-            if(fabuxiaoxi.amoney<=9){
+            if(fabuxiaoxi.amoney<9){
                 showMessage1btn("金额不能小于9元,请重试","",0);
                 return false;
             }
@@ -635,7 +665,7 @@
         })
         //输入框失去焦点时
         $(".tramount-ftinput").on('blur',function(){
-            if($(".tramount-ftinput").val()<=9){
+            if($(".tramount-ftinput").val()<9){
                 showMessage1btn("金额不能小于9元,请重试","",0);
                 tramount.amont = 9;
                 $(".tramount-ftinput").val(9);
@@ -662,6 +692,32 @@
                 //保证.只出现一次，而不能出现两次以上
                 $(this).val($(this).val().replace(".", "$#$").replace(/\./g, "").replace("$#$", "."));
         })
+    // 车主注册页绑定事件
+        // 内容变化
+            // 身份证正面
+            $("#idCardFrontDelete").bind("touch click",function(e){
+                carregister.delete("#idCardFront");
+            })
+            // 身份证反面
+            $("#idCardBackDelete").bind("touch click",function(e){
+                carregister.delete("#idCardBack");
+            })
+            // 驾驶照正面
+            $("#dLicenseFrontDelete").bind("touch click",function(e){
+                carregister.delete("#dLicenseFront");
+            })
+            // 驾驶照反面
+            $("#dLicenseBackDelete").bind("touch click",function(){
+                carregister.delete("#dLicenseBack");
+            })
+        // 提交
+            $(".owneregister-button").bind("touch click",function(){
+                carregister.photoajax();
+            })
+        // 删除所有
+            $("#register-allremove").bind("touch click",function(){
+                carregister.clear();
+            })
     })
     // 函数 
         function hvownermyrun(){
@@ -687,6 +743,7 @@
         mdtime:"",      // 到达时间
         personNum:0.0,     // 出发人数,默认为0。
         amoney:0.0,       // 钱数
+        routeMileage:0,   // 路线里程
     };
 
     // 存储乘客和车主的路由值 
@@ -697,7 +754,171 @@
     var cityselectval = {
         nowcity:""
     }
+// 车主注册页操作模块
+    var carregister = {
+        idCardFront:0,  //身份证正面数据
+        idCardBack:0,   //身份证反面数据
+        dLicenseFront:0,    // 驾驶照正面数据
+        dLicenseBack:0,     // 驾驶照反面数据
+        filechange:function(val,file,xrdiv){  // 变化事件
+            var judgeval  =  0;
+            if(val==="#idCardFront"){
+                judgeval = carregister.idCardFront;
+            }else if(val==="#idCardBack"){
+                judgeval = carregister.idCardBack;
+            }else if(val==="#dLicenseFront"){
+                judgeval = carregister.dLicenseFront;
+            }else if(val==="#dLicenseBack"){
+                judgeval = carregister.dLicenseBack;
+            }
+            carregister.turnbase(judgeval,file,xrdiv);
+        },
+        printing:function(base64,val,xrdiv){  // 把base64放到图片上
+            if(val === 1){
+                console.log("压缩前", base64.length / 1024);
+            }else if(val===2){
+                console.log("压缩后", base64.length / 1024);
+                document.getElementById(xrdiv).src = base64;
+            }
+        },
+        turnbase:function(val,file,xrdiv){    // 照片转base64
+            var image = '';
+            if(!file.files || !file.files[0]){
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(evt){
+                image = evt.target.result;
+                val = image;
+                console.log(carregister.printing(val,1));
+                //使用压缩
+                carregister.dealImage(val,200,carregister.printing,xrdiv);
+            }
+            reader.readAsDataURL(file.files[0]);       
+        },
+        delete:function(val){
+            // 删除路径操作
 
+            // 删除div图片
+            var photodel = val+"-preview";
+            $(photodel).attr("src","");
+            if(val==="#idCardFront"){
+                 carregister.idCardFront = 0;
+            }else if(val==="#idCardBack"){
+                 carregister.idCardBack = 0;
+            }else if(val==="#dLicenseFront"){
+                 carregister.dLicenseFront = 0;
+            }else if(val==="#dLicenseBack"){
+                 carregister.dLicenseBack = 0;
+            }
+        },
+        clear:function(){       // 清除所有
+            // 删除路径操作
+
+            // 删除图片操作
+            
+            carregister.idCardFront = 0;
+            carregister.idCardBack = 0;
+            carregister.dLicenseFront = 0;
+            carregister.dLicenseBack = 0;
+        },
+        photoajax:function(){   // 向后台发送
+            var tips = "";
+            if(carregister.idCardFront===0){
+                tips="请上传身份证正面照";
+            }else if(carregister.idCardBack===0){
+                tips="请上传身份证反面照";
+            }else if(carregister.dLicenseFront===0){
+                tips="请上传驾驶照正面照";
+            }else if(carregister.dLicenseBack===0){
+                tips="请上传驾驶照反面照";
+            }
+            if(tips!==""){
+                showMessage1btn(tips,"",0);
+                return false;
+            }
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerCertification/saveMadeOwnerCertification.asp",
+                data:{
+                    uid:nowusermsg.uid,
+                    idCardFront:carregister.idCardFront,
+                    idCardBack:carregister.idCardBack,
+                    dLicenseFront:carregister.dLicenseFront,
+                    dLicenseBack:carregister.dLicenseBack
+                },
+                type:"post",
+                success:function(data){
+                    console.log(data);
+                },
+                error:function(){
+                    console.log(data);
+                }
+            })
+        },
+        dealImage:function(base64,w,callback,xrdiv) {   // 压缩方法
+			var newImage = new Image();
+			var quality = 0.6;    //压缩系数0-1之间
+			newImage.src = base64;
+			newImage.setAttribute("crossOrigin", 'Anonymous');	//url为外域时需要
+			var imgWidth, imgHeight;
+			newImage.onload = function () {
+				imgWidth = this.width;
+				imgHeight = this.height;
+				var canvas = document.createElement("canvas");
+				var ctx = canvas.getContext("2d");
+				if (Math.max(imgWidth, imgHeight) > w) {
+					if (imgWidth > imgHeight) {
+						canvas.width = w;
+						canvas.height = w * imgHeight / imgWidth;
+					} else {
+						canvas.height = w;
+						canvas.width = w * imgWidth / imgHeight;
+					}
+				} else {
+					canvas.width = imgWidth;
+					canvas.height = imgHeight;
+					quality = 0.6;
+				}
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+				var base64 = canvas.toDataURL("image/png", quality); //压缩语句
+				// 如想确保图片压缩到自己想要的尺寸,如要求在50-150kb之间，请加以下语句，quality初始值根据情况自定
+				while (base64.length / 1024 > 1024) {
+					quality -= 0.01;
+					base64 = canvas.toDataURL("image/png", quality);
+                }
+				callback(base64,2,xrdiv);//必须通过回调函数返回，否则无法及时拿到该值
+			}
+        }
+    }
+// 判断有无车住身份模块
+    var owneridentity = {
+        states:0,    // 0代表没有车主身份,1代表有,2代表审核中。
+        ownerajax:function(){   // 页面一开始调用下,
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/buyTicket/isCarOwner.asp",
+                type:"post",
+                data:{
+                    uid:nowusermsg.uid
+                },
+                success:function(data){
+                    console.log("身份成功",data);
+                    if(data.status===1 && data.result===1 ){
+                        owneridentity.states = 1 ;
+                    }else if(data.result=== 1 && data.status===-1 ){
+                        owneridentity.states  = 0; 
+                    }else if(data.result=== 1 && data.status=== 0){
+                        owneridentity.states = 2 ;
+                    }
+                },
+                error:function(data){
+                    console.log("请求身份失败");
+                    owneridentity.states = 0;
+                }
+            })
+        }
+    }
+    
 // 选择人数页操作模块
     var personnum = {
         iconstates:1,
@@ -752,7 +973,7 @@
            fabuxiaoxi.cfdcity = fabuxiaoxi.dwsj.addressComponent.city;
            cityselectval.nowcity = fabuxiaoxi.dwsj.addressComponent.city;
            // 定义成功后，切换路由到首页         
-           console.log(fabuxiaoxi.dwsj);
+        
             // 出发城市设置
            $("#cgz-cfcity").text(fabuxiaoxi.dwsj.addressComponent.city);
 
@@ -781,6 +1002,7 @@
    }
 // 结账页的操作函数
     var settleAccounts = {
+        rendertimes:0, //渲染次数，第一次跳转则为0，jump会显示，跳转到路程选择页等几个页面则置为0。time等页面则为1。不渲染。
         jump:function(){
             $("#completed-number").text(fabuxiaoxi.personNum+"人乘车");
             if(fabuxiaoxi.cfdcity==="常州市" && fabuxiaoxi.mddcity ==="常州市"){
@@ -795,7 +1017,41 @@
             }else if(locationqjval.val==="b=v"){
                 $("#completed-sesf").text("车主");
             }  
-            $(".completed-pprice").text(fabuxiaoxi.amoney);
+        // 里程计算下
+            var dLng = 0;  //经度
+            var dLat = 0;  // 纬度
+            var cfddata = fabuxiaoxi.cfddata;
+            var mdata = fabuxiaoxi.mmddata;
+            if(cfddata!==""){
+                dLng = cfddata.location.lng;
+                dLat = cfddata.location.lat;
+            }
+            if(fabuxiaoxi.dwsj!==""){
+                dLng = fabuxiaoxi.dwsj.position.lng;
+                dLat = fabuxiaoxi.dwsj.position.lat;
+            }
+            var p1 = [dLng,dLat];   // [经度,纬度]
+            var p2 = [mdata.location.lng,mdata.location.lat];
+            var dis = AMap.GeometryUtil.distanceOfLine([p1,p2]);
+            // 返回结果为米
+            console.log("一共多少米",dis);
+            fabuxiaoxi.routeMileage = (dis/1000).toFixed(1);
+            console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
+            $(".mileage-price").text(fabuxiaoxi.routeMileage);
+        // 钱数简单计算下
+            var routelc = fabuxiaoxi.routeMileage;
+            var carmoney = 15;
+            if(routelc <= 5){
+                carmoney = 15;
+            }else if(routelc>5 && routelc <=30){
+                carmoney = 15 + (routelc-5)*1;
+            }else if(routelc>30 && routelc <=150){
+                carmoney = 15 + 25 + (routelc-30)*0.5;
+            }else if(routelc>150){
+                carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
+            }
+            fabuxiaoxi.amoney = carmoney;
+            $(".completed-pprice").text((fabuxiaoxi.amoney).toFixed(1));
         },
         clear:function(){   //清空操作
             fabuxiaoxi.cfdcity = "";
@@ -973,6 +1229,8 @@
         $(".showsjdata").hide();
         $(".paymentzy").hide();
         $(".pdetails").hide();
+        $(".owner-register").hide();   
+        $(".to-examine").hide();
     }
     //切换路由的初始化方法
     function hashcreate(){
@@ -985,6 +1243,8 @@
         $(".showsjdata").hide();
         $(".paymentzy").hide();
         $(".pdetails").hide();
+        $(".owner-register").hide();
+        $(".to-examine").hide();
         // 点击了，先隐藏，在进行效果展示 
     }
     // 切换路由的方法
@@ -1063,7 +1323,10 @@
                 }else if(locationHash=="#details?settle"){
                     $(".chufadi-total").hide();
                     $(".tramount").hide();
-                    settleAccounts.jump();
+                    if(settleAccounts.rendertimes===0){
+                        settleAccounts.jump();
+                        settleAccounts.rendertimes = 1;
+                    }
                     $(".completed").show();
                 }else if(locationHash=="#details?tramount"){
                     $(".completed").hide();
@@ -1122,7 +1385,7 @@
                     $(".nowcheckcity").hide();
                     $(".changzhou-city").hide();
                 }
-            }else if(locationHash =="#showdata"){
+            }else if(val1[0]==="#showdata" || locationHash =="#showdata"){
                 
             }else if(val1[0] =="#ddxq"|| locationHash=="#ddxq"){
                 hashcreate();
@@ -1137,6 +1400,12 @@
                 passengercli();
                 hashcreate();
                 $(".pdetails").show();
+            }else if(val1[0]==="#register" || locationHash ==="#register"){
+                hashcreate();
+                $(".owner-register").show();
+            }else if(val1[0]==="#examine" || locationHash === "#examine"){
+                hashcreate();
+                $(".to-examine").show();
             }
         }
     }
@@ -1171,8 +1440,6 @@
        
     }
     
-    
-
     // 获取数据的地方 
     //获取乘客数据进行渲染
     function getPassenger(){
@@ -1183,7 +1450,8 @@
                 cur:1,  // 默认取第一页 
                 pushType:"Passenger",   // 乘客 
                 uid:nowusermsg.uid, // id号 
-                dateRange:"",      // 日期范围，默认取一个月之内的 
+                viewType:"self",        // 看自己
+                dateRange:"",      // 日期范围
                 arCity:"",      // 到达城市 
                 dpCity:""      // 出发城市 
             },
@@ -1204,6 +1472,7 @@
             data:{
                 cur:1,  // 默认取第一页 
                 pushType:"Driver",   // 车主身份
+                viewType:"self",        // 看自己
                 uid:nowusermsg.uid, // id号 
                 dateRange:"",      // 日期范围，默认取一个月之内的 
                 arCity:"",      // 到达城市 
@@ -1232,7 +1501,8 @@
            data:{
                cur:1,  // 默认取第一页 
                pushType:"Passenger",   // 乘客 
-               uid:"",  // id号   默认为空就是取全部的数据
+               viewType:"all",        // 看自己
+               uid:nowusermsg.uid,  // id号  
                dateRange:"",      
                arCity:"",      // 到达城市 
                dpCity:""     // 出发城市 
@@ -1272,7 +1542,8 @@
            data:{
                cur:1,  // 默认取第一页 
                pushType:"Driver",   // 乘客 
-               uid:"",  // id号   默认为空就是取全部的数据
+               viewType:"all",        // 看自己
+               uid:nowusermsg.uid,  // id号 
                dateRange:"",      // 日期范围，取全部的 
                arCity:"",      // 到达城市 
                dpCity:""      // 出发城市 
@@ -1368,7 +1639,6 @@
                     var cydstatedztcl = "#"+cydstatedzt;
                     $(cydstatedztcl).css('color',"#d9534f");
                 }
-            
         }
 
     // 对全部行程中乘客数据的渲染 
@@ -1653,6 +1923,10 @@
             var dLat = "";
             var departure = "";
             // 先判断出发地cfddata 
+            /* dLng ,    // 出发地经度 
+dLat,   // 出发地纬度
+mdata.location.lng,    // 目的地经度
+mdata.location.lat,  // 目的地纬度  */
             if(cfddata!==""){
                 dLng = cfddata.location.lng;
                 dLat = cfddata.location.lat;
@@ -1725,6 +1999,7 @@
                         if(successdattsxx===""){
                             successdattsxx = "发布出错,请刷新在试";
                         }
+                        settleAccounts.rendertimes = 1 ;
                         showMessage1btn(successdattsxx,"",0);
                         return false;
                     }else {
@@ -1738,6 +2013,7 @@
                         fabuxiaoxi.mmddata = "";    // 置空 
                         
                         showMessage1btn("发布成功!","",0);
+                        settleAccounts.rendertimes = 0 ;
                     // 提交的元素 
                         // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
                         window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html";   
@@ -1750,7 +2026,7 @@
                     fabuxiaoxi.mddcity = "";    // 置空 
                     fabuxiaoxi.cfddata = "";    // 置空 
                     fabuxiaoxi.mmddata = "";    // 置空 
-                    
+                    settleAccounts.rendertimes = 0 ;
                     showMessage1btn("发布失败,请刷新重试!","",0)
                 }
             })
