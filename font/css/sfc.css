@@ -483,6 +483,7 @@
 .arunpassengerDivclass {
   display: inline-block;
   width: 80%;
+  float: left;
 }
 .arunvownerDivclass {
   display: inline-block;
@@ -1947,7 +1948,7 @@ body {
   }
   .owner-register .owneregister-submit .owneregister-button{
     display: inline-block;
-    width: 70%;
+    width: 100%;
     text-align: center;
     background: #ffc963;
     height: 54px;
@@ -1955,13 +1956,6 @@ body {
     border-radius: 30px;
     font-size: 20px;
     margin-top: 20px;
-  }
-  .owner-register .owneregister-submit .owneregister-allremove{
-    display: inline-block;
-    width: 28%;
-    text-align: center;
-    line-height: 54px;
-    font-size: 20px;
   }
   .owneregister-id .owneregister-ylphoto{
     display: block;

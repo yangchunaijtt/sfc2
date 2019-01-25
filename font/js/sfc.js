@@ -107,6 +107,7 @@
    var hrunxuzval = 1;
     $(".hrun").bind("touch click",function(){
         // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册审核失败，跳转出重新注册页面
+        //  owneridentity.states = 4;
         hashlycolorsz();
         $(".hrun").css("color","#e39f7a");
         if(owneridentity.states===0){
@@ -123,11 +124,11 @@
             $(".to-examine").empty();
             $(".to-examine").append("<div class='to-examinets'>正在审核中,请耐心等待....</div><img src='./font/fontjs/examine.gif'   class='to-examineimg'>");
             window.location.hash = "#examine";
-        }else if(owneridentity.hash===3){
+        }else if(owneridentity.states===3){
             $(".to-examine").empty();
             $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
             window.location.hash = "#examine";
-        }else if(owneridentity.hash===4){
+        }else if(owneridentity.states===4){
             $(".to-examine").empty();
             $(".to-examine").append("<div class='to-examinets'> 注册失败,请重新注册....</div><img src='./font/fontjs/weep.gif'   class='to-examineimg'><a href='#register' class='btn btn-success to-examineicon'>点击重新注册</a>");
             window.location.hash = "#examine";
@@ -715,9 +716,6 @@
         })
     // 车主注册页绑定事件
         // 删除所有
-            $("#register-allremove").bind("touch click",function(){
-                carregister.clear();
-            })
             $(".owneregister-button").bind("touch click",function(){
                 carregister.photoajax();
             })
@@ -775,9 +773,6 @@
             }
            
         },
-        clear:{ //清空并返回
-
-        },
         printing:function(judgeval,val,xrdiv){  // 把judgeval放到图片上
             if(val === 1){
                 console.log("压缩前", judgeval.length / 1024);
@@ -831,11 +826,13 @@
                 success:function(data){
                     console.log(data);
                     if(data.result===1){
+                        // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册审核失败，跳转出重新注册页面
                         owneridentity.states = 3 ;
                         // 成功了,跳转到提醒页面
                         $(".to-examine").empty();
                         $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
                         window.location.hash = "#examine";
+                        owneridentity.states = 2;
                     }
                 },
                 error:function(data){
