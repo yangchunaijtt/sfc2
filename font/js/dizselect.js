@@ -133,18 +133,25 @@
 
     // 进入input时chufadi  出发地时 进入可以自动选择的页面 
     function inchufadi(){
-        if(fabuxiaoxi.dwsj!==""){
-            if($("#cgz-mdcity").text()===""){
-                $("#cgz-mdcity").text("常州市");
+        if(FreeRide.freeMode ==="intercity" || fabuxiaoxi.dwsj!==""){
+            if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
+                window.location.hash = "#s";
+            }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj!==""){
+                $("#cgz-mdcity").text(fabuxiaoxi.cfdcity);
+                $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+                window.location.hash = "#sxxwz";
             }
-            window.location.hash = "#sxxwz";
-        }else if(FreeRide.freeMode ==="intercity"){
-            window.location.hash = "#s";
-        }else if(FreeRide.freeMode ==="incity"){
-            $("#inxcbody").val("常州市");
-            $(".xcspanleft").text("常州市");
-            xzlichuli("常州市");
-            window.location.hash = "#sxxwz";
+        }else if(FreeRide.freeMode ==="incity" || fabuxiaoxi.dwsj!==""){
+            if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj===""){
+                $("#inxcbody").val("常州市");
+                $(".xcspanleft").text("常州市");
+                xzlichuli("常州市");
+                window.location.hash = "#sxxwz";
+            }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj!==""){
+                $("#cgz-mdcity").text(fabuxiaoxi.cfdcity);
+                $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+                window.location.hash = "#sxxwz";
+            }
         }
     }
      // 进入input时address  目的地时 进入可以自动选择的页面 

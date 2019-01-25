@@ -653,57 +653,50 @@
                 <span class="owneregister-idspan">上传身份证正面:</span>
                 <div class="owneregister-idiv">
                     <input  class="owneregister-input" id="idCardFront"  accept="image/*"  type="file" onchange="carregister.filechange('#idCardFront',this,'idCardFront-preview')"/> 
-                    <span class="glyphicon glyphicon-remove owneregister-delete" id="idCardFrontDelete"></span>
                 </div>
                 <div class="clearfix">
-                    <span>证件预览:</span>
-                    <img src="" id="idCardFront-preview">
+                    <span class="owneregister-ylphoto">证件预览:</span>
+                    <img src="" id="idCardFront-preview" class="owneregister-pgotozs">
                 </div>                   
             </div>
             <div class="clearfix owneregister-id">
                 <span class="owneregister-idspan">上传身份证反面:</span>
                 <div class="owneregister-idiv">
                     <input  class="owneregister-input"  id="idCardBack"  accept="image/*"  type="file" onchange="carregister.filechange('#idCardBack',this,'idCardBack-preview')"/> 
-                    <span class="glyphicon glyphicon-remove owneregister-delete" id="idCardBackDelete"></span>
                 </div>
                 <div class="clearfix">
-                    <span>证件预览:</span>
-                    <img src="" id="idCardBack-preview">
+                    <span class="owneregister-ylphoto">证件预览:</span>
+                    <img src="" id="idCardBack-preview" class="owneregister-pgotozs">
                 </div>
             </div>
             <div class="clearfix owneregister-id">
                 <span class="owneregister-idspan">上传驾驶照证反面:</span>
                 <div class="owneregister-idiv">
                     <input  class="owneregister-input" id="dLicenseFront" accept="image/*"  type="file"  onchange="carregister.filechange('#dLicenseFront',this,'dLicenseFront-preview')"/> 
-                    <span class="glyphicon glyphicon-remove owneregister-delete" id="dLicenseFrontDelete"></span>
                 </div> 
                 <div class="clearfix">
-                    <span>证件预览:</span>
-                    <img src="" id="dLicenseFront-preview">
+                    <span class="owneregister-ylphoto">证件预览:</span>
+                    <img src="" id="dLicenseFront-preview" class="owneregister-pgotozs">
                 </div>
             </div>
             <div class="clearfix owneregister-id">
                 <span class="owneregister-idspan">上传驾驶照反面:</span>
                 <div class="owneregister-idiv">
                     <input  class="owneregister-input" id="dLicenseBack"  accept="image/*"  type="file"  onchange="carregister.filechange('#dLicenseBack',this,'dLicenseBack-preview')"/> 
-                    <span class="glyphicon glyphicon-remove owneregister-delete" id="dLicenseBackDelete"></span>
                 </div>
                 <div class="clearfix">
-                    <span>证件预览:</span>
-                    <img src="" id="dLicenseBack-preview">
+                    <span class="owneregister-ylphoto">证件预览:</span>
+                    <img src="" id="dLicenseBack-preview" class="owneregister-pgotozs">
                 </div>
             </div>
             <div class="clearfix owneregister-submit">
                 <span class="owneregister-button">提交</span>
-                <span class="glyphicon glyphicon-trash owneregister-allremove" id="register-allremove"></span>
+                <span class="owneregister-allremove" id="register-allremove">返回</span>
             </div>
         </div>
         <!-- 正在审核中 -->
         <div class="to-examine clearfix" style="display:none">
-            <div class="to-examinets">
-                正在审核中,请耐心等待....
-            </div>
-            <img src="./font/fontjs/examine.gif"   class="to-examineimg">
+            
         </div>
     </div>
     <!-- 高德地图的两个引入 -->

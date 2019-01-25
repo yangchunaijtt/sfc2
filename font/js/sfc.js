@@ -107,6 +107,7 @@
    // 给导航条绑定事件 
    var hrunxuzval = 1;
     $(".hrun").bind("touch click",function(){
+        // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册审核失败，跳转出重新注册页面
         hashlycolorsz();
         $(".hrun").css("color","#e39f7a");
         if(owneridentity.states===0){
@@ -120,6 +121,16 @@
             }
             $(".runluyouaa").slideToggle("normal");
         }else if(owneridentity.states===2){
+            $(".to-examine").empty();
+            $(".to-examine").append("<div class='to-examinets'>正在审核中,请耐心等待....</div><img src='./font/fontjs/examine.gif'   class='to-examineimg'>");
+            window.location.hash = "#examine";
+        }else if(owneridentity.hash===3){
+            $(".to-examine").empty();
+            $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
+            window.location.hash = "#examine";
+        }else if(owneridentity.hash===4){
+            $(".to-examine").empty();
+            $(".to-examine").append("<div class='to-examinets'> 注册失败,请重新注册....</div><img src='./font/fontjs/weep.gif'   class='to-examineimg'><a href='#register' class='btn btn-success to-examineicon'>点击重新注册</a>");
             window.location.hash = "#examine";
         }
     })
@@ -265,7 +276,6 @@
                 $(".rsdcsdlf").css(valjson);
                 $(".rsdcsdlfi").css(valjson);
                 runscreenv.mdd = $(".rsdcsoipt").val();
-
             })
             var rsdcsdloval = {
                 "background":"#ff4a39",
@@ -435,6 +445,7 @@
             $(".pnum-numone").css("border","1px solid #ffc35f");
             $(".pnum-ctnumber").text(1);
             $(".pnum-ftinput").val(1);
+            
         })
         $(".pnum-numtwo").bind("touch click",function(){
             personnum.clear();
@@ -462,6 +473,9 @@
             personnum.clear();
             personnum.updated(1);
             $(".pnum-numone").css("border","1px solid #ffc35f");
+            personnum.personnumber = 1;
+            $(".pnum-ctnumber").text(personnum.personnumber);
+            $(".pnum-ftinput").val(personnum.personnumber);
         })
         $(".pnum-choiceicon").bind("touch click",function(){
             personnum.iconstates++;
@@ -480,8 +494,13 @@
             $(".pnum-choiceicon").attr("class","glyphicon glyphicon-triangle-bottom pnum-choiceicon");
             $(".pnum-number").slideDown();
             // 点击提交人数
-            fabuxiaoxi.personNum= personnum.personnumber;
-            window.location.hash ="#details?settle";
+            if(personnum.personnumber===0){
+                showMessage1btn("乘车人数不能小于1人,请重选","",0);
+                return false;
+            }else {
+                fabuxiaoxi.personNum= personnum.personnumber;
+                window.location.hash ="#details?settle";
+            }
         })
         // 默认值
         $(".pnum-ctnumber").text(personnum.personnumber);
@@ -589,8 +608,12 @@
     // 结账页绑定的数据
         // 跳转到人数页
         $("#completed-number").bind("touch click",function(){
-            settleAccounts.rendertimes = 1;
+            settleAccounts.rendertimes = 0 ;
             window.location.hash = "#personnum";
+        })
+        $(".mileage").bind("touch click",function(){
+            settleAccounts.rendertimes = 0;
+            window.location.hash = "#sxxwz";
         })
         //  绑定到选择地址页
         $("#completed-seaddress").bind("touch click",function(){
@@ -612,7 +635,7 @@
 
     // 金额页设置  设置最小金额为9元
         $(".completed-price").bind("touch click",function(){
-            settleAccounts.rendertimes = 1;
+            settleAccounts.rendertimes = 0;
             window.location.hash = "#details?tramount";
         })
         // 删除 回到初始化状态
@@ -632,10 +655,10 @@
         })
         // 减
         $(".tramount-righticon").bind("touch click",function(){
-            tramount.amont--;
+            tramount.amont = (tramount.amont - 1).toFixed(1);
             // 我的计算金额会出现问题，最多让减到9元
             if(tramount.amont<9){
-                showMessage1btn("已经底线了,不能再减了","",0);
+                showMessage1btn("不能低于9元,请重试","",0);
                 tramount.amont = fabuxiaoxi.amoney;
                 $(".tramount-money").text(tramount.amont);
                 $(".tramount-ftinput").val(tramount.amont);
@@ -693,30 +716,12 @@
                 $(this).val($(this).val().replace(".", "$#$").replace(/\./g, "").replace("$#$", "."));
         })
     // 车主注册页绑定事件
-        // 内容变化
-            // 身份证正面
-            $("#idCardFrontDelete").bind("touch click",function(e){
-                carregister.delete("#idCardFront");
-            })
-            // 身份证反面
-            $("#idCardBackDelete").bind("touch click",function(e){
-                carregister.delete("#idCardBack");
-            })
-            // 驾驶照正面
-            $("#dLicenseFrontDelete").bind("touch click",function(e){
-                carregister.delete("#dLicenseFront");
-            })
-            // 驾驶照反面
-            $("#dLicenseBackDelete").bind("touch click",function(){
-                carregister.delete("#dLicenseBack");
-            })
-        // 提交
-            $(".owneregister-button").bind("touch click",function(){
-                carregister.photoajax();
-            })
         // 删除所有
             $("#register-allremove").bind("touch click",function(){
                 carregister.clear();
+            })
+            $(".owneregister-button").bind("touch click",function(){
+                carregister.photoajax();
             })
     })
     // 函数 
@@ -761,27 +766,30 @@
         dLicenseFront:0,    // 驾驶照正面数据
         dLicenseBack:0,     // 驾驶照反面数据
         filechange:function(val,file,xrdiv){  // 变化事件
-            var judgeval  =  0;
             if(val==="#idCardFront"){
-                judgeval = carregister.idCardFront;
+                carregister.turnbase(carregister.idCardFront,file,xrdiv,0);
             }else if(val==="#idCardBack"){
-                judgeval = carregister.idCardBack;
+                carregister.turnbase(carregister.idCardBack,file,xrdiv,1);
             }else if(val==="#dLicenseFront"){
-                judgeval = carregister.dLicenseFront;
+                carregister.turnbase(carregister.dLicenseFront,file,xrdiv,2);
             }else if(val==="#dLicenseBack"){
-                judgeval = carregister.dLicenseBack;
+                carregister.turnbase(carregister.dLicenseBack,file,xrdiv,3);
             }
-            carregister.turnbase(judgeval,file,xrdiv);
+           
         },
-        printing:function(base64,val,xrdiv){  // 把base64放到图片上
+        clear:{ //清空并返回
+
+        },
+        printing:function(judgeval,val,xrdiv){  // 把judgeval放到图片上
             if(val === 1){
-                console.log("压缩前", base64.length / 1024);
+                console.log("压缩前", judgeval.length / 1024);
             }else if(val===2){
-                console.log("压缩后", base64.length / 1024);
-                document.getElementById(xrdiv).src = base64;
+                console.log("压缩后", judgeval.length / 1024);
+                document.getElementById(xrdiv).src = judgeval;
             }
         },
-        turnbase:function(val,file,xrdiv){    // 照片转base64
+        turnbase:function(judgeval,file,xrdiv,zhival){    // 照片转base64
+            var judgeval = judgeval;
             var image = '';
             if(!file.files || !file.files[0]){
                 return;
@@ -789,38 +797,12 @@
             var reader = new FileReader();
             reader.onload = function(evt){
                 image = evt.target.result;
-                val = image;
-                console.log(carregister.printing(val,1));
+                judgeval = image;
+                console.log(carregister.printing(judgeval,1));
                 //使用压缩
-                carregister.dealImage(val,200,carregister.printing,xrdiv);
+                carregister.dealImage(judgeval,800,carregister.printing,xrdiv,zhival);
             }
             reader.readAsDataURL(file.files[0]);       
-        },
-        delete:function(val){
-            // 删除路径操作
-
-            // 删除div图片
-            var photodel = val+"-preview";
-            $(photodel).attr("src","");
-            if(val==="#idCardFront"){
-                 carregister.idCardFront = 0;
-            }else if(val==="#idCardBack"){
-                 carregister.idCardBack = 0;
-            }else if(val==="#dLicenseFront"){
-                 carregister.dLicenseFront = 0;
-            }else if(val==="#dLicenseBack"){
-                 carregister.dLicenseBack = 0;
-            }
-        },
-        clear:function(){       // 清除所有
-            // 删除路径操作
-
-            // 删除图片操作
-            
-            carregister.idCardFront = 0;
-            carregister.idCardBack = 0;
-            carregister.dLicenseFront = 0;
-            carregister.dLicenseBack = 0;
         },
         photoajax:function(){   // 向后台发送
             var tips = "";
@@ -837,6 +819,7 @@
                 showMessage1btn(tips,"",0);
                 return false;
             }
+            console.log()
             $.ajax({
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerCertification/saveMadeOwnerCertification.asp",
                 data:{
@@ -849,16 +832,24 @@
                 type:"post",
                 success:function(data){
                     console.log(data);
+                    if(data.result===1){
+                        owneridentity.states = 3 ;
+                        // 成功了,跳转到提醒页面
+                        $(".to-examine").empty();
+                        $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
+                        window.location.hash = "#examine";
+                    }
                 },
-                error:function(){
-                    console.log(data);
+                error:function(data){
+                    showMessage1btn("发生错误,请重试","",0);
                 }
             })
         },
-        dealImage:function(base64,w,callback,xrdiv) {   // 压缩方法
+        dealImage:function(judgeval,w,callback,xrdiv,zhival) {   // 压缩方法
+            var judgeval =judgeval;
 			var newImage = new Image();
-			var quality = 0.6;    //压缩系数0-1之间
-			newImage.src = base64;
+			var quality = 1;    //压缩系数0-1之间
+			newImage.src = judgeval;
 			newImage.setAttribute("crossOrigin", 'Anonymous');	//url为外域时需要
 			var imgWidth, imgHeight;
 			newImage.onload = function () {
@@ -877,23 +868,32 @@
 				} else {
 					canvas.width = imgWidth;
 					canvas.height = imgHeight;
-					quality = 0.6;
+					quality = 1;
 				}
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-				var base64 = canvas.toDataURL("image/png", quality); //压缩语句
+				var judgeval = canvas.toDataURL("image/png", quality); //压缩语句
 				// 如想确保图片压缩到自己想要的尺寸,如要求在50-150kb之间，请加以下语句，quality初始值根据情况自定
-				while (base64.length / 1024 > 1024) {
+				while (judgeval.length / 1024 > 500) {
 					quality -= 0.01;
-					base64 = canvas.toDataURL("image/png", quality);
+					judgeval = canvas.toDataURL("image/png", quality);
                 }
-				callback(base64,2,xrdiv);//必须通过回调函数返回，否则无法及时拿到该值
+                if(zhival===0){
+                    carregister.idCardFront = judgeval;
+                }else if(zhival===1){
+                    carregister.idCardBack = judgeval;
+                }else if(zhival===2){
+                    carregister.dLicenseFront = judgeval;
+                }else if(zhival===3){
+                    carregister.dLicenseBack = judgeval;
+                }
+				callback(judgeval,2,xrdiv);//必须通过回调函数返回，否则无法及时拿到该值
 			}
         }
     }
 // 判断有无车住身份模块
     var owneridentity = {
-        states:0,    // 0代表没有车主身份,1代表有,2代表审核中。
+        states:0,    // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册失败，跳转出重新注册页面
         ownerajax:function(){   // 页面一开始调用下,
             $.ajax({
                 url:"http://qckj.czgdly.com/bus/MobileWeb/buyTicket/isCarOwner.asp",
@@ -905,10 +905,12 @@
                     console.log("身份成功",data);
                     if(data.status===1 && data.result===1 ){
                         owneridentity.states = 1 ;
-                    }else if(data.result=== 1 && data.status===-1 ){
-                        owneridentity.states  = 0; 
+                    }else if(data.result=== 1 && data.status===-1 ){  // 审核未通过
+                        owneridentity.states  = 4; 
                     }else if(data.result=== 1 && data.status=== 0){
                         owneridentity.states = 2 ;
+                    }else if(data.result=== -1 && data.status===null ){
+                        owneridentity.states = 0; 
                     }
                 },
                 error:function(data){
@@ -926,7 +928,7 @@
         // 清空操作
         updated:function(val){
             $(".pnum-rdnum").text(val+"人乘车");
-            personnum.personnumber = val;
+            personnum.personnumber = parseInt(val);
         },
         // 清空css样式
         clear:function(){
@@ -1050,8 +1052,8 @@
             }else if(routelc>150){
                 carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
             }
-            fabuxiaoxi.amoney = carmoney;
-            $(".completed-pprice").text((fabuxiaoxi.amoney).toFixed(1));
+            fabuxiaoxi.amoney = carmoney.toFixed(1);
+            $(".completed-pprice").text(fabuxiaoxi.amoney);
         },
         clear:function(){   //清空操作
             fabuxiaoxi.cfdcity = "";
