@@ -31,8 +31,6 @@
                 hdrunpassenger();
                 // 处理全部车主页
                 hdrunvowner();
-                // 处理支付页
-                hdpaymentzy();
                 hactive();
                 formcontrol();
                 created();
@@ -91,13 +89,14 @@
         minDate: false
         });
 
-    // 给导航条绑定切换
-    var hpassengerpd = 1;
+// 给导航条绑定切换
+    var globalVariable = {
+        hpassengerpd:1,
+    }
    $(".hpassenger").bind("touch click",function(){
-
          $(".runluyouaa").hide();
-        hpassengerpd++;
-       if(hpassengerpd%2===0){
+         globalVariable.hpassengerpd++;
+       if(globalVariable.hpassengerpd%2===0){
         $("#hpassengericon").attr("class","glyphicon glyphicon-triangle-top");
        }else {
         $("#hpassengericon").attr("class","glyphicon glyphicon-triangle-bottom"); 
@@ -197,7 +196,6 @@
         $(".timeqr").bind("touch click",function(){
             timeqrfunction();
         })
-
 
         //定位市默认选择常州颜色，但是不在地图上点击
         removeacive();
@@ -941,7 +939,6 @@
             $(".pnum-rdnum").text("请选择...");
         }
     }
-
 // 定位功能模块
     function sfclocation(){
         // 定位功能  
@@ -1133,8 +1130,6 @@
         }
     }
 
-
-
     function register(val){
         var nowhref = window.location.href;
         localCache("page",nowhref);     // 存储在本地的地址
@@ -1307,7 +1302,7 @@
 
             // 判断参数 
             if(val1[0]=="#ownshowdata"){
-                openxq();
+                
             }
             $(".hvowner").hide();
              if(val1[0]=="#vowner" ||locationHash=="#vowner"){
@@ -1393,8 +1388,12 @@
                 hashcreate();
                 if(val1[1]==="passger"){
                     paymentpage(nowusermsg.uid,"Passenger");
+                    // 处理支付页
+                    hdpaymentzy();
                 }else if(val1[1]==="diver"){
                     paymentpage(nowusermsg.uid,"Driver");
+                    // 处理支付页
+                    hdpaymentzy();
                 }
                 $(".paymentzy").show();
             }else if(val1[0]=="#payment"){
@@ -1413,10 +1412,7 @@
     }
     
 // 打开详情页函数 
-        function  openxq(){
-            // 暂时没发挥作用 
-        }    
-
+            
     function searchcfdhide(){
         $("#searchxincheng .searchcfd").hide();
         $("#searchxincheng .searchweizhi").hide();
@@ -1796,11 +1792,7 @@
         }
      }
 
-
-
-
     // 根据点击获取坐标点 和 位置
-        
         var geocoder,marker;
         function regeoCode() {
             var dingweiszcity = $(".acityselect").text();
@@ -1855,7 +1847,6 @@
                 document.getElementById('lnglat').value = {};
                 regeoCode();
             }
-           
             document.getElementById('lnglat').value = jbelnglat;
             regeoCode();
            
@@ -1873,8 +1864,6 @@
             var currentCenter = map.getCenter(); 
         }
 
-
-   
 // 提交功能模块的实现 
      var paymentModular = {
          // 初始化数据 
@@ -1899,8 +1888,6 @@
                  return false;
              }
             
-             
-
              $(".xcspanleft").text($(".acityselect").text());
 
             //出发地的所有信息 
@@ -1924,11 +1911,7 @@
             var dLng = "";
             var dLat = "";
             var departure = "";
-            // 先判断出发地cfddata 
-            /* dLng ,    // 出发地经度 
-dLat,   // 出发地纬度
-mdata.location.lng,    // 目的地经度
-mdata.location.lat,  // 目的地纬度  */
+
             if(cfddata!==""){
                 dLng = cfddata.location.lng;
                 dLat = cfddata.location.lat;
@@ -2043,9 +2026,7 @@ mdata.location.lat,  // 目的地纬度  */
         chisu:0,    // 计算用户支付了几次 
         type:"passger"  // 请求类型
     }
-    // paymentpage(nowusermsg.uid,paymentbttsj.FROID,qmguid,); 
     function paymentpage(uid,yhlx){
-        
         $.ajax({
             type:"post",
             url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp",
@@ -2070,7 +2051,7 @@ mdata.location.lat,  // 目的地纬度  */
                }
             },
             error:function(data){
-            
+                console.log("失败",data);
             }
         })
     }

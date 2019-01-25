@@ -369,15 +369,12 @@
 .run {
   width: 100%;
 }
-.run .dclxc {
-  margin: 6px 6px;
-}
 .run .dclxc .top {
-  margin-top: 10px;
   height: 50px;
   background: #FFF;
   border-bottom: 1px solid #f0f0f0;
   line-height: 50px;
+  border-top: 1px solid #f2f2f2;
 }
 .run .dclxc .top .top-icon {
   margin-left: 10px;
@@ -879,10 +876,10 @@ input[type=date] {
   width: 100%;
 }
 .paymentzy .phdicon {
-  margin-top: 14px;
   background: #fff;
   height: 40px;
   border-bottom: 1px solid #f0f0f0;
+  border-top: 1px solid #f2f2f2;
 }
 .paymentzy .phdicon .ptbicon {
   text-align: center;
@@ -1114,11 +1111,9 @@ body {
 }
 /* runscreen 筛选页 */
 .run .runscreen {
-  margin: 0px 6px;
-  margin-top: 0px;
   background: #fff;
   border-radius: 0px 0px 6px 6px;
-  margin-top: 10px;
+  border-top: 1px solid #f2f2f2;
 }
 .run .runscreen .runscsxsj .runscsxsjone {
   width: 76%;

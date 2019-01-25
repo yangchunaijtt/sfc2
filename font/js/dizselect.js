@@ -209,7 +209,6 @@
        
      }
 
-
      // 点击返回选择城市页 
         // 需要多几步判断 
         $(".xcheader").bind("touch click ",function(){
@@ -224,7 +223,6 @@
                 window.location.hash = "#m";
             }
         })
-
     
      // 选择城市后返回并把数据填上在表单是上 
      // 定位出发地 目的地 
@@ -274,7 +272,6 @@
         
         // 点击时，要判断他是始发地  还是目的地 
         function xxwzclick(i){
-           
             var locationhash = FreeRide.clickdirection;
             // 给城市赋值 
             if(locationhash=== 0){
@@ -305,15 +302,10 @@
                 // 都已完成，跳转到时间选择页。
                 window.location.hash = "#time";
             }
-            // 如果没有输入，直接点击呢。
-
         }
 
 // 支付功能的实现 
-        
-
      // 支付button的实现 
-     // 以后多个就这样实现 
      var paymentbttsj  = {
          title:"",
          amount:100,
@@ -575,7 +567,7 @@
                 // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
                 // 这里判断有问题 
                 if(  passengerNodeval.page <= passengerNodeval.loadcount){
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+passengerNodeval.page+"&pushType=Passenger"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity=";
+                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+passengerNodeval.page+"&viewType=self"+"&pushType=Passenger"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity=";
                 }
             },
             history: false,
@@ -607,11 +599,9 @@
         var useruid =  nowusermsg.uid;
         var $vownper = $('#vownperNode').infiniteScroll({     //#content是包含所有图或块的容器
             path: function(){
-                // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
-                // 数据量很小情况下  报错了 
                 if(  vownperNodeval.page <= vownperNodeval.loadcount){
                     // 获取全部时间的行程，失效页没有关系 
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+vownperNodeval.page+"&pushType=Driver"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity=";
+                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+vownperNodeval.page+"&viewType=self"+"&pushType=Driver"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity=";
                 }
             },
             history: false,
@@ -623,9 +613,6 @@
         });
         $vownper.on( 'load.infiniteScroll', function( event, response ) {
             var data = response;
-            // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
-            // 开始处理结果 
-             // 赋值最大页数 
             vownperNodeval.loadcount = data.page;
             vownperNodeval.page = vownperNodeval.page+1;
                  // 调用处理车主页的函数 
@@ -643,11 +630,9 @@
         var useruid =  nowusermsg.uid;
         var $runpassengerval = $('#runpassengerNode').infiniteScroll({     //#content是包含所有图或块的容器
             path: function(){
-                // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
-                // 数据量很小情况下  报错了 
                 if(  runpassengerval.page <= runpassengerval.loadcount){
                     // 获取全部时间的行程，失效页没有关系 
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+runpassengerval.page+"&pushType=Passenger"+"&uid="+"&dateRange="+"&dpCity=''"+"&arCity=";
+                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+runpassengerval.page+"&viewType=all"+"&pushType=Passenger"+"&uid="+"&dateRange="+"&dpCity=''"+"&arCity=";
                 }
             },
             history: false,
@@ -668,9 +653,7 @@
                  setqbPassenger(data);
         })
     }
-// 全部行程中 车主的滑动效果 
-     // 滑动需要的全局函数 
-    // 全部行程中 乘客页滑动效果runvowner的滑动效果 
+// 全部行程中 车主的滑动效果  
     var runvownerval = {
         page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
         loadcount:3  // 页面展示的为第几页的数据 
@@ -684,7 +667,7 @@
                 if(  runvownerval.page <= runvownerval.loadcount){
                     // 获取全部时间的行程，失效页没有关系 
                 
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+runvownerval.page+"&pushType=Driver"+"&uid="+"&dateRange="+"&dpCity="+"&arCity=";
+                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+runvownerval.page+"&viewType=all"+"&pushType=Driver"+"&uid="+"&dateRange="+"&dpCity="+"&arCity=";
                 }
             },
             history: false,
@@ -706,22 +689,26 @@
         })
     }
 
-
-
 // 支付页 滑动获取数据效果 
     var paymentzyval = {
             page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
-            loadcount:3   // 页面展示的为第几页的数据 
+            loadcount:3,   // 页面展示的为第几页的数据 
+            sf:"",          // 身份
         }
         function hdpaymentzy(){
+            if(window.location.hash==="#ddxq?passger"){
+                paymentzyval.sf="Passenger";
+            }else if(window.location.hash==="#ddxq?diver"){
+                paymentzyval.sf="Driver";
+            }
             var useruid =  nowusermsg.uid;
             var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
                 path: function(){
                     // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
                     // 数据量很小情况下  报错了 
-                    if(  paymentzyval.page <= paymentzyval.loadcount){
+                    if(paymentzyval.page <= paymentzyval.loadcount){
                         // 获取全部时间的行程，失效页没有关系 
-                        return "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+paymentzyval.page+"&uid="+useruid+"&dateRange=";
+                        return "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+paymentzyval.page+"&utype="+paymentzyval.sf+"&uid="+useruid+"&dateRange=";
                     }
                 },
                 history: false,
@@ -809,8 +796,7 @@
                 }
                 
             })
-        // 选择出发地 
-            // 输入 
+        // 选择出发地  
                 $(".rscfcdaipt").bind("blur",function(){
                     $(".rsfidvlo").css(valjson);
                     $(".rsfidvlt").css(valjson);
@@ -910,8 +896,6 @@
                     
                 })
         // 选择目的地 
-            // 输入框 
-            // 下面几个点击 
                 function rsdcsdlovalhs(){
                     // 几个div 
                     // 下面几个div 
@@ -951,7 +935,8 @@
                        data:{
                            cur:1,  // 默认取第一页 
                            pushType:"Passenger",   // 乘客 
-                           uid:"",  // id号   默认为空就是取全部的数据
+                           uid:nowusermsg.uid,  // id号   默认为空就是取全部的数据
+                           viewType:"all",
                            dateRange:runscreenv.time,      
                            arCity:runscreenv.mdd.trim(),      // 到达城市 
                            dpCity:runscreenv.cfd.trim()      // 出发城市 
@@ -960,7 +945,7 @@
                             qbxcvalsj.passenger = data;
                            // setPassenger() 处理 乘客端数据的函数
                            // 先清空，在添加 
-                          
+                            console.log("成功取到数据",data);
                            // 成功取到数据后，要清空runscreenv，防止下次再用值不对 
                            runscjwfbsxddcsh();
                            $("#runpassengerNode").empty();
@@ -976,16 +961,16 @@
                        data:{
                            cur:1,  // 默认取第一页 
                            pushType:"Driver",   // 乘客 
-                           uid:"",  // id号   默认为空就是取全部的数据
+                           uid:nowusermsg.uid,  // id号   默认为空就是取全部的数据
+                           viewType:"all",
                            dateRange:runscreenv.time.trim(),      
                            arCity:runscreenv.mdd.trim(),      // 到达城市 
                            dpCity:runscreenv.cfd.trim()     // 出发城市 
                        },
                         success: function (data) {
                            qbxcvalsj.vowner = data;
-                           // 获取成功，但是数据暂时为空 
-                           // setPassenger() 处理 乘客端数据的函数
                            // 成功取到数据后，要清空runscreenv，防止下次再用值不对 
+                           console.log("成功取到数据",data);
                            runscjwfbsxddcsh();
                            $("#runvownerNode").empty();
                            setqbVowneraa(data);
