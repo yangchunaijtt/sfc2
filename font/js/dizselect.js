@@ -133,25 +133,21 @@
 
     // 进入input时chufadi  出发地时 进入可以自动选择的页面 
     function inchufadi(){
-        if(FreeRide.freeMode ==="intercity" || fabuxiaoxi.dwsj!==""){
-            if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
-                window.location.hash = "#s";
-            }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj!==""){
-                $("#cgz-mdcity").text(fabuxiaoxi.cfdcity);
-                $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
-                window.location.hash = "#sxxwz";
-            }
-        }else if(FreeRide.freeMode ==="incity" || fabuxiaoxi.dwsj!==""){
-            if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj===""){
-                $("#inxcbody").val("常州市");
-                $(".xcspanleft").text("常州市");
-                xzlichuli("常州市");
-                window.location.hash = "#sxxwz";
-            }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj!==""){
-                $("#cgz-mdcity").text(fabuxiaoxi.cfdcity);
-                $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
-                window.location.hash = "#sxxwz";
-            }
+        if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
+            window.location.hash = "#s";
+        }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj!==""){
+            $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
+            $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+            window.location.hash = "#sxxwz";
+        }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj===""){
+            $("#inxcbody").val("常州市");
+            $(".xcspanleft").text("常州市");
+            xzlichuli("常州市");
+            window.location.hash = "#sxxwz";
+        }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj!==""){
+            $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
+            $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+            window.location.hash = "#sxxwz";
         }
     }
      // 进入input时address  目的地时 进入可以自动选择的页面 
@@ -175,16 +171,24 @@
             $(".dqcsval").text(textval);
             cityselectval.nowcity = textval;
             $("#inxcbody").val(textval.trim());
-            if(locationhash=="#s"){
-                $("#cgz-cfcity").text(textval);
-                $("#inxcbody").val(textval.trim());
-                window.location.hash = "#sxxwz";
-            }else if (locationhash=="#m"){
-                $("#cgz-mdcity").text(textval);
-                $("#inxcbody").val(textval.trim());
-                window.location.hash = "#mxxwz";
-            }
-            
+
+            // 需要多几层判断
+                if(locationhash=="#s" && fabuxiaoxi.dwsj ===""){
+                    $("#cgz-cfcity").text(textval);
+                    window.location.hash = "#sxxwz";
+                }else if(locationhash=="#s" && fabuxiaoxi.dwsj !==""){
+                    $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
+                    $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+                    window.location.hash = "#sxxwz";0
+                }else if (locationhash=="#m"&&fabuxiaoxi.dwsj ===""){
+                    $("#cgz-mdcity").text(textval);
+                    window.location.hash = "#mxxwz";
+                }else if(locationhash=="#m" && fabuxiaoxi.dwsj !==""){
+                    $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
+                    $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+                    $("#cgz-mdcity").text(textval);
+                    window.location.hash = "#mxxwz";
+                }
         }
      
      // 点击搜索功能的函数 

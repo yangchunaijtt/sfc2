@@ -9,7 +9,6 @@
             "overflow-x":"hidden",
             "overflow-y":"hidden"
           });
-    
     $(function(){
         // 后台给的先调用下 这段js 
         getOpenid(function(openid){
@@ -64,10 +63,10 @@
         //让筛选页也可以滑动 
         $(".runscreen").height($(document.body).height()-$(".header").height());
         // 发布页的css样式
-        $(".personNum").height($(document.body).height()-$(".header").height()-120);
+        $(".personNum").height($(document.body).height()-$(".header").height()-20);
         // 小手机的显示问题
-        if($(".personNum").height()<400){
-            $(".personNum").height(400);
+        if($(".personNum").height()<587){
+            $(".personNum").height(587);
         }
         // 时间选择页
         $(".timeheader").height($(document.body).height()-$(".header").height()-120);
