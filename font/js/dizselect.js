@@ -27,7 +27,6 @@
                     // 在获取到的地方花个maker 
                     maponbh(searchcityval.dijival);
                     setdtCeneter([searchcityval.dijival.R,searchcityval.dijival.P]);
-
                   }
                 })
               })
@@ -82,8 +81,7 @@
             ullicstyicz:function(val){
                 removeacive();
                 $(val).addClass("ulliactive");
-                choicecity.cszhi(val);
-                
+                choicecity.cszhi(val);               
             },
             cszhi:function(val){
                 var textval = $(val).text();
@@ -134,6 +132,9 @@
     // 进入input时chufadi  出发地时 进入可以自动选择的页面 
     function inchufadi(){
         if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
+            if($("#cgz-mdcity").text()==="" ||$("#cgz-mdcity").text()===undefined){
+                $("#cgz-mdcity").text("常州市")
+            }
             window.location.hash = "#s";
         }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj!==""){
             $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
@@ -153,6 +154,9 @@
      // 进入input时address  目的地时 进入可以自动选择的页面 
      function inaddress(){
         if(FreeRide.freeMode ==="intercity"){
+            if($("#cgz-cfcity").text()==="" ||$("#cgz-cfcity").text()===undefined){
+                $("#cgz-cfcity").text("常州市");
+            }
             window.location.hash = "#m";
         }else if(FreeRide.freeMode ==="incity"){
             $("#inxcbody").val("常州市");
@@ -210,9 +214,7 @@
         $(jtdz).text(jtdzval);
         // DOM创建出来再绑定事件 
         tjhbind();
-       
      }
-
      // 点击返回选择城市页 
         // 需要多几步判断 
         $(".xcheader").bind("touch click ",function(){
@@ -226,8 +228,7 @@
             }else if(whash==="#mxxwz"){
                 window.location.hash = "#m";
             }
-        })
-    
+        }) 
      // 选择城市后返回并把数据填上在表单是上 
      // 定位出发地 目的地 
      // #mxxwz  #sxxwz 
@@ -273,7 +274,6 @@
             touchchuli(autoInputsunval.result.tips[9]);  
         })
      }
-        
         // 点击时，要判断他是始发地  还是目的地 
         function xxwzclick(i){
             var locationhash = FreeRide.clickdirection;
@@ -285,12 +285,10 @@
                 var tipsone = autoInputsunval.cfdresult.tips;  
                 //  #sxxwz 出发地 经纬度信息
                 fabuxiaoxi.cfddata  = autoInputsunval.cfdresult.tips[i];
-
                 // 给出发地赋值
                 $("#cgz-cfd").val(tipsone[i].name);
                 $("#chufadi").text(tipsone[i].name);
                 $(".lnglat").val(tipsone[i].location);  
-               
             }else if(locationhash === 1){
                 FreeRide.btmisjump = 1;
                 fabuxiaoxi.mddcity = $("#cgz-mdcity").text();
@@ -307,7 +305,6 @@
                 window.location.hash = "#time";
             }
         }
-
 // 支付功能的实现 
      // 支付button的实现 
      var paymentbttsj  = {
@@ -319,7 +316,6 @@
          usource:"Wx_Kbt",   // 用户的来源 
          FROID:111     // 发布单号，取当前信息的id值 
      }
-
     function paymentbutton(FROID,qmguid){
         //首先取消所有 
         // qmguid： 数据的发布者的id号  
@@ -328,9 +324,7 @@
             // 支付成功  可以观看用户的信息 
             // 如果一样，直接用本地的id就好 
             var jwxxone = "#ownshowdata?id="+FROID+"&uid="+qmguid+"&sf=run";
-            
             var wlgrefone = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxxone;
-          
             window.location.href = wlgrefone ;
             
             // 现在判断解决， 
@@ -356,14 +350,10 @@
         var sjc = generateTimeReqestNumber();
         paymentbttsj.billno = "FRO";
         paymentbttsj.billno = paymentbttsj.billno + generateTimeReqestNumber() + rand;
-        
-
     // 参数
     var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
-
     // 地址
     var url = "../common/getBSign-kongbatong.asp";
-
 // sfcsj.passenger 存储着用户的信息 
         // openid 需要传入的数据的定义
         var sfvallx = locationqjval.val;
@@ -380,20 +370,16 @@
             FROID:paymentbttsj.FROID,
             utype:utype
         };
-       
     $.post(url,param,function(data){
         if (!((typeof (data) == 'object') && data.constructor == Object)) {
             data = eval("(" + data + ")");
         }
-
         if(data.BSign) {
             bSign = data.BSign;
-
         BC.err = function(data) {
             //注册错误信息接受
             showMessage1btn(data["ERROR"],"",0);
         }
-        
         BC.click({
             //"return_url" : "http://qckj.czgdly.com/bus/MobileWeb/WxWeb/myTickets_content.html",
             "instant_channel" : paymentbttsj.instant_channel,
@@ -431,7 +417,6 @@
                 }
                 });
                 BC.err = function(err) {
-                    
                     //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
                     showMessage1btn(err.ERROR,"",0);
                 }
@@ -441,7 +426,6 @@
                 // 删除dialog
                 clearDialog();
             },"json")
-        
         }
     }   
 
@@ -467,7 +451,6 @@
             onSelect: function (valueText, inst) {  
                 var sday = inst.getDate();  
                 var today = new Array('周日','周一','周二','周三','周四','周五','周六'); 
-                
                 //获取当前日期
                 var tmpNow = new Date();
                 tmpNow.setDate(tmpNow.getDate()+1);//获取AddDayCount天后的日期
@@ -489,19 +472,15 @@
                     hour = tmpNow.getHours();
                     minute = tmpNow.getMinutes();
                 }
-                
                 if (parseInt(Month) < 10) {
                     Month = "0" + Month;
                 }
-                
                 if (parseInt(hour) < 10) {
                     hour = "0" + hour;
                 }
-                
                 if (parseInt(minute) < 10) {
                     minute = "0" + minute;
                 }
-                
                 if ($(this).hasClass("start_time_default")){
                     $(this).removeClass("start_time_default").addClass("start_time only_one_time");
                 }
@@ -512,7 +491,6 @@
                 var optSDateTime_tmp = $.extend(opt['sdatetime'], opt['sdtdefault_0']);
                 $("#dt-a-0").mobiscroll().datetime(optSDateTime_tmp);
                 $("#dt-c-1").mobiscroll().datetime(optSDateTime_tmp);
-                changePriceByUCar();
             }  
         };
         var optSDateTime_0 = $.extend(opt['sdatetime'], opt['sdtdefault_0']);
@@ -524,10 +502,6 @@
         cfsj:"",    // 存储出发时间的值 
         qwsj:""   // 存储期望到达的时间 
     }
-    // 值变化取值 
-        function changePriceByUCar(){
-          
-        }
     // 时间取值函数 
         // 取消方法 
             function timequxfunction(){
@@ -587,8 +561,7 @@
             passengerNodeval.page++;
             // 开始处理结果 
              // 赋值最大页数 
-            passengerNodeval.loadcount = data.page;
-           
+            passengerNodeval.loadcount = data.page;          
                  // 调用处理乘客页的函数 
                 setPassenger(data);   
         })
@@ -748,6 +721,80 @@
         cfd:"",         // 出发地 
         mdd:""         // 目的地 
     }
+    // 筛选页的功能模块
+    var personumfunction = {
+        rsdcsdlvllet:{
+            one:1,
+            two:1,
+            three:1,
+            four:1,
+            five:1,
+        },
+        cfdnumclear:function(val){
+            if(val === 1){
+                rsflovlhslet.two = 1;
+                rsflovlhslet.three = 1;
+                rsflovlhslet.four = 1;
+                rsflovlhslet.five = 1;
+            }else if(val === 2){
+                rsflovlhslet.one = 1;
+                rsflovlhslet.three = 1;
+                rsflovlhslet.four = 1;
+                rsflovlhslet.five = 1;
+            }else if(val === 3){
+                rsflovlhslet.one = 1;
+                rsflovlhslet.two = 1;
+                rsflovlhslet.four = 1;
+                rsflovlhslet.five = 1;
+            }else if(val === 4){
+                rsflovlhslet.one = 1;
+                rsflovlhslet.two = 1;
+                rsflovlhslet.three = 1;
+                rsflovlhslet.five = 1;
+            }else if(val ===5){
+                rsflovlhslet.one = 1;
+                rsflovlhslet.two = 1;
+                rsflovlhslet.three = 1;
+                rsflovlhslet.four = 1;
+            }
+        },
+        mddnumclear:function(val){
+            if(val === 1){
+                personumfunction.rsdcsdlvllet.two = 1;
+                personumfunction.rsdcsdlvllet.three = 1;
+                personumfunction.rsdcsdlvllet.four = 1;
+                personumfunction.rsdcsdlvllet.five = 1;
+            }else if(val === 2){
+                personumfunction.rsdcsdlvllet.one = 1;
+                personumfunction.rsdcsdlvllet.three = 1;
+                personumfunction.rsdcsdlvllet.four = 1;
+                personumfunction.rsdcsdlvllet.five = 1;
+            }else if(val === 3){
+                personumfunction.rsdcsdlvllet.one = 1;
+                personumfunction.rsdcsdlvllet.two = 1;
+                personumfunction.rsdcsdlvllet.four = 1;
+                personumfunction.rsdcsdlvllet.five = 1;
+            }else if(val === 4){
+                personumfunction.rsdcsdlvllet.one = 1;
+                personumfunction.rsdcsdlvllet.two = 1;
+                personumfunction.rsdcsdlvllet.three = 1;
+                personumfunction.rsdcsdlvllet.five = 1;
+            }else if(val ===5){
+                personumfunction.rsdcsdlvllet.one = 1;
+                personumfunction.rsdcsdlvllet.two = 1;
+                personumfunction.rsdcsdlvllet.three = 1;
+                personumfunction.rsdcsdlvllet.four = 1;
+            }
+        },
+        clearrsfidvlovalhs:function(){
+            runscreenv.cfd = "";
+            $(".rscfcdaipt").val("");
+        },
+        clearrsdcsdlovalhs:function(){
+            runscreenv.mdd = "";
+            $(".rsdcsoipt").val("");
+        }
+    };
     //事件处理 
         // 给runscreen添加值 
         var valjson = {
@@ -798,7 +845,6 @@
                     $(".runscrqdvtr").css(valjson);
                     runscreenv.time = "";
                 }
-                
             })
         // 选择出发地  
                 $(".rscfcdaipt").bind("blur",function(){
@@ -808,17 +854,20 @@
                     $(".rsfidvf").css(valjson);
                     $(".rsfidvlfif").css(valjson);
                     runscreenv.cfd = $(".rscfcdaipt").val();
-
                 })
             // 点击几个城市 
-                function rsfidvlovalhs(){
+                function rsfidvlovalhs(val){
                     // 几个div 
                     $(".rsfidvlo").css(valjson);
                     $(".rsfidvlt").css(valjson);
                     $(".rsfidvltr").css(valjson);
                     $(".rsfidvf").css(valjson);
                     $(".rsfidvlfif").css(valjson); 
+                    // 赋值
+                    runscreenv.cfd = val;
+                    $(".rscfcdaipt").val(val);
                 }
+                
                 var rsfidvloval = {
                     "background":"#23beae",
                     "color":"#fff"
@@ -834,73 +883,68 @@
                     "background":"#ff4a39",
                     "color":"#fff"
                 }
-                var rsdcsdlvllet ={
-                     one:1,
-                     two:1,
-                     three:1,
-                     four:1,
-                     five:1
-                 }
                 $(".rsfidvlo").bind('touch click',function(){
-                    rsflovlhslet.one +=1;
+                    personumfunction.cfdnumclear(1);
+                    rsflovlhslet.one ++;
                     if(rsflovlhslet.one%2===0){
                         runscreenv.cfd = $(".rsfidvlo").text();
-                        rsfidvlovalhs();
+                        rsfidvlovalhs($(".rsfidvlo").text());
                         $(".rsfidvlo").css(rsfidvloval);
                     }else {
-                        runscreenv.cfd="";
                         $(".rsfidvlo").css(valjson);
+                        personumfunction.clearrsfidvlovalhs();
                     }
                 })
                 $(".rsfidvlt").bind('touch click',function(){
+                    personumfunction.cfdnumclear(2);
                     rsflovlhslet.two +=1;
                     if(rsflovlhslet.two%2===0){
                         runscreenv.cfd = $(".rsfidvlt").text();
-                        rsfidvlovalhs();
-                        $(".rsfidvlt").css(rsdcsdloval);
+                        rsfidvlovalhs($(".rsfidvlt").text());
+                        $(".rsfidvlt").css(rsfidvloval);
                     }else {
-                        runscreenv.cfd="";
                         $(".rsfidvlt").css(valjson);
+                        personumfunction.clearrsfidvlovalhs();
                     }
                 })
                 $(".rsfidvltr").bind('touch click',function(){
+                    personumfunction.cfdnumclear(3);
                     rsflovlhslet.three +=1;
                     if(rsflovlhslet.three%2===0){
-                        runscreenv.cfd = $(".rsfidvltr").text();
-                        rsfidvlovalhs();
+                        rsfidvlovalhs($(".rsfidvltr").text());
                         $(".rsfidvltr").css(rsfidvloval);
                     }else {
-                        runscreenv.cfd="";
                         $(".rsfidvltr").css(valjson);
+                        personumfunction.clearrsfidvlovalhs();
                     }
                     
                 })
                 $(".rsfidvf").bind('touch click',function(){
+                    personumfunction.cfdnumclear(4);
                     rsflovlhslet.four +=1;
                     if(rsflovlhslet.four%2===0){
-                        runscreenv.cfd = $(".rsfidvf").text();
-                        rsfidvlovalhs();
+                        rsfidvlovalhs($(".rsfidvf").text());
                         $(".rsfidvf").css(rsfidvloval);
                     }else {
-                        runscreenv.cfd="";
                         $(".rsfidvf").css(valjson);
+                        personumfunction.clearrsfidvlovalhs();
                     }
                     
                 })
                 $(".rsfidvlfif").bind('touch click',function(){
+                    personumfunction.cfdnumclear(5);
                     rsflovlhslet.five +=1;
                     if(rsflovlhslet.five%2===0){
-                        runscreenv.cfd = $(".rsfidvlfif").text();
-                        rsfidvlovalhs();
+                        rsfidvlovalhs($(".rsfidvlfif").text());
                         $(".rsfidvlfif").css(rsfidvloval);
                     }else {
-                        runscreenv.cfd="";
                         $(".rsfidvlfif").css(valjson);   
+                        personumfunction.clearrsfidvlovalhs();
                     }
                     
                 })
         // 选择目的地 
-                function rsdcsdlovalhs(){
+                function rsdcsdlovalhs(val){
                     // 几个div 
                     // 下面几个div 
                     $(".rsdcsdlo").css(valjson); 
@@ -908,6 +952,9 @@
                     $(".rsdcsdltr").css(valjson); 
                     $(".rsdcsdlf").css(valjson); 
                     $(".rsdcsdlfi").css(valjson); 
+                    // 赋值
+                    runscreenv.mdd = val.trim();
+                    $(".rsdcsoipt").val(val);
                 }
                 
         function rscsxsjofhu(){
@@ -1034,6 +1081,3 @@
                 window.location.hash = "#run?passger";
             }
         })
-
-
-    

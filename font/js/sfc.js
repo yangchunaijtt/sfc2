@@ -1,14 +1,14 @@
-       var nowusermsg = {
-            uid:111,         //用户id 
-            openid:111,
-            phone:111,   //用户的手机号 
-            lyxx:""   // 存储需要用到路由的值 
-        }
-         // 禁用效果 
-         $(document.body).css({
-            "overflow-x":"hidden",
-            "overflow-y":"hidden"
-          });
+    var nowusermsg = {
+        uid:"",         //用户id 
+        openid:111,
+        phone:111,   //用户的手机号 
+        lyxx:""   // 存储需要用到路由的值 
+    }
+    // 禁用效果 
+    $(document.body).css({
+    "overflow-x":"hidden",
+    "overflow-y":"hidden"
+    });
     $(function(){
         // 后台给的先调用下 这段js 
         getOpenid(function(openid){
@@ -39,9 +39,6 @@
                 owneridentity.ownerajax();
             }
         },location.search);
-            // 先记录一下当前页面地址在跳转
-            // http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html
-
         // 初始化时设置默认值 
         $(".dqcsval").text($(".xcspanleft").text());
         //给滑动元素获取高度 
@@ -58,7 +55,6 @@
         $(".paymentzy").height($(document.body).height()-$(".header").height());
         //解决一些页面内容太多无法滑动的问题 
         $(".details").height($(document.body).height()-$(".header").height());
-        
         $("#searchxincheng").height($(document.body).height()-$(".header").height());
         //让筛选页也可以滑动 
         $(".runscreen").height($(document.body).height()-$(".header").height());
@@ -78,7 +74,6 @@
         $(".owner-register").height($(document.body).height()-$(".header").height());
         // 审核页的样式
         $(".to-examine").height($(document.body).height());
-
         // 当 hash变化时切换显示
     // 页面初始化时就执行这些数据 
     $(".searchtime #datetime").datetimepicker({
@@ -87,7 +82,6 @@
         // 目前之前的时间都不能选
         minDate: false
         });
-
 // 给导航条绑定切换
     var globalVariable = {
         hpassengerpd:1,
@@ -134,7 +128,6 @@
         }
     })
         
-    
     // 给返回添加返回事件 
     $(".rscsxsjofhu").bind("touch click",function(){
         rscsxsjofhu();
@@ -143,7 +136,6 @@
         if(cityselectval.nowcity==""){
             $(".acityselect").text("常州市");
         }
-    
         //支付模块的功能 
         // 提交操作
         $("#gaodesubmit").bind("touch click",function(e){
@@ -167,7 +159,6 @@
             inaddress();
         })
         $(".dqcsval").text(cityselectval.nowcity);
-        
         $("#inxcbody").blur(function(){
             $("#inxcbody").val("");
         })
@@ -183,14 +174,12 @@
                 window.location.hash  = "#mxxwz";
             }
         })
-        
         // 初始化条件 
             $("#chufadi").text("从哪儿出发？");
             $("#address").text("想去哪儿？");
 
         $(".timequx").bind("touch click",function(){
             timequxfunction();
-            
         })
         
         $(".timeqr").bind("touch click",function(){
@@ -201,7 +190,6 @@
         removeacive();
         $(".ullish").addClass("ulliactive");
         cszhi(".ullish");
-
         $(".hpassenger").css("color","#e39f7a");
     // 页面点击路由颜色设置 
         $(".hpassenger").bind("touch click",function(){
@@ -214,8 +202,7 @@
             $("#ddxq a").css("color","#e39f7a");
         })
 
-// 绑定事件都放在这里面 
-        
+// 绑定事件都放在这里面     
 // 始发地 目的地 点击后 赋值并给下一页
         $("#searchxincheng .xzli1").bind("touch click",function(){
             var  textval =  $("#searchxincheng .xzli1").text();
@@ -279,69 +266,83 @@
                 "background":"#ff4a39",
                 "color":"#fff"
             }
-            var rsdcsdlvllet ={
-                 one:1,
-                 two:1,
-                 three:1,
-                 four:1,
-                 five:1
-             }
             $(".rsdcsdlo").bind("touch click",function(){
-                rsdcsdlvllet.one+=1;
-                if(rsdcsdlvllet.one%2 ===0){
-                    runscreenv.mdd = $(".rsdcsdlo").text();
-                    rsdcsdlovalhs();
+                personumfunction.mddnumclear(1);
+                personumfunction.rsdcsdlvllet.one+=1;
+                if(personumfunction.rsdcsdlvllet.one%2 ===0){
+                    rsdcsdlovalhs($(".rsdcsdlo").text());
                     $(".rsdcsdlo").css(rsdcsdloval);
                 }else {
-                    runscreenv.mdd = "";
+                   personumfunction.clearrsdcsdlovalhs();
                     $(".rsdcsdlo").css(valjson);
                 }
             })
             $(".rsdcsdlt").bind("touch click",function(){
-                rsdcsdlvllet.two+=1;
-                if(rsdcsdlvllet.two%2 ===0){
-                    runscreenv.mdd = $(".rsdcsdlt").text();
-                    rsdcsdlovalhs();
+                personumfunction.mddnumclear(2);
+                personumfunction.rsdcsdlvllet.two+=1;
+                if(personumfunction.rsdcsdlvllet.two%2 ===0){
+                    rsdcsdlovalhs($(".rsdcsdlt").text());
                     $(".rsdcsdlt").css(rsdcsdloval);
                 }else {
-                    runscreenv.mdd = "";
+                   personumfunction.clearrsdcsdlovalhs();
                     $(".rsdcsdlt").css(valjson);
                 }
                 
             })
             $(".rsdcsdltr").bind("touch click",function(){
-                rsdcsdlvllet.three+=1;
-                if(rsdcsdlvllet.three%2 ===0){
-                    runscreenv.mdd = $(".rsdcsdltr").text();
-                    rsdcsdlovalhs();
+                personumfunction.mddnumclear(3);
+                personumfunction.rsdcsdlvllet.three+=1;
+                if(personumfunction.rsdcsdlvllet.three%2 ===0){
+                    rsdcsdlovalhs($(".rsdcsdltr").text());
                     $(".rsdcsdltr").css(rsdcsdloval);
                 }else {
-                    runscreenv.mdd = "";
+                   personumfunction.clearrsdcsdlovalhs();
                     $(".rsdcsdltr").css(valjson);
                 }
                
             })
             $(".rsdcsdlf").bind("touch click",function(){
-                rsdcsdlvllet.four+=1;
-                if(rsdcsdlvllet.four%2 ===0){
-                    runscreenv.mdd = $(".rsdcsdlf").text();
-                    rsdcsdlovalhs();
+                personumfunction.mddnumclear(4);
+                personumfunction.rsdcsdlvllet.four+=1;
+                if(personumfunction.rsdcsdlvllet.four%2 ===0){
+                    rsdcsdlovalhs($(".rsdcsdlf").text());
                     $(".rsdcsdlf").css(rsdcsdloval);
                 }else {
-                    runscreenv.mdd = "";
+                   personumfunction.clearrsdcsdlovalhs();
                     $(".rsdcsdlf").css(valjson);
                 }
             })
             $(".rsdcsdlfi").bind("touch click",function(){
-                rsdcsdlvllet.five+=1;
-                if(rsdcsdlvllet.five%2 ===0){
-                    runscreenv.mdd = $(".rsdcsdlfi").text();
-                    rsdcsdlovalhs();
+                personumfunction.mddnumclear(5);
+                personumfunction.rsdcsdlvllet.five+=1;
+                if(personumfunction.rsdcsdlvllet.five%2 ===0){
+                    rsdcsdlovalhs($(".rsdcsdlfi").text());
                     $(".rsdcsdlfi").css(rsdcsdloval);
                 }else {
-                    runscreenv.mdd = "";
+                   personumfunction.clearrsdcsdlovalhs();
                     $(".rsdcsdlfi").css(valjson);
                 }
+            })
+        // 人数筛选页的input绑定
+            // 出发
+            $(".rscfcdaipt").on("focus",function(){
+                $(".rsfidvlo").css(valjson);
+                $(".rsfidvlt").css(valjson);
+                $(".rsfidvltr").css(valjson);
+                $(".rsfidvf").css(valjson);
+                $(".rsfidvlfif").css(valjson);
+                runscreenv.cfd = "";
+                $(".rscfcdaipt").val("");
+            })
+            // 到达
+            $(".rsdcsoipt").on("focus",function(){
+                $(".rsdcsdlo").css(valjson);
+                $(".rsdcsdlt").css(valjson);
+                $(".rsdcsdltr").css(valjson);
+                $(".rsdcsdlf").css(valjson);
+                $(".rsdcsdlfi").css(valjson);
+                runscreenv.mdd = "";
+                $(".rsdcsoipt").val("");
             })
     //跟新版本的绑定
         $(".hvownermyrun").bind("touch click",function(){
@@ -394,8 +395,8 @@
         })
         // 返回操作
         $(".changzhou-return").bind("touch click",function(){
-            if(fabuxiaoxi.amoney === 0 ){   //没有到那一步
-                FreeRide.searchweizhi(0);
+            if(fabuxiaoxi.amoney === 0 ){   
+                //没有到那一步，把目的地清空，出发地不清空。
                 FreeRide.searchweizhi(1);
                 window.location.hash = "#details?"+locationqjval.val;
             }else{
@@ -602,7 +603,6 @@
             $('#dt-a-0').text("选择出发时间");
             $('#dt-c-1').text("选择期望到达时间");
         })
-
     // 结账页绑定的数据
         // 跳转到人数页
         $("#completed-number").bind("touch click",function(){
@@ -630,7 +630,6 @@
             settleAccounts.rendertimes = 1;
             window.location.hash = "#time";
         })
-
     // 金额页设置  设置最小金额为9元
         $(".completed-price").bind("touch click",function(){
             settleAccounts.rendertimes = 0;
@@ -667,13 +666,13 @@
         })
         // 发布出去
         $(".confirm-cfmoney").bind("touch click",function(){
-            fabuxiaoxi.amoney = tramount.amont;
-            if(fabuxiaoxi.amoney<9){
+            if(tramount.amont<9){
                 showMessage1btn("金额不能小于9元,请重试","",0);
-                return false;
+            }else {
+                fabuxiaoxi.amoney = tramount.amont;
+                $(".completed-pprice").text(fabuxiaoxi.amoney);
+                window.location.hash = "#details?settle";
             }
-            $(".completed-pprice").text(fabuxiaoxi.amoney);
-            window.location.hash = "#details?settle";
         })
         // input输入时
         $(".tramount-ftinput").on('input',function(){
@@ -741,8 +740,8 @@
         dwsj:"",     // 定位得到的数据 
         cftime:"",      // 出发时间
         mdtime:"",      // 到达时间
-        personNum:0.0,     // 出发人数,默认为0。
-        amoney:0.0,       // 钱数
+        personNum:0,     // 出发人数,默认为0。
+        amoney:0,       // 钱数
         routeMileage:0,   // 路线里程
     };
 
@@ -770,7 +769,6 @@
             }else if(val==="#dLicenseBack"){
                 carregister.turnbase(carregister.dLicenseBack,file,xrdiv,3);
             }
-           
         },
         printing:function(judgeval,val,xrdiv){  // 把judgeval放到图片上
             if(val === 1){
@@ -829,7 +827,7 @@
                         owneridentity.states = 3 ;
                         // 成功了,跳转到提醒页面
                         $(".to-examine").empty();
-                        $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
+                        $(".to-examine").append("<div class='to-examinets'>发送成功,正在审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
                         window.location.hash = "#examine";
                         owneridentity.states = 2;
                     }
@@ -1034,19 +1032,21 @@
             console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
             $(".mileage-price").text(fabuxiaoxi.routeMileage);
         // 钱数简单计算下
-            var routelc = fabuxiaoxi.routeMileage;
-            var carmoney = 15;
-            if(routelc <= 5){
-                carmoney = 15;
-            }else if(routelc>5 && routelc <=30){
-                carmoney = 15 + (routelc-5)*1;
-            }else if(routelc>30 && routelc <=150){
-                carmoney = 15 + 25 + (routelc-30)*0.5;
-            }else if(routelc>150){
-                carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
+            if(fabuxiaoxi.amoney===0){
+                var routelc = fabuxiaoxi.routeMileage;
+                var carmoney = 15;
+                if(routelc <= 5){
+                    carmoney = 15;
+                }else if(routelc>5 && routelc <=30){
+                    carmoney = 15 + (routelc-5)*1;
+                }else if(routelc>30 && routelc <=150){
+                    carmoney = 15 + 25 + (routelc-30)*0.5;
+                }else if(routelc>150){
+                    carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
+                }
+                fabuxiaoxi.amoney = carmoney.toFixed(1);
+                $(".completed-pprice").text(fabuxiaoxi.amoney);
             }
-            fabuxiaoxi.amoney = carmoney.toFixed(1);
-            $(".completed-pprice").text(fabuxiaoxi.amoney);
         },
         clear:function(){   //清空操作
             fabuxiaoxi.cfdcity = "";
@@ -1077,19 +1077,15 @@
             AMap.plugin('AMap.Autocomplete', function(){
                     var autoOptions = {
                         city:"常州"
-                    }
-                    
+                    }                 
                     var searchval = "";
-              // 实例化Autocomplete
-              
+              // 实例化Autocomplete             
                 if(textval=== "cgz-cfd" || FreeRide.clickdirection===0 ){
                     searchval = $("#cgz-cfcity").text()+keywords;
                 }else if(textval==="cgz-mdd" || FreeRide.clickdirection===1){
                     searchval = $("#cgz-mdcity").text()+keywords;
                 }
-
-              var autoComplete = new AMap.Autocomplete(autoOptions);
-              
+              var autoComplete = new AMap.Autocomplete(autoOptions);             
               autoComplete.search(searchval, function(status,result) {
                 // 搜索成功时，result即是对应的匹配数据
                 if(FreeRide.clickdirection === 0 ){
@@ -1407,8 +1403,7 @@
         }
     }
     
-// 打开详情页函数 
-            
+// 打开详情页函数        
     function searchcfdhide(){
         $("#searchxincheng .searchcfd").hide();
         $("#searchxincheng .searchweizhi").hide();
@@ -1736,7 +1731,6 @@
                     var cirstatedztcl = "#"+cirstatedzt;
                     $(cirstatedztcl).css('color',"#d9534f");
                 }
-                
         }
     // 全部行程页的车主信息 
         function setqbVowner(i,vownerData){
@@ -1758,19 +1752,15 @@
                 var rvdf = "rvdf"+i;
                 $("#rvdf").attr("id",rvdf);
         }
-    
-    
+
     // 地图API页面处理逻辑 
-         
      // 定位存储的字符串 
-   
     var map = new AMap.Map('container', {
         resizeEnable: true,
         zoom:14,//级别
         center: [119.9,31.7]//中心点坐标
 
     });
-
 
       // 点击处理函数  公用的 
       function touchchuli(result){
@@ -1921,36 +1911,29 @@
                 departure = fabuxiaoxi.dwsj.formattedAddress;
             }
             var successdattsxx = "";
-            if(nowusermsg.uid === undefined  ){
-                successdattsxx = "读取账号出错,请重新登录!";
-            }else if(fabuxiaoxi.cfdcity ===""){
-                successdattsxx ="出发城市出错";
-            }else if(fabuxiaoxi.mddcity ===""){
-                successdattsxx ="目的城市出错";
-            }else if(fabuxiaoxi.mmddata===""){
-                successdattsxx = "出发地址出错";
-            }else if(pushType === undefined){
-                successdattsxx = "身份出错,请重新点击!";
-            }else if(departure === undefined || dLat === undefined || fabuxiaoxi.cfdcity.trim() === undefined
-            || dLng === undefined ){
-                if(dLat === undefined || dLng === undefined ){
-                    successdattsxx = "始发地不能选市,请选择具体地名!";
-                }else{
-                    successdattsxx = "始发地出错,请重新选择!";
+            if(nowusermsg.uid ===""){
+                successdattsxx = "账号登录异常,请返回重登";
+            }else if(pushType ===""||pushType === undefined){
+                successdattsxx="状态出错,请重新开始";
+            }else if(departure.trim()==="" || departure===undefined || dLng ==="" || dLng===undefined || dLat===""||dLat===undefined){
+                if(departure.trim()==="" || departure===undefined){
+                    successdattsxx= "出发地出错,请重新选择出发地";
+                }else if(dLng ==="" || dLng===undefined || dLat===""||dLat===undefined){
+                    successdattsxx= "不能直接选择市名为出发地";
                 }
-            }else if(fabuxiaoxi.mdtime === undefined || fabuxiaoxi.cftime=== undefined ){
-                successdattsxx = "选择时间出错,请重新选择!";
-            }else if(mdata.name === undefined || mdata.location===undefined || mdata.location.lng === undefined || 
-                mdata.location.lat=== undefined  || fabuxiaoxi.mddcity.trim() === undefined ){
-                    if( mdata.location===undefined || mdata.location.lng === undefined || mdata.location.lat=== undefined ){
-                        successdattsxx = "目的地不能选市,请选择具体地名!";
-                    }else if(mdata.location===undefined ){
-                        successdattsxx = "尚未选择目的地";
-                    }else{
-                        successdattsxx = "目的地出错,请重新选择!";
-                    }
+            }else if(mdata.name.trim()==="" ||mdata.name.trim()===undefined || mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
+                if(mdata.name.trim()==="" ||mdata.name.trim()===undefined){
+                    successdattsxx= "目的地出错,请重新选择目的地";
+                }else if(mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
+                    successdattsxx= "不能直接选择市名为目的地";
+                }
+            }else if(fabuxiaoxi.mdtime===""||fabuxiaoxi.mdtime===undefined){
+                successdattsxx= "您忘了选期望到达时间了";
+            }else if(fabuxiaoxi.cftime===""||fabuxiaoxi.cftime===undefined){
+                successdattsxx= "您忘了选出发时间了";
+            }else if(fabuxiaoxi.personNum==="" || fabuxiaoxi.personNum ===undefined){
+                successdattsxx= "您忘了选人数了";
             }
-
             if(successdattsxx!==""){
                 showMessage1btn(successdattsxx,"",0);
                 return false;
@@ -1967,7 +1950,7 @@
                     arrivalTime:fabuxiaoxi.mdtime,      // 到达时间问题 
                     aLng:mdata.location.lng,    // 目的地经度 
                     aLat:mdata.location.lat,  // 目的地纬度 
-                    departureTime:fabuxiaoxi.cftime,    // 出发时间问题后解决
+                    departureTime:fabuxiaoxi.cftime,    // 出发时间
                     pushType:pushType,        // 发布类型 
                     arCity:fabuxiaoxi.mddcity.trim(),      // 到达城市 
                     dpCity:fabuxiaoxi.cfdcity.trim(),      // 出发城市 
@@ -1975,10 +1958,9 @@
                     price:parseFloat(fabuxiaoxi.amoney)     // 发布金额
                 },
                 success:function(data){
-                   
                     if(data.result ===  -1 ){
                         if(successdattsxx===""){
-                            successdattsxx = "发布出错,请刷新在试";
+                            successdattsxx = "网络出错,请刷新在试";
                         }
                         settleAccounts.rendertimes = 1 ;
                         showMessage1btn(successdattsxx,"",0);
@@ -2008,12 +1990,11 @@
                     fabuxiaoxi.cfddata = "";    // 置空 
                     fabuxiaoxi.mmddata = "";    // 置空 
                     settleAccounts.rendertimes = 0 ;
-                    showMessage1btn("发布失败,请刷新重试!","",0)
+                    showMessage1btn("网络出错,请刷新在试!","",0);
                 }
             })
         }
     }
-
 
 // 支付页逻辑的实现 
     // 存储获取到的支付页的信息，供支付详情页掉欧阳 
@@ -2107,7 +2088,6 @@
     }
     // 具体填充的函数 
         function passengerclival(val){
-            
             $(".pdetlsdadlook").empty();
             // 付款
                 $("#pdfkh").text(val.vpNo);

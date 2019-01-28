@@ -136,9 +136,12 @@ $(function(){
                     console.log("获取成功的数据",data);
                     if(data.result===-1){
                         /* 操作失败,请重新刷新 */
-                        showMessage1btn("操作失败,请重新刷新","",0)
+                        showMessage1btn("操作失败,请重新刷新","",0);
                     }else if(data.result===1){
-                        showMessage1btn("操作成功","",0)
+                        showMessage1btn("已取消发布","",0);
+                        // 操作成功，显示提示
+                        $(".sdstatusd").text("失效了");
+                        $(".clickqxx").empty();
                     }
                 },
                 error:function(data){
@@ -160,21 +163,24 @@ $(function(){
         zoom:10,//级别
         center: [119.9,31.7],//中心点坐标
     });
-
-
     var paymentvalsj = {
     resultdata:{}
     }    
-
 /* 点击时，判断地址，并在地图撒花姑娘 */ 
 /* 始发地点击找地址 */
     function cfdsdmdivcl(val){
-    /* 出发地要 找地址 */
-    if(val=="cfd"){
-        autocfdsdmdiv($(".cfdsdmdiv").text());
-    }else if(val=="mdd"){
-        autocfdsdmdiv($(".mddsdmdiv").text());
-    }
+        /* 出发地要 找地址 */
+        if(val=="cfd"){
+            var valcfd  = $(".cfcitydv").text()+$(".cfdsdmdiv").text();
+            var  chax = valcfd.split("省");
+            if(chax[1]===undefined || chax[1]=== null || chax[1]==="" ){
+                autocfdsdmdiv(chax[0]);
+            }else {
+                autocfdsdmdiv(chax[1]);
+            }
+        }else if(val=="mdd"){
+            autocfdsdmdiv($(".mdcitydv").text()+$(".mddsdmdiv").text());
+        }
     }
 /* 复用的处理函数 */
     function autocfdiv(result){

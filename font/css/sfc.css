@@ -16,8 +16,6 @@
 .header .hpassenger a,
 .header .hrun a,
 .header #ddxq .htogglefour {
-
-
   display: block;
 }
 /* 筛选 */
@@ -1476,7 +1474,6 @@ body {
     background: #fff;
     border-top: 1px solid #f2f2f2;
     padding-top: 10px;
-    margin-top: 10px;
   }
   .changzhou-city .changzhou-cf{
     height: 58px;
@@ -1549,7 +1546,7 @@ body {
     width: 100%;
     background: #fff;
     border-radius: 30px 30px 0px 0px;
-    margin-top: 100px;
+    margin-top: 20px;
   }
   .personNum .pnum-return{
     width: 100%;
@@ -1609,7 +1606,7 @@ body {
     line-height: 54px;
     border-radius: 30px;
     font-size: 20px;
-    margin-top: 50px;
+    margin-top: 20px;
   }
   .personNum   .pnum-ride  .pnum-rdicon{
     display: inline-block;
@@ -1617,7 +1614,7 @@ body {
     text-align: center;
     line-height: 54px;
     font-size: 20px;
-    margin-top: 50px;
+    margin-top: 20px;
   }
   /* 新添加的设置样式 */
   .pnum-center{
@@ -1993,5 +1990,4 @@ body {
     line-height: 30px;
     font-size: 16px;
     margin-top: 20px;
-  }
-  
+  }  
