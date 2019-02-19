@@ -101,7 +101,7 @@ $(function(){
             Tsinformation:"<div>取消成功,正在退款中</div>",  // 提示按钮，提示他
             Tsinfm:'<div class="clearfix"><div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">祝您旅途愉快,请您注意安全</div></div>',    // 正在行程中
         },
-        passerResult:function(){
+        passerResult:function(){   // 车主查看乘客
             var data = nowusermsg.requestData;
             trips.state = data.state;
             //  State	int	状态（-1:失效；0：发布；1：完结；2：接单)
@@ -114,7 +114,7 @@ $(function(){
                     $(".sdstatusd").text("已发布");
                    $("#tmpbutton").empty();
                     // 取消发布之后，
-                    $("#tmpbutton").append("<div id='cancelRelease' style='width: 150px;height: 36px;line-height: 36px;color: #fff;background: #31b0d5;text-align: center;border-radius: 6px;margin: 0 auto;font-size: 16px;' onclick='qxsfcxinxi()'>取消发布</div>");
+                   $("#tmpbutton").append("<div id='cancelRelease' style='width: 150px;height: 36px;line-height: 36px;color: #fff;background: #31b0d5;text-align: center;border-radius: 6px;margin: 0 auto;font-size: 16px;' onclick='qxsfcxinxi()'>取消发布</div>");
                 }else if ( data.state === 1 ){  // 单子已完成
                     // 有人接单,乘客自己点击完成：没有按钮，只提示旅途愉快,注意安全
                     $(".sdstatusd").text("已完结");
@@ -135,7 +135,7 @@ $(function(){
                     $(".sdstatusd").text("可接单");
                     $("#tmpbutton").empty();
                     // 添加一个接单按钮
-                    $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(passer)"></div>');
+                    $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(0)">接单</div>');
                 }else if ( data.state === 1 ){   // 已完成
                     $(".sdstatusd").text("抱歉,单子已完成");
                     $("#tmpbutton").empty();
@@ -146,38 +146,90 @@ $(function(){
             }   
         },
         driverResult:function(){
+            var data = nowusermsg.requestData;
+             //  State	int	状态（-1:失效；0：发布；1：完结；2：接单)
             if( nowusermsg.clickPerson === "own" ){    // 自己点自己
-
-            }else if( nowusermsg.clickPerson === "other"){   // 别查看的
-
+                if( data.state === -1 ){  
+                    // 失效了  车主失效没有按钮
+                    $("#tmpbutton").empty();
+                    $(".sdstatusd").text("已失效");
+                }else if( data.state ===  0 ){
+                    //  发布成功
+                    $(".sdstatusd").text("发布成功");
+                    $("#tmpbutton").empty();
+                }else if( data.state === 1 ){
+                    // 已完成
+                    $("#tmpbutton").empty();
+                    $(".sdstatusd").text("已完成");
+                }else if( data.state === 2 ){
+                    // 已被接单  报名一个就算接单
+                    $("#tmpbutton").empty();
+                    $(".sdstatusd").text("可以报名");
+                    $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
+                }   
+            }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
+                $(".sdstatusd").text("可以报名");
+                $("#tmpbutton").empty();
+                $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
             }
         },
         passerDeal:function(){   // 乘客点击成交的操作函数
             $("#tmpbutton").empty();
             showMessage1btn("已成交,祝您旅途愉快！","",0);
-            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">祝您旅途愉快,请您注意安全</div>');
+            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
             $(".sdstatusd").text("已成交");
         },
     }
 // 向后台请求人数，接单
     function Receipt(val){
-        if(val === "passer"){
-            receiptAjax();
-        }else if(val === "driver"){
-            receiptAjax();
+        if(val === 0){ // 车主接乘客的单
+            receiptAjax(0);
+        }else if(val === 1){ // 乘客报名车主的单
+            receiptAjax(1);
         }
-        function receiptAjax(){
+        function receiptAjax(val){
             $.ajax({
                 type:"post",
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/getCurrentPNum.asp",
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/getCurrentPNum.asp",
                 data:{
                     froId:nowusermsg.id
                 },
                 success:function(data){
                     console.log(data);
+                    if( val === 0 ){
+                        if(data.result>0){
+                            showMessage1btn("接单成功,请联系乘客","",0);
+                            //  要向后台发送数据
+                            $("#tmpbutton").empty();
+                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">接单成功,请您电联乘客</div>');
+                            $(".sdstatusd").text("接单成功");
+                        }else if( data.result <= 0 ){
+                            $("#tmpbutton").empty();
+                            showMessage1btn("接单失败,已被接单","",0);
+                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,单子已被接</div>');
+                            $(".sdstatusd").text("已被接单");
+                        }
+                    }else if( val === 1 ){
+                        if( data.result > 0 ){
+                            showMessage1btn("报名成功,请联系车主","",0);
+                            //  要向后台发送数据
+                            $("#tmpbutton").empty();
+                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
+                            $(".sdstatusd").text("报名成功");
+
+                            //报名成功要付报名费给我们,
+
+                            
+                        }else if ( data.result <= 0 ) {
+                            $("#tmpbutton").empty();
+                            showMessage1btn("报名失败,已满","",0);
+                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,已满</div>');
+                            $(".sdstatusd").text("已满");
+                        }
+                    }
                 },
                 error:function(data){
-                    console.log(data);
+                    showMessage1btn("网络出错,请重试!","",0);
                 }
             })
         }
