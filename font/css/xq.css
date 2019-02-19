@@ -33,8 +33,6 @@
 }
 .showsjdata .showmoredata {
   background-color: #fff;
-  border-radius: 4px;
-  margin: 10px 6px;
 }
 .showsjdata .showmoredata .cfdsdm {
   width: 100%;
@@ -164,22 +162,6 @@
   line-height: 40px;
   float: left;
 }
-.clickqxx {
-  width: 100%;
-  margin:10px 0px;
-  padding-bottom: 20px;
-}
-.clickqxx #qxsfcxinxi {
-  width: 150px;
-  height: 36px;
-  line-height: 36px;
-  color: #fff;
-  background: #31b0d5;
-  text-align: center;
-  border-radius: 6px;
-  margin:0  auto;
-  font-size: 16px;
-}
   .cfcity, .mdcity{
     width: 100%;
     line-height: 40px;
@@ -289,3 +271,38 @@
   text-indent: 10px;
   float: left;
 }
+
+/* 按钮样式 */
+.clickqxx {
+  width: 100%;
+  margin:10px 0px;
+  padding-bottom: 20px;
+}
+.clickqxx #qxsfcxinxi {
+  width: 150px;
+  height: 36px;
+  line-height: 36px;
+  color: #fff;
+  background: #31b0d5;
+  text-align: center;
+  border-radius: 6px;
+  margin:0  auto;
+  font-size: 16px;
+}
+/* 样式地方 */
+  #tmpbutton{
+    width:100%;
+    border-bottom: 1px solid #f2f2f2;
+    margin-top: 10px;
+    padding-bottom: 10px;
+  }
+  #tmpbutton .cancel_button{
+    width: 150px;
+    height: 36px;
+    line-height: 36px;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    margin: 0 auto;
+    font-size: 16px;
+  }

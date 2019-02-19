@@ -138,7 +138,7 @@
             window.location.hash = "#s";
         }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj!==""){
             $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
-            $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+            $("#cgz-cfd").val(fabuxiaoxi.locationnam);
             window.location.hash = "#sxxwz";
         }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj===""){
             $("#inxcbody").val("常州市");
@@ -147,7 +147,7 @@
             window.location.hash = "#sxxwz";
         }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj!==""){
             $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
-            $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+            $("#cgz-cfd").val(fabuxiaoxi.locationnam);
             window.location.hash = "#sxxwz";
         }
     }
@@ -182,14 +182,14 @@
                     window.location.hash = "#sxxwz";
                 }else if(locationhash=="#s" && fabuxiaoxi.dwsj !==""){
                     $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
-                    $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+                    $("#cgz-cfd").val(fabuxiaoxi.locationnam);
                     window.location.hash = "#sxxwz";0
                 }else if (locationhash=="#m"&&fabuxiaoxi.dwsj ===""){
                     $("#cgz-mdcity").text(textval);
                     window.location.hash = "#mxxwz";
                 }else if(locationhash=="#m" && fabuxiaoxi.dwsj !==""){
                     $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
-                    $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+                    $("#cgz-cfd").val(fabuxiaoxi.locationnam);
                     $("#cgz-mdcity").text(textval);
                     window.location.hash = "#mxxwz";
                 }

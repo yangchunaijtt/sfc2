@@ -743,6 +743,7 @@
         personNum:0,     // 出发人数,默认为0。
         amoney:0,       // 钱数
         routeMileage:0,   // 路线里程
+        locationnam:"",   // 定位地址名
     };
 
     // 存储乘客和车主的路由值 
@@ -959,10 +960,28 @@
        function onComplete(data) {
            // 定位得到数据，设置
            gaode.successdata = data;
+            console.log("定位成功",data);
+
            
-           $("#chufadi").text(data.formattedAddress);
            // 存储数据
            fabuxiaoxi.dwsj = data; 
+            // 定位地址名
+            var locationval = "";
+            if( data.addressComponent.township=== "" || data.addressComponent.township === undefined ){
+                locationval =  data.addressComponent.street + data.addressComponent.streetNumber;
+            }else if( data.addressComponent.street === "" || data.addressComponent.street  === undefined ){
+                locationval = data.addressComponent.township  + data.addressComponent.streetNumber;
+            }else if( data.addressComponent.streetNumber=== "" || data.addressComponent.streetNumber === undefined ){
+                locationval = data.addressComponent.township + data.addressComponent.street ;
+            }else {
+                locationval = data.addressComponent.township + data.addressComponent.street + data.addressComponent.streetNumber;
+            }
+            
+            console.log(locationval);
+
+            $("#chufadi").text(locationval);
+            fabuxiaoxi.locationnam = locationval;
+
            fabuxiaoxi.cfdcity = fabuxiaoxi.dwsj.addressComponent.city;
            cityselectval.nowcity = fabuxiaoxi.dwsj.addressComponent.city;
            // 定义成功后，切换路由到首页         
@@ -976,7 +995,7 @@
 
             // 置为1 
             FreeRide.topisjump = 1;
-           $("#cgz-cfd").val(fabuxiaoxi.dwsj.formattedAddress);
+           $("#cgz-cfd").val(locationval);
        }
        //解析定位错误信息
        function onError(data) {
@@ -1908,7 +1927,7 @@
                 dLng = fabuxiaoxi.dwsj.position.lng;
                 dLat = fabuxiaoxi.dwsj.position.lat;
                 fabuxiaoxi.cfdcity = fabuxiaoxi.dwsj.addressComponent.city;
-                departure = fabuxiaoxi.dwsj.formattedAddress;
+                departure = fabuxiaoxi.locationnam;
             }
             var successdattsxx = "";
             if(nowusermsg.uid ===""){

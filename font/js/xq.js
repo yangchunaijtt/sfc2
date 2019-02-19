@@ -13,25 +13,20 @@ $(function(){
     $(".mddsdmdivbt").bind("touch click",function(){
         cfdsdmdivcl("mdd");
     })
+    // 页面的初始化
    /* 获取路由的值 */
    hqselectval();
-   
-   /* 初始化 */
-   /* 初始化的数据 */
-   $(".clickqxx").append(clickqxx);
-   if(nowusermsg.valone == "sf=run"){
-        $(".clickqxx").empty();
-   }
 })
-/* 数据 */
-    var clickqxx = "<div id='qxsfcxinxi'>取消发布</div>";
+
 
 /* 页面初始化的数据 */
     var nowusermsg = {
+        requestData:{},
         valone:'',
         uid:111,
         id:111,
-        state:111
+        state:111,
+        clickPerson:"own",   // 时那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
     }
 /* 获取向数据库获取值的定义id 和 uid */
     function hqselectval(){
@@ -47,8 +42,14 @@ $(function(){
         var sjaaa = hashval.split("&");
         nowusermsg.valone= sjaaa[2]
         console.log(sjaaa);
-
-        console.log(hashval,typeof nowusermsg.id,typeof nowusermsg.uid);
+        // sf=run出现 就代表不是自己点的数据
+        if(nowusermsg.valone == "sf=run"){
+            nowusermsg.clickPerson = "other";  // 其他点击的，被查看了。
+        }else {   // 是自己点自己
+            /* 初始化的数据 */
+            nowusermsg.clickPerson = "own";  // 自己点击自己
+        }
+        // 开始向后台发送获取数据
         ajaxhair(nowusermsg.id,nowusermsg.uid);
     }
 /* 发送ajax的数据 */
@@ -62,11 +63,20 @@ $(function(){
             },
             success:function(data){
                 console.log("获取成功的数据",data);
+                //  本地化数据
+                nowusermsg.requestData = data.obj;
                 rendering(data);
                 /* 绑取消订单的事件 */
                 $("#qxsfcxinxi").bind("touch click",function(){
                     qxsfcxinxi();
                 })
+                if( data.obj.pushType === "Passenger" ){    // 乘客身份
+                    trips.passerResult();
+                }else if(  data.obj.pushType === "Driver" ){    // 车主身份逻辑的
+                    trips.driverResult();
+                }
+                
+                
                 /* 加载成功，取消提示按钮 */
                 clearDialog();
             },
@@ -82,6 +92,98 @@ $(function(){
             }
         })
     }   
+// 行程支付功能的模块
+    var trips =  {
+        state:0,   // 单子的状态，默认为0，
+        template:{
+            cancel:"<button class='tmpcancel'>取消</button>",  // 取消按钮
+            deal:"<button class='tmpdeal'>成交</button>",    // 成交按钮
+            Tsinformation:"<div>取消成功,正在退款中</div>",  // 提示按钮，提示他
+            Tsinfm:'<div class="clearfix"><div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">祝您旅途愉快,请您注意安全</div></div>',    // 正在行程中
+        },
+        passerResult:function(){
+            var data = nowusermsg.requestData;
+            trips.state = data.state;
+            //  State	int	状态（-1:失效；0：发布；1：完结；2：接单)
+            if( nowusermsg.clickPerson === "own" ){    // 自己点自己
+                if (data.state === -1 ){    
+                    $(".sdstatusd").text("已失效");
+                   // $("#tmpbutton").empty();
+                }else if ( data.state === 0 ){  // 没有人接单
+                    // 没人接单(乘客流程中就已经付钱了)  ： 有取消按钮 
+                    $(".sdstatusd").text("已发布");
+                   $("#tmpbutton").empty();
+                    // 取消发布之后，
+                    $("#tmpbutton").append("<div id='cancelRelease' style='width: 150px;height: 36px;line-height: 36px;color: #fff;background: #31b0d5;text-align: center;border-radius: 6px;margin: 0 auto;font-size: 16px;' onclick='qxsfcxinxi()'>取消发布</div>");
+                }else if ( data.state === 1 ){  // 单子已完成
+                    // 有人接单,乘客自己点击完成：没有按钮，只提示旅途愉快,注意安全
+                    $(".sdstatusd").text("已完结");
+                    $("#tmpbutton").empty();
+                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">祝您旅途愉快,请您注意安全</div>')
+                }else if ( data.state === 2 ){  // 已被接单
+                    $(".sdstatusd").text("已接单");
+                    // 有人接单(有车主接单了,乘客自己没点完成)：提前一小时有	：有成交按钮   取消按钮
+                    $("#tmpbutton").empty();
+                    $("#tmpbutton").append('<div class="clearfix" style="width:50%;display:inline-block;"><div class="cancel_button" style="background: #31b0d5;"  onclick="qxsfcxinxi()">取消</div></div><div class="clearfix"  style="width:47%;display:inline-block;"><div class="cancel_button"  style="background:#2b5ae3;" onclick="trips.passerDeal()">成交</div></div>');
+                }
+            }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
+                $("#tmpbutton").empty();
+                if( data.state === -1 ){
+                    $(".sdstatusd").text("已失效");
+                    $("#tmpbutton").empty();
+                }else if( data.state === 0 ){  // 单子可接
+                    $(".sdstatusd").text("可接单");
+                    $("#tmpbutton").empty();
+                    // 添加一个接单按钮
+                    $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(passer)"></div>');
+                }else if ( data.state === 1 ){   // 已完成
+                    $(".sdstatusd").text("抱歉,单子已完成");
+                    $("#tmpbutton").empty();
+                }else if( data.state === 2 ){   // 已被接单
+                    $(".sdstatusd").text("抱歉,单子已被接");
+                    $("#tmpbutton").empty();
+                }
+            }   
+        },
+        driverResult:function(){
+            if( nowusermsg.clickPerson === "own" ){    // 自己点自己
+
+            }else if( nowusermsg.clickPerson === "other"){   // 别查看的
+
+            }
+        },
+        passerDeal:function(){   // 乘客点击成交的操作函数
+            $("#tmpbutton").empty();
+            showMessage1btn("已成交,祝您旅途愉快！","",0);
+            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">祝您旅途愉快,请您注意安全</div>');
+            $(".sdstatusd").text("已成交");
+        },
+    }
+// 向后台请求人数，接单
+    function Receipt(val){
+        if(val === "passer"){
+            receiptAjax();
+        }else if(val === "driver"){
+            receiptAjax();
+        }
+        function receiptAjax(){
+            $.ajax({
+                type:"post",
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/getCurrentPNum.asp",
+                data:{
+                    froId:nowusermsg.id
+                },
+                success:function(data){
+                    console.log(data);
+                },
+                error:function(data){
+                    console.log(data);
+                }
+            })
+        }
+        
+    }
+
 /* 向页面渲染数据的函数 */
     function rendering(data){
         var sj = data.obj;
@@ -112,7 +214,6 @@ $(function(){
                 $(".sdstatusd").text("发布成功");
             }else if(nowusermsg.state == -1){
                 $(".sdstatusd").text("失效了");
-                 $(".clickqxx").empty();
             }else if(nowusermsg.state == 1){
                 $(".sdstatusd").text("订单行程已完成");
             }else{
@@ -120,6 +221,7 @@ $(function(){
             }
         }
     }
+
 
 /* 取消订单的操作 */
     function qxsfcxinxi(){
@@ -138,10 +240,10 @@ $(function(){
                         /* 操作失败,请重新刷新 */
                         showMessage1btn("操作失败,请重新刷新","",0);
                     }else if(data.result===1){
-                        showMessage1btn("已取消发布","",0);
+                        $("#tmpbutton").empty();
+                        showMessage1btn("已取消发布,正在退款中","",0);
                         // 操作成功，显示提示
                         $(".sdstatusd").text("失效了");
-                        $(".clickqxx").empty();
                     }
                 },
                 error:function(data){
