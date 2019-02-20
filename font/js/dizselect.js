@@ -353,7 +353,7 @@
         // 参数
         var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
         // 地址
-        var url = "../../../common/getBSign-kongbatong.asp";
+        var url = "../common/getBSign-kongbatong.asp";
         // sfcsj.passenger 存储着用户的信息 
         // openid 需要传入的数据的定义
         var sfvallx = locationqjval.val;

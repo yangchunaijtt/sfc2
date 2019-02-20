@@ -16,18 +16,18 @@ var nowusermsg = {
 
 $(function(){
     getOpenid(function(openid){
-        nowusermsg.myuid = localCache("uid-kongbatong");
+        nowusermsg.uid = localCache("uid-kongbatong");
         nowusermsg.openid = localCache("openid-kongbatong");
         nowusermsg.phone = localCache("mobile-kongbatong");
-        nowusermsg.openid = openid ;
-        if( null == nowusermsg.uid || "" == nowusermsg.uid ) { 
+        nowusermsg.openid = openid;
+        if(null == nowusermsg.uid || "" == nowusermsg.uid) {
             register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
         } else {
            console.log("获取成功");
         }
     },location.search);
     // 取本地缓存数据
-
+    
     console.log(nowusermsg);
 
     showLodding("请稍等，加载中...");
@@ -262,7 +262,7 @@ $(function(){
             usource:"Wx_Kbt",   // 用户的来源 
             FROID:111     // 发布单号，取当前信息的id值 
         },
-        payMoney:function( moneyVal ){  // 只有乘客报名车主的行程才需要付钱 
+        payMoney:function(moneyVal){  // 只有乘客报名车主的行程才需要付钱 
            var paymentbttsj =  paymentModule.paymentbttsj;
             paymentbttsj.title = "车主接单";
             paymentbttsj.FROID = nowusermsg.id; 
@@ -282,7 +282,7 @@ $(function(){
 
             var sjc = generateTimeReqestNumber();
             paymentbttsj.billno = "FRO";
-            paymentbttsj.billno = paymentbttsj.billno + sjc + rand ;
+            paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
             // 参数
             paymentbttsj.amount   = moneyVal;
             var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
@@ -293,7 +293,7 @@ $(function(){
             var utype = nowusermsg.requestData.pushType;
             
             paymentbttsj.openid = {
-                uid:nowusermsg.myuid,
+                uid:nowusermsg.uid,
                 phone:nowusermsg.phone,
                 usource:paymentbttsj.usource,
                 FROID:paymentbttsj.FROID,
