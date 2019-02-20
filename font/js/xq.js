@@ -1,4 +1,35 @@
+/* 页面初始化的数据 */
+var nowusermsg = {
+    requestData:{},
+    valone:'',
+    myuid:111,   // 登录用户自己的uid
+    uid:111,    // 是查询单号的uid，不是自己的uid。
+    id:111,
+    state:111,
+    clickPerson:"own",   // 时那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
+    openid:111,  
+    phone:111,    // 登录用户自己的电话号
+}
+
+        
+       
+
 $(function(){
+    getOpenid(function(openid){
+        nowusermsg.myuid = localCache("uid-kongbatong");
+        nowusermsg.openid = localCache("openid-kongbatong");
+        nowusermsg.phone = localCache("mobile-kongbatong");
+        nowusermsg.openid = openid ;
+        if( null == nowusermsg.uid || "" == nowusermsg.uid ) { 
+            register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
+        } else {
+           console.log("获取成功");
+        }
+    },location.search);
+    // 取本地缓存数据
+
+    console.log(nowusermsg);
+
     showLodding("请稍等，加载中...");
     /* 点击时  地图上添加一个maker点 并且聚焦 */
    $(".cfdsdmdiv").bind("touch click",function(){
@@ -16,18 +47,10 @@ $(function(){
     // 页面的初始化
    /* 获取路由的值 */
    hqselectval();
+   console.log(2,nowusermsg);
 })
 
 
-/* 页面初始化的数据 */
-    var nowusermsg = {
-        requestData:{},
-        valone:'',
-        uid:111,
-        id:111,
-        state:111,
-        clickPerson:"own",   // 时那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
-    }
 /* 获取向数据库获取值的定义id 和 uid */
     function hqselectval(){
         var hashval = window.location.hash;
@@ -211,15 +234,7 @@ $(function(){
                         }
                     }else if( val === 1 ){
                         if( data.result > 0 ){
-                            showMessage1btn("报名成功,请联系车主","",0);
-                            //  要向后台发送数据
-                            $("#tmpbutton").empty();
-                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
-                            $(".sdstatusd").text("报名成功");
-
-                            //报名成功要付报名费给我们,
-
-                            
+                            paymentModule.payMoney(nowusermsg.requestData.price); 
                         }else if ( data.result <= 0 ) {
                             $("#tmpbutton").empty();
                             showMessage1btn("报名失败,已满","",0);
@@ -235,6 +250,115 @@ $(function(){
         }
         
     }
+// 订单详情页的支付模块
+    // 支付模块
+    var  paymentModule = {
+        paymentbttsj:{
+            title:"",
+            amount:0,
+            billno: "FRO",   // 生成订单号 
+            instant_channel:"wx", // 订单支付形式 
+            openid:{},  // openid的存储 
+            usource:"Wx_Kbt",   // 用户的来源 
+            FROID:111     // 发布单号，取当前信息的id值 
+        },
+        payMoney:function( moneyVal ){  // 只有乘客报名车主的行程才需要付钱 
+           var paymentbttsj =  paymentModule.paymentbttsj;
+            paymentbttsj.title = "车主接单";
+            paymentbttsj.FROID = nowusermsg.id; 
+         
+            var bSign = "";
+            var rand = "";
+            for(var i = 0; i < 3; i++){
+                var r = Math.floor(Math.random() * 10);
+                rand += r;
+            }
+            // 生成时间戳 "yyyyMMddhhmmss" 格式
+            function pad2(n) { return n < 10 ? '0' + n : n };
+            function generateTimeReqestNumber() {
+                var date = new Date();
+                return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
+            }
+
+            var sjc = generateTimeReqestNumber();
+            paymentbttsj.billno = "FRO";
+            paymentbttsj.billno = paymentbttsj.billno + sjc + rand ;
+            // 参数
+            paymentbttsj.amount   = moneyVal;
+            var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
+            // 地址
+            var url = "../../../common/getBSign-kongbatong.asp";
+            // sfcsj.passenger 存储着用户的信息 
+            // openid 需要传入的数据的定义
+            var utype = nowusermsg.requestData.pushType;
+            
+            paymentbttsj.openid = {
+                uid:nowusermsg.myuid,
+                phone:nowusermsg.phone,
+                usource:paymentbttsj.usource,
+                FROID:paymentbttsj.FROID,
+                utype:utype
+            };
+            console.log(param);
+             $.post(url,param,function(data){
+
+                if (!((typeof (data) == 'object') && data.constructor == Object)) {
+                    data = eval("(" + data + ")");
+                }
+                if(data.BSign) {
+                    bSign = data.BSign;
+                BC.err = function(data) {
+                    console.log(data);
+                    //注册错误信息接受
+                    showMessage1btn(data["ERROR"],"",0);
+                }
+                console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
+            BC.click({
+                "instant_channel" : paymentbttsj.instant_channel,
+                "debug" : true,
+                "need_ali_guide" : true,
+                "use_app" : true,
+                "title" : paymentbttsj.title, //商品名
+                "amount" : moneyVal,  //总价（分）
+                "out_trade_no" : paymentbttsj.billno, //自定义订单号
+                "sign" : bSign, //商品信息hash值，含义和生成方式见下文
+                "openid" : nowusermsg.openid,
+                "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
+            },
+            {
+                wxJsapiFinish : function(res) {
+                    //jsapi接口调用完成后
+                    //showMessage1btn(JSON.stringify(res),"",0);
+                    switch(res.err_msg){
+                        case "get_brand_wcpay_request:ok":
+                            //报名成功要付报名费给我们,
+                            showMessage1btn("支付报名成功,请联系车主","",0);
+                            //  要向后台发送数据
+                            $("#tmpbutton").empty();
+                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
+                            $(".sdstatusd").text("报名成功");
+                            break;
+                        case "get_brand_wcpay_request:fail":
+                            showMessage1btn("系统出错，请联系我们！","Back()",0);
+                            break;
+                        case "get_brand_wcpay_request:cancel":
+                            showMessage1btn("已取消支付！","Back()",0);
+                            break;
+                        }
+                    }
+                    });
+                    BC.err = function(err) {
+                        //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
+                        showMessage1btn(err.ERROR,"",0);
+                    }
+                }else{
+                    showMessage1btn("后台参数错误！","",0);
+                }                                           
+                    // 删除dialog
+                    clearDialog();
+                },"json")
+            }
+        }
 
 /* 向页面渲染数据的函数 */
     function rendering(data){
