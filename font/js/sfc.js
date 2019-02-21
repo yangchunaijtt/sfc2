@@ -565,27 +565,34 @@
         // input输入时
         $(".pnum-ftinput").on('input',function(){
             var val = parseInt($(".pnum-ftinput").val());
-            personnum.personnumber = val;
-            $(".pnum-ctnumber").text(val);
-            $(".pnum-rdnum").text(val+"人乘车");
-            if(val<=4){
-                personnum.clear();
-                personnum.updated(val);
-                if(personnum.personnumber===1){
-                    $(".pnum-numone").css("border","1px solid #ffc35f");
-                }else if(personnum.personnumber===2){
-                    $(".pnum-numtwo").css("border","1px solid #ffc35f");
-                }else if(personnum.personnumber===3){
-                    $(".pnum-numthree").css("border","1px solid #ffc35f");
-                }else if(personnum.personnumber===4){
-                    $(".pnum-numfour").css("border","1px solid #ffc35f");
+            if( val === NaN || val === "" || val === undefined){
+                var valone = 0 ;
+                $(".pnum-ctnumber").text(valone);
+                $(".pnum-ftinput").val(0)
+                $(".pnum-rdnum").text(valone+"人乘车");
+            }else {
+                personnum.personnumber = val;
+                $(".pnum-ctnumber").text(val);
+                $(".pnum-rdnum").text(val+"人乘车");
+                if(val<=4){
+                    personnum.clear();
+                    personnum.updated(val);
+                    if(personnum.personnumber===1){
+                        $(".pnum-numone").css("border","1px solid #ffc35f");
+                    }else if(personnum.personnumber===2){
+                        $(".pnum-numtwo").css("border","1px solid #ffc35f");
+                    }else if(personnum.personnumber===3){
+                        $(".pnum-numthree").css("border","1px solid #ffc35f");
+                    }else if(personnum.personnumber===4){
+                        $(".pnum-numfour").css("border","1px solid #ffc35f");
+                    }
+                }else if(val>4){
+                    $(".pnum-numone").css("border","none");
+                    $(".pnum-numtwo").css("border","none");
+                    $(".pnum-numthree").css("border","none");
+                    $(".pnum-numfour").css("border","none");
+                    $(".pnum-number").css("border","none");
                 }
-            }else if(val>4){
-                $(".pnum-numone").css("border","none");
-                $(".pnum-numtwo").css("border","none");
-                $(".pnum-numthree").css("border","none");
-                $(".pnum-numfour").css("border","none");
-                $(".pnum-number").css("border","none");
             }
         })
         //输入框得到焦点时

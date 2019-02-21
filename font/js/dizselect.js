@@ -131,7 +131,9 @@
 
     // 进入input时chufadi  出发地时 进入可以自动选择的页面 
     function inchufadi(){
-        if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
+        if( $("#cgz-mdcity").text() === "" || $("#cgz-mdcity").text() === undefined  ){
+            $("#cgz-mdcity").text("常州市");
+        }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
             if($("#cgz-mdcity").text()==="" ||$("#cgz-mdcity").text()===undefined){
                 $("#cgz-mdcity").text("常州市")
             }
@@ -467,7 +469,7 @@
         paymentbttsj.amount   = moneyVal*100;
         var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
         // 地址
-        var url = "../../../common/getBSign-kongbatong.asp";
+        var url = "../common/getBSign-kongbatong.asp";
         // sfcsj.passenger 存储着用户的信息 
         // openid 需要传入的数据的定义
         

@@ -405,11 +405,10 @@ $(function(){
         if(nowusermsg.state===0){
             $.ajax({
                 type:"post",
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/updateFROrders.asp",
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
                 data:{
                   uid:nowusermsg.uid,
-                  id:nowusermsg.id,
-                  state:-1,
+                  id:nowusermsg.id
                 },
                 success:function(data){
                     console.log("获取成功的数据",data);
