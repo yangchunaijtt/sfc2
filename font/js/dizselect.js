@@ -430,127 +430,119 @@
 
 
 // 支付模块
-    var  paymentModule = {
-        paymentbttsj:{
-            title:"",
-            amount:100,
-            billno: "FRO",   // 生成订单号 
-            instant_channel:"wx", // 订单支付形式 
-            openid:{},  // openid的存储 
-            usource:"Wx_Kbt",   // 用户的来源 
-            FROID:111     // 发布单号，取当前信息的id值 
-        },
-        payMoney:function(FROID,qmguid){
-           var paymentbttsj =  paymentModule.paymentbttsj;
-            //首先取消所有 
-            // qmguid： 数据的发布者的id号  
-            // 如果uid一直 ，则不需要付钱，点击时直接看  
-            if(parseInt(qmguid) == parseInt(nowusermsg.uid) ){
-                // 支付成功  可以观看用户的信息 
-                // 如果一样，直接用本地的id就好 
-                var jwxxone = "#ownshowdata?id="+FROID+"&uid="+qmguid+"&sf=run";
-                var wlgrefone = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxxone;
-                window.location.href = wlgrefone ;
-                
-                // 现在判断解决， 
-                return false;
-                // 判断if else  
-            }else{
-                    // id不一样 
-            paymentbttsj.title = "发布订单";
-            paymentbttsj.FROID = FROID; 
-         
-             var bSign = "";
-             var rand = "";
-            for(var i = 0; i < 3; i++){
-                var r = Math.floor(Math.random() * 10);
-                rand += r;
-            }
-            // 生成时间戳 "yyyyMMddhhmmss" 格式
-            function pad2(n) { return n < 10 ? '0' + n : n };
-            function generateTimeReqestNumber() {
-                var date = new Date();
-                return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
-            }
-            var sjc = generateTimeReqestNumber();
-            paymentbttsj.billno = "FRO";
-            paymentbttsj.billno = paymentbttsj.billno + generateTimeReqestNumber() + rand;
-            // 参数
-            var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
-            // 地址
-            var url = "../common/getBSign-kongbatong.asp";
-            // sfcsj.passenger 存储着用户的信息 
-            // openid 需要传入的数据的定义
-            var sfvallx = locationqjval.val;
-            var utype = "";
-            if(sfvallx ==="a=p"){
-                utype = "Passenger";
-            }else if(sfvallx==="b=v"){
-                utype = "Driver";
-            }
-            paymentbttsj.openid = {
-                uid:nowusermsg.uid,
-                phone:nowusermsg.phone,
-                usource:paymentbttsj.usource,
-                FROID:paymentbttsj.FROID,
-                utype:utype
-            };
-             $.post(url,param,function(data){
+  var  paymentModule = {
+    paymentbttsj:{
+        title:"",
+        amount:0,
+        billno: "FRO",   // 生成订单号 
+        instant_channel:"wx", // 订单支付形式 
+        openid:{},  // openid的存储 
+        usource:"Wx_Kbt",   // 用户的来源 
+        FROID:111     // 发布单号，取当前信息的id值 
+    },
+    payMoney:function(moneyVal){  // 只有乘客报名车主的行程才需要付钱 
+       var paymentbttsj =  paymentModule.paymentbttsj;
+        paymentbttsj.title = "乘客发布行程";
+
+        // 单号：等下取用户数据表里的id号
+        paymentbttsj.FROID = nowusermsg.uid ; 
+     
+        var bSign = "";
+        var rand = "";
+        for(var i = 0; i < 3; i++){
+            var r = Math.floor(Math.random() * 10);
+            rand += r;
+        }
+        // 生成时间戳 "yyyyMMddhhmmss" 格式
+        function pad2(n) { return n < 10 ? '0' + n : n };
+        function generateTimeReqestNumber() {
+            var date = new Date();
+            return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
+        }
+
+        var sjc = generateTimeReqestNumber();
+        paymentbttsj.billno = "FRO";
+        paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
+        // 参数
+        paymentbttsj.amount   = moneyVal*100;
+        var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
+        // 地址
+        var url = "../../../common/getBSign-kongbatong.asp";
+        // sfcsj.passenger 存储着用户的信息 
+        // openid 需要传入的数据的定义
+        
+        
+        paymentbttsj.openid = {
+            uid:nowusermsg.uid,
+            phone:nowusermsg.phone,
+            usource:paymentbttsj.usource,
+            FROID:paymentbttsj.FROID,
+            utype:"Passenger"
+        };
+        console.log(param);
+         $.post(url,param,function(data){
+
             if (!((typeof (data) == 'object') && data.constructor == Object)) {
                 data = eval("(" + data + ")");
             }
             if(data.BSign) {
                 bSign = data.BSign;
             BC.err = function(data) {
+                console.log(data);
                 //注册错误信息接受
                 showMessage1btn(data["ERROR"],"",0);
             }
-            BC.click({
-                "instant_channel" : paymentbttsj.instant_channel,
-                "debug" : false,
-                "need_ali_guide" : true,
-                "use_app" : true,
-                "title" : paymentbttsj.title, //商品名
-                "amount" : paymentbttsj.amount,  //总价（分）
-                "out_trade_no" : paymentbttsj.billno, //自定义订单号
-                "sign" : bSign, //商品信息hash值，含义和生成方式见下文
-                "openid" : nowusermsg.openid,
-                "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
-            },
-            {
-                wxJsapiFinish : function(res) {
-                    //jsapi接口调用完成后
-                    //showMessage1btn(JSON.stringify(res),"",0);
-                    switch(res.err_msg){
-                        case "get_brand_wcpay_request:ok":
-                            showMessage1btn("支付成功！如需退单，请提前上车时间24小时退定！","Back()",1);
-                            // 支付成功  可以观看用户的信息 
-                            var jwxx = "#ownshowdata?id="+paymentbttsj.FROID+"&uid="+qmguid+"&sf=run";
-                            // 传入id号 和 uid 
-                            // 应该是发布数据的那个人的 
-                            var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
-                            window.location.href = wlgref ;
-                            break;
-                        case "get_brand_wcpay_request:fail":
-                            showMessage1btn("系统出错，请联系我们！","Back()",0);
-                            break;
-                        case "get_brand_wcpay_request:cancel":
-                            showMessage1btn("已取消支付！","Back()",0);
-                            break;
-                        }
+            console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
+        BC.click({
+            "instant_channel" : paymentbttsj.instant_channel,
+            "debug" : true,
+            "need_ali_guide" : true,
+            "use_app" : true,
+            "title" : paymentbttsj.title, //商品名
+            "amount" : moneyVal*100,  //总价（分）
+            "out_trade_no" : paymentbttsj.billno, //自定义订单号
+            "sign" : bSign, //商品信息hash值，含义和生成方式见下文
+            "openid" : nowusermsg.openid,
+            "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
+        },
+        {
+            wxJsapiFinish : function(res) {
+                //jsapi接口调用完成后
+                //showMessage1btn(JSON.stringify(res),"",0);
+                switch(res.err_msg){
+                    case "get_brand_wcpay_request:ok":
+                        // 用完要把用过的值初始化 
+                        // 用完时间要初始化,完成了在初始化。
+                        fabuxiaoxi.dwsj = "";   // 定位的初始化 
+                        fabuxiaoxi.cfdcity =""; // 城市至为空 
+                        fabuxiaoxi.mddcity = "";    // 置空 
+                        fabuxiaoxi.cfddata = "";    // 置空 
+                        fabuxiaoxi.mmddata = "";    // 置空 
+                        settleAccounts.rendertimes = 0 ;
+                        // 乘客发布时,支付成功的同时向后台发送数据
+                        showMessage1btn("发布成功,如需退款，请提前24小时取消订单","",0);
+                        // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
+                        window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
+                        break;
+                    case "get_brand_wcpay_request:fail":
+                        showMessage1btn("系统出错，请联系我们！","Back()",0);
+                        break;
+                    case "get_brand_wcpay_request:cancel":
+                        showMessage1btn("已取消支付！","Back()",0);
+                        break;
                     }
-                    });
-                    BC.err = function(err) {
-                        //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
-                        showMessage1btn(err.ERROR,"",0);
-                    }
-                }else{
-                    showMessage1btn("后台参数错误！","",0);
-                }                                           
-                    // 删除dialog
-                    clearDialog();
-                },"json")
-            }
+                }
+                });
+                BC.err = function(err) {
+                    //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
+                    showMessage1btn(err.ERROR,"",0);
+                }
+            }else{
+                showMessage1btn("后台参数错误！","",0);
+            }                                           
+                // 删除dialog
+                clearDialog();
+            },"json")
         }
     }
 

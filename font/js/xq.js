@@ -20,6 +20,7 @@ $(function(){
         nowusermsg.openid = localCache("openid-kongbatong");
         nowusermsg.phone = localCache("mobile-kongbatong");
         nowusermsg.openid = openid;
+        console.log("openid",nowusermsg.openid,openid);
         if(null == nowusermsg.uid || "" == nowusermsg.uid) {
             register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
         } else {
@@ -264,7 +265,7 @@ $(function(){
         },
         payMoney:function(moneyVal){  // 只有乘客报名车主的行程才需要付钱 
            var paymentbttsj =  paymentModule.paymentbttsj;
-            paymentbttsj.title = "车主接单";
+            paymentbttsj.title = "乘客报名";
             paymentbttsj.FROID = nowusermsg.id; 
          
             var bSign = "";
@@ -284,7 +285,7 @@ $(function(){
             paymentbttsj.billno = "FRO";
             paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
             // 参数
-            paymentbttsj.amount   = moneyVal;
+            paymentbttsj.amount   = moneyVal*100;
             var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
             // 地址
             var url = "../../../common/getBSign-kongbatong.asp";
@@ -319,7 +320,7 @@ $(function(){
                 "need_ali_guide" : true,
                 "use_app" : true,
                 "title" : paymentbttsj.title, //商品名
-                "amount" : moneyVal,  //总价（分）
+                "amount" : moneyVal*100,  //总价（分）
                 "out_trade_no" : paymentbttsj.billno, //自定义订单号
                 "sign" : bSign, //商品信息hash值，含义和生成方式见下文
                 "openid" : nowusermsg.openid,

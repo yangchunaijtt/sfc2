@@ -16,6 +16,7 @@
             nowusermsg.openid = localCache("openid-kongbatong");
             nowusermsg.phone = localCache("mobile-kongbatong");
             nowusermsg.openid = openid;
+            console.log("openid",openid,nowusermsg.openid);
             if(null == nowusermsg.uid || "" == nowusermsg.uid) {
                 register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
             } else {
@@ -1979,26 +1980,30 @@
                 success:function(data){
                     if(data.result ===  -1 ){
                         if(successdattsxx===""){
-                            successdattsxx = "网络出错,请刷新在试";
+                            successdattsxx = "发布出错,请刷新在试";
                         }
                         settleAccounts.rendertimes = 1 ;
                         showMessage1btn(successdattsxx,"",0);
                         return false;
                     }else {
-                        // 用完时间要初始化
+                        // 提交的元素 
+                        if( pushType === "Passenger" ){
+                            //  如果是乘客发布，需要付钱给平台
 
-                        // 用完要把用过的值初始化 
-                        fabuxiaoxi.dwsj = "";   // 定位的初始化 
-                        fabuxiaoxi.cfdcity =""; // 城市至为空 
-                        fabuxiaoxi.mddcity = "";    // 置空 
-                        fabuxiaoxi.cfddata = "";    // 置空 
-                        fabuxiaoxi.mmddata = "";    // 置空 
-                        
-                        showMessage1btn("发布成功!","",0);
-                        settleAccounts.rendertimes = 0 ;
-                    // 提交的元素 
-                        // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
-                        window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html";   
+                            // 付款单号可能会出现问题，需要取之前的来解决
+                            paymentModule.payMoney(parseFloat(fabuxiaoxi.amoney));
+                        }else if( pushType === "Drivrer" ){
+                             // 用完时间要初始化,完成了在初始化。
+                            // 用完要把用过的值初始化 
+                            fabuxiaoxi.dwsj = "";   // 定位的初始化 
+                            fabuxiaoxi.cfdcity =""; // 城市至为空 
+                            fabuxiaoxi.mddcity = "";    // 置空 
+                            fabuxiaoxi.cfddata = "";    // 置空 
+                            fabuxiaoxi.mmddata = "";    // 置空 
+                            settleAccounts.rendertimes = 0 ;
+                            // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
+                            window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html";   
+                        }
                     }
                 },
                 error:function(data){
