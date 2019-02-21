@@ -318,6 +318,8 @@
          usource:"Wx_Kbt",   // 用户的来源 
          FROID:111     // 发布单号，取当前信息的id值 
      }
+
+     // 查看乘客的按钮点击出发的函数
     function paymentbutton(FROID,qmguid){
         //首先取消所有 
         // qmguid： 数据的发布者的id号  
@@ -333,100 +335,13 @@
             return false;
             // 判断if else  
         }else{
-                // id不一样 
-        paymentbttsj.title = "发布订单";
-        paymentbttsj.FROID = FROID; 
-     
-         var bSign = "";
-         var rand = "";
-        for(var i = 0; i < 3; i++){
-            var r = Math.floor(Math.random() * 10);
-            rand += r;
-        }
-        // 生成时间戳 "yyyyMMddhhmmss" 格式
-        function pad2(n) { return n < 10 ? '0' + n : n };
-        function generateTimeReqestNumber() {
-            var date = new Date();
-            return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
-        }
-        var sjc = generateTimeReqestNumber();
-        paymentbttsj.billno = "FRO";
-        paymentbttsj.billno = paymentbttsj.billno + generateTimeReqestNumber() + rand;
-        // 参数
-        var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
-        // 地址
-        var url = "../common/getBSign-kongbatong.asp";
-        // sfcsj.passenger 存储着用户的信息 
-        // openid 需要传入的数据的定义
-        var sfvallx = locationqjval.val;
-        var utype = "";
-        if(sfvallx ==="a=p"){
-            utype = "Passenger";
-        }else if(sfvallx==="b=v"){
-            utype = "Driver";
-        }
-        paymentbttsj.openid = {
-            uid:nowusermsg.uid,
-            phone:nowusermsg.phone,
-            usource:paymentbttsj.usource,
-            FROID:paymentbttsj.FROID,
-            utype:utype
-        };
-         $.post(url,param,function(data){
-        if (!((typeof (data) == 'object') && data.constructor == Object)) {
-            data = eval("(" + data + ")");
-        }
-        if(data.BSign) {
-            bSign = data.BSign;
-        BC.err = function(data) {
-            //注册错误信息接受
-            showMessage1btn(data["ERROR"],"",0);
-        }
-        BC.click({
-            "instant_channel" : paymentbttsj.instant_channel,
-            "debug" : false,
-            "need_ali_guide" : true,
-            "use_app" : true,
-            "title" : paymentbttsj.title, //商品名
-            "amount" : paymentbttsj.amount,  //总价（分）
-            "out_trade_no" : paymentbttsj.billno, //自定义订单号
-            "sign" : bSign, //商品信息hash值，含义和生成方式见下文
-            "openid" : nowusermsg.openid,
-            "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
-        },
-        {
-            wxJsapiFinish : function(res) {
-                //jsapi接口调用完成后
-                //showMessage1btn(JSON.stringify(res),"",0);
-                switch(res.err_msg){
-                    case "get_brand_wcpay_request:ok":
-                        showMessage1btn("支付成功！如需退单，请提前上车时间24小时退定！","Back()",1);
-                        // 支付成功  可以观看用户的信息 
-                        var jwxx = "#ownshowdata?id="+paymentbttsj.FROID+"&uid="+qmguid+"&sf=run";
-                        // 传入id号 和 uid 
-                        // 应该是发布数据的那个人的 
-                        var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
-                        window.location.href = wlgref ;
-                        break;
-                    case "get_brand_wcpay_request:fail":
-                        showMessage1btn("系统出错，请联系我们！","Back()",0);
-                        break;
-                    case "get_brand_wcpay_request:cancel":
-                        showMessage1btn("已取消支付！","Back()",0);
-                        break;
-                    }
-                }
-                });
-                BC.err = function(err) {
-                    //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
-                    showMessage1btn(err.ERROR,"",0);
-                }
-            }else{
-                showMessage1btn("后台参数错误！","",0);
-            }                                           
-                // 删除dialog
-                clearDialog();
-            },"json")
+            // 其他人查看 
+            paymentbttsj.FROID = FROID; 
+            var jwxx = "#ownshowdata?id="+paymentbttsj.FROID+"&uid="+qmguid+"&sf=run";
+                    // 传入id号 和 uid 
+                    // 应该是发布数据的那个人的 
+            var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
+            window.location.href = wlgref ;
         }
     }   
 
