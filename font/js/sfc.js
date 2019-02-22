@@ -631,7 +631,7 @@
             settleAccounts.clear();
             window.location.hash = "#details?"+locationqjval.val;
             settleAccounts.rendertimes = 0;
-            sfclocation();
+            
         })
          // 时间页绑定
          $("#searchsetdate").bind("touch click",function(){
@@ -725,6 +725,16 @@
             $(".owneregister-button").bind("touch click",function(){
                 carregister.photoajax();
             })
+    // 给车主提现页绑定数据
+            $("#balace-return").bind("touch click",function(){
+                window.location.href = "#vowner";
+            })
+        // 提现按钮
+            $("#idbalance-mycash").bind("touch click",function(){
+                owenerCash.cashWithdrawal();
+            })
+//  调用本地定位函数
+            sfclocation();
     })
     // 函数 
         function hvownermyrun(){
@@ -735,10 +745,7 @@
             $(".hrunqbcar").css("color","#555");
             $(".hrucarpay").css("color","#555");
         }
-//所有资源加载成功在执行地图定位 
-    window.onload = function(){
-        sfclocation();
-    }
+
     var fabuxiaoxi = {
         cfddata:"", // 存储出发地数据的地方 
         mmddata:"", // 存储目的地数据的地方 
@@ -762,6 +769,43 @@
     var cityselectval = {
         nowcity:""
     }
+
+// 给车主提现页绑定
+    var owenerCash = {
+        cashResult:{}, // 车主存储的数据
+        cashWithdrawal:function(){  // 全部提现的函数
+            // 提现时也教研一次
+
+        },
+        owerPage:function(){ // 每次点开这个页面都渲染一次
+            // 渲染页面
+            // 每次点开页面都调用一次
+
+            // 调用取接单数据
+            owenerCash.myOrder();
+        },
+        myOrder:function(){
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts.asp",
+                type:"post",
+                data:{
+                    cur:1,
+                    uid:nowusermsg.uid,
+                    utype:"Driver",
+                    dateRange:""
+                },
+                success:function(data){
+                    console.log("车主接单信息",data);
+                    // 乘客处理代码在 1452行
+
+                },  
+                error:function(data){
+                    console.log("车主接单获取失败",data);
+                }
+            })
+        }
+    }
+
 // 车主注册页操作模块
     var carregister = {
         idCardFront:0,  //身份证正面数据
@@ -1200,7 +1244,9 @@
         //全部行程中车主
         runvownerDiv:"<div class='circle clearfix' id='runvownerDiv'><a href='#ownshowdata' id='arunvownerDiv'   target='_parent'  class='arunvownerDivclass clearfix'><div class='left runvownerleft  clearfix' ><div class='time'><span class='data' id='rvdata'>14号</span><div class='rq'><span class='hours' id='rvdhours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rvdcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rvdf'></div></div></div><input type='submit' class='ricon left btn btn-primary ' value='查看' style='margin-top:22px;'></div></a></div>",
         // 支付页的模板 
-        paymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>订单时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>支付金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>支付结果:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>"
+        paymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>支付时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>支付金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>支付结果:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
+        // 车主接单页模板
+        ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>订单时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>订单结果:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>"
     }
 
     //让时间绑定切换到页面的事件 
@@ -1406,13 +1452,24 @@
             }else if(val1[0] =="#ddxq"|| locationHash=="#ddxq"){
                 hashcreate();
                 if(val1[1]==="passger"){
-                    paymentpage(nowusermsg.uid,"Passenger");
+                    paymentpage(nowusermsg.uid);
+
+                    $("#mypayidname").text("我的支付");
+                    // 乘客隐藏掉那个
+                    $("#balanceid").hide();
                     // 处理支付页
                     hdpaymentzy();
                 }else if(val1[1]==="diver"){
-                    paymentpage(nowusermsg.uid,"Driver");
-                    // 处理支付页
-                    hdpaymentzy();
+
+                    // 点击时车主时 调用渲染函数
+                    owenerCash.owerPage();
+
+                    $("#mypayidname").text("我的订单");
+                    // 车主就显示
+                    $("#balanceid").show();
+                    
+                    // 车主要处理接单数据
+
                 }
                 $(".paymentzy").show();
             }else if(val1[0]=="#payment"){
@@ -1985,6 +2042,7 @@
                     price:parseFloat(fabuxiaoxi.amoney)     // 发布金额
                 },
                 success:function(data){
+                    
                     if(data.result ===  -1 ){
                         if(successdattsxx===""){
                             successdattsxx = "发布出错,请刷新在试";
@@ -1996,8 +2054,8 @@
                         // 提交的元素 
                         if( pushType === "Passenger" ){
                             //  如果是乘客发布，需要付钱给平台
-
                             // 付款单号可能会出现问题，需要取之前的来解决
+                            // data.obj 返回数据给的单号
                             paymentModule.payMoney(parseFloat(fabuxiaoxi.amoney));
                         }else if( pushType === "Drivrer" ){
                              // 用完时间要初始化,完成了在初始化。
@@ -2034,7 +2092,8 @@
         chisu:0,    // 计算用户支付了几次 
         type:"passger"  // 请求类型
     }
-    function paymentpage(uid,yhlx){
+    // 只有乘客才有支付表，车主不需要，车主只有接单表
+    function paymentpage(uid){
         $.ajax({
             type:"post",
             url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp",
@@ -2042,7 +2101,7 @@
                 cur:1, // 查看页码 
                 uid:uid,
                 dateRange:"",  // 查看日期，查看所有 
-                utype:yhlx
+                utype:"Passenger"
             },
             success:function(data){
                 

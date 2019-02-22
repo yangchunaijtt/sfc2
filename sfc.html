@@ -40,7 +40,7 @@
                         查看车主
                     </a> 
                     <a class="hvownerleftone hvownermypay"  href="#ddxq?passger" style="display: inline-block;flex:1;">
-                        支付订单
+                        我的支付
                     </a>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                         查看乘客
                     </a>
                     <a href="#ddxq?diver" class="rundvone hrucarpay">
-                        支付订单
+                        我的订单
                     </a>
              </div>
             </div>
@@ -587,19 +587,45 @@
             </div>
         </div>
         <!-- 支付主页 -->
-        <div class="paymentzy clearfix" style="display: none">
-            <div style="display:none">
-                <div>
-                    <div>我的钱包</div>
-                    
+        <div class="paymentzy clearfix" style="display:none">
+            <!-- 头部提现的头部按钮 -->
+            <div class="balance clearfix" id="balanceid" style="display:none;">
+                <div class="balance-wallet  clearfix">
+                    <span class="balance-wspan glyphicon glyphicon-chevron-left" id="balace-return"></span>
+                    <div class="balance-wdiv">
+                        我的钱包
+                        <span class="balance-wdvspan"></span>
+                    </div>
+                    <div class="balance-mywcash" id="idbalance-mycash">
+                        余额提现
+                    </div>
                 </div>
-                <div></div>
+                <div class="balance-mywallet clearfix">
+                    <div class="balance-mymoneysum clearfix">
+                        <div class="balance-mywleft clearfix">
+                            <span class="balance-mywspan">余额总额:</span>
+                            <span class="balance-mywmoney">00.00</span>
+                        </div>
+                        <span class="balance-mywlspan"></span>
+                    </div>
+                    <div class="balance-mymoneysum clearfix">
+                        <div class="balance-mywleft clearfix">
+                            <span class="balance-mywspan">已提余额</span>
+                            <span class="balance-mywmoney">00.00</span>
+                        </div>
+                        <span class="balance-mywlspan"></span>
+                    </div>
+                    <div class="balance-mymoneysum clearfix" style="float:right;color:#ffc757;">
+                        <span class="balance-mywspan">可提余额</span>
+                        <span class="balance-mywmoney">00.00</span>
+                    </div>
+                </div>
             </div>
-            <!-- 上不头部 -->
+            <!-- 我的支付订单详情 -->
             <div class="phdicon clearfix">
                 <span class="ptbicon  iconfont icon-zhifu1"></span>
-                <div class="mypay">
-                    我的支付
+                <div class="mypay" id="mypayidname">
+                    
                 </div>
             </div>
             <!-- 复用区 -->

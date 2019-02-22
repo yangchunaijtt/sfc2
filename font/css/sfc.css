@@ -1991,3 +1991,77 @@ body {
     font-size: 16px;
     margin-top: 20px;
   }  
+
+/* 提现页面 */
+  .paymentzy  .balance{
+    background: #fff;
+    border-top: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  .paymentzy  .balance  .balance-wallet{
+    width: 100%;
+    height: 46px;
+    line-height: 46px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  .paymentzy  .balance .balance-wallet .balance-wspan{
+    width: 20%;
+    display: inline-block;
+    font-size: 19px;
+    color: #f0935a;
+    text-align: center;
+    line-height: 46px;
+  }
+  .paymentzy  .balance  .balance-wallet .balance-wdiv{
+    display: inline-block;
+    font-size: 17px;
+    width: 50%;
+    text-align: center;
+  }
+  .paymentzy  .balance  .balance-wallet .balance-wdvspan{
+    height: 26px;
+    border: 1px solid #a8a8a8;
+    display: inline-block;
+    float: right;
+    margin-top: 10px;
+  }
+  .paymentzy  .balance  .balance-wallet .balance-mywcash{
+    display: inline-block;
+    width: 26%;
+    text-align: center;
+    font-size: 17px;
+    color: #64b0f2;
+  }
+   /* 钱数样式的设置 */
+   .paymentzy  .balance  .balance-mywallet{
+    height: 46px;
+    width: 100%;
+    background: #64b0f2;
+    color: #fff;
+   }
+  .paymentzy  .balance  .balance-mywallet .balance-mymoneysum{
+    width: 32%;
+    display: inline-block;
+  }
+  .paymentzy  .balance  .balance-mywallet  .balance-mywleft{
+    float: left;
+    width: 96%;
+  }
+  .paymentzy  .balance  .balance-mywallet .balance-mywlspan{
+    height: 26px;
+    border: 1px solid #fff;
+    float: right;
+    margin-top: 10px;
+  }
+  .paymentzy  .balance  .balance-mywallet .balance-mymoneysum .balance-mywspan{
+    height: 23px;
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+  .paymentzy  .balance  .balance-mywallet .balance-mymoneysum  .balance-mywmoney{
+    height: 23px;
+    display: block;
+    text-align: center;
+    width: 100%;
+  }

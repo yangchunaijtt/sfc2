@@ -6,13 +6,11 @@ var nowusermsg = {
     uid:111,    // 是查询单号的uid，不是自己的uid。
     id:111,
     state:111,
-    clickPerson:"own",   // 时那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
+    clickPerson:"own",   // 是那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
     openid:111,  
     phone:111,    // 登录用户自己的电话号
 }
 
-        
-       
 
 $(function(){
     getOpenid(function(openid){

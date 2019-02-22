@@ -17,7 +17,6 @@
                   // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
                   city: lival,
                 })
-              
                 geocoder.getLocation(lival, function(status, result) {
                   if (status === 'complete' && result.info === 'OK') {
                     // result中对应详细地理坐标信息
@@ -368,7 +367,7 @@
         var rand = "";
         for(var i = 0; i < 3; i++){
             var r = Math.floor(Math.random() * 10);
-            rand += r;
+            rand += r ;
         }
         // 生成时间戳 "yyyyMMddhhmmss" 格式
         function pad2(n) { return n < 10 ? '0' + n : n };
@@ -706,12 +705,9 @@
             loadcount:3,   // 页面展示的为第几页的数据 
             sf:"",          // 身份
         }
+
         function hdpaymentzy(){
-            if(window.location.hash==="#ddxq?passger"){
                 paymentzyval.sf="Passenger";
-            }else if(window.location.hash==="#ddxq?diver"){
-                paymentzyval.sf="Driver";
-            }
             var useruid =  nowusermsg.uid;
             var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
                 path: function(){
