@@ -14,21 +14,18 @@ var nowusermsg = {
 
 $(function(){
     getOpenid(function(openid){
-        nowusermsg.uid = localCache("uid-kongbatong");
+        nowusermsg.myuid = localCache("uid-kongbatong");
         nowusermsg.openid = localCache("openid-kongbatong");
         nowusermsg.phone = localCache("mobile-kongbatong");
         nowusermsg.openid = openid;
         console.log("openid",nowusermsg.openid,openid);
-        if(null == nowusermsg.uid || "" == nowusermsg.uid) {
+        if(null == nowusermsg.myuid || "" == nowusermsg.myuid) {
             register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
         } else {
            console.log("获取成功");
         }
     },location.search);
-    // 取本地缓存数据
-    
-    console.log(nowusermsg);
-
+  
     showLodding("请稍等，加载中...");
     /* 点击时  地图上添加一个maker点 并且聚焦 */
    $(".cfdsdmdiv").bind("touch click",function(){
@@ -88,16 +85,12 @@ $(function(){
                 //  本地化数据
                 nowusermsg.requestData = data.obj;
                 rendering(data);
-                /* 绑取消订单的事件 */
-                $("#qxsfcxinxi").bind("touch click",function(){
-                    qxsfcxinxi();
-                })
+                
                 if( data.obj.pushType === "Passenger" ){    // 乘客身份
                     trips.passerResult();
                 }else if(  data.obj.pushType === "Driver" ){    // 车主身份逻辑的
                     trips.driverResult();
                 }
-                
                 
                 /* 加载成功，取消提示按钮 */
                 clearDialog();
@@ -123,7 +116,7 @@ $(function(){
             Tsinformation:"<div>取消成功,正在退款中</div>",  // 提示按钮，提示他
             Tsinfm:'<div class="clearfix"><div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">祝您旅途愉快,请您注意安全</div></div>',    // 正在行程中
         },
-        passerResult:function(){   // 车主查看乘客
+        passerResult:function(){   // 车主查看乘客(乘客被查看)
             var data = nowusermsg.requestData;
             trips.state = data.state;
             //  State	int	状态（-1:失效；0：发布；1：完结；2：接单)
@@ -146,7 +139,7 @@ $(function(){
                     $(".sdstatusd").text("已接单");
                     // 有人接单(有车主接单了,乘客自己没点完成)：提前一小时有	：有成交按钮   取消按钮
                     $("#tmpbutton").empty();
-                    $("#tmpbutton").append('<div class="clearfix" style="width:50%;display:inline-block;"><div class="cancel_button" style="background: #31b0d5;"  onclick="qxsfcxinxi()">取消</div></div><div class="clearfix"  style="width:47%;display:inline-block;"><div class="cancel_button"  style="background:#2b5ae3;" onclick="trips.passerDeal()">成交</div></div>');
+                    $("#tmpbutton").append('<div class="clearfix" style="width:50%;display:inline-block;"><div class="cancel_button" style="background: #31b0d5;"  onclick="qxsfcxinxi()">取消发布</div></div><div class="clearfix"  style="width:47%;display:inline-block;"><div class="cancel_button"  style="background:#2b5ae3;" onclick="trips.passerDeal()">成交</div></div>');
                 }
             }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
                 $("#tmpbutton").empty();
@@ -179,6 +172,8 @@ $(function(){
                     //  发布成功
                     $(".sdstatusd").text("发布成功");
                     $("#tmpbutton").empty();
+                    // 取消发布之后，
+                   $("#tmpbutton").append("<div id='cancelRelease' style='width: 150px;height: 36px;line-height: 36px;color: #fff;background: #31b0d5;text-align: center;border-radius: 6px;margin: 0 auto;font-size: 16px;' onclick='qxsfcxinxi()'>取消发布</div>");
                 }else if( data.state === 1 ){
                     // 已完成
                     $("#tmpbutton").empty();
@@ -196,20 +191,36 @@ $(function(){
             }
         },
         passerDeal:function(){   // 乘客点击成交的操作函数
-            $("#tmpbutton").empty();
-            showMessage1btn("已成交,祝您旅途愉快！","",0);
-            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
-            $(".sdstatusd").text("已成交");
+            // 用户点成交要出发完结的ajax
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/updateFROrders.asp",
+                type:"post",
+                data:{
+                    uid:nowusermsg.uid,
+                    id:nowusermsg.id,
+                    state:1   // 1 是完结
+                },
+                success:function(data){
+                    console.log("点击成交",data);
+                    $("#tmpbutton").empty();
+                    showMessage1btn("已成交,祝您旅途愉快！","",0);
+                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
+                    $(".sdstatusd").text("已成交");
+                },
+                error:function(data){
+                    console.log("成交失败",data);
+                }
+            })
         },
     }
 // 向后台请求人数，接单
     function Receipt(val){
-        if(val === 0){ // 车主接乘客的单
-            receiptAjax(0);
-        }else if(val === 1){ // 乘客报名车主的单
-            receiptAjax(1);
+        if(val === 0){ // 车主接乘客的单(接单)
+            receiptSign();
+        }else if(val === 1){ // 乘客报名车主的单(报名直接付钱)
+            receiptAjax();
         }
-        function receiptAjax(val){
+        function receiptAjax(){
             $.ajax({
                 type:"post",
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/getCurrentPNum.asp",
@@ -217,29 +228,13 @@ $(function(){
                     froId:nowusermsg.id
                 },
                 success:function(data){
-                    console.log(data);
-                    if( val === 0 ){
-                        if(data.result>0){
-                            showMessage1btn("接单成功,请联系乘客","",0);
-                            //  要向后台发送数据
-                            $("#tmpbutton").empty();
-                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">接单成功,请您电联乘客</div>');
-                            $(".sdstatusd").text("接单成功");
-                        }else if( data.result <= 0 ){
-                            $("#tmpbutton").empty();
-                            showMessage1btn("接单失败,已被接单","",0);
-                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,单子已被接</div>');
-                            $(".sdstatusd").text("已被接单");
-                        }
-                    }else if( val === 1 ){
-                        if( data.result > 0 ){
-                            paymentModule.payMoney(nowusermsg.requestData.price); 
-                        }else if ( data.result <= 0 ) {
-                            $("#tmpbutton").empty();
-                            showMessage1btn("报名失败,已满","",0);
-                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,已满</div>');
-                            $(".sdstatusd").text("已满");
-                        }
+                    if( data.result > 0 ){
+                        paymentModule.payMoney(nowusermsg.requestData.price); 
+                    }else if ( data.result <= 0 ) {
+                        $("#tmpbutton").empty();
+                        showMessage1btn("报名失败,已满","",0);
+                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,已满</div>');
+                        $(".sdstatusd").text("已满");
                     }
                 },
                 error:function(data){
@@ -247,7 +242,32 @@ $(function(){
                 }
             })
         }
-        
+        function receiptSign(){
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/saveMadeFROReceipts.asp",
+                type:"post",
+                data:{
+                    uid:nowusermsg.myuid,
+                    froId:nowusermsg.id,
+                    utype:"Driver"
+                },
+                success:function(data){
+                    console.log("报名成功",data);
+                    if( data.result === -1 ){
+                        showMessage1btn("获取用户失败,请重新打开页面","",0);
+                    }else{
+                        showMessage1btn("接单成功,请联系乘客","",0);
+                        $("#tmpbutton").empty();
+                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">接单成功,请您电联乘客</div>');
+                        $(".sdstatusd").text("接单成功");
+                    }
+                },
+                error:function(data){
+                    showMessage1btn("接单失败,请重试","",0);
+                }
+            })
+            
+        }
     }
 // 订单详情页的支付模块
     // 支付模块
@@ -288,15 +308,14 @@ $(function(){
             // 地址
             var url = "../../../common/getBSign-kongbatong.asp";
             // sfcsj.passenger 存储着用户的信息 
-            // openid 需要传入的数据的定义
-            var utype = nowusermsg.requestData.pushType;
+           
             
             paymentbttsj.openid = {
                 uid:nowusermsg.uid,
                 phone:nowusermsg.phone,
                 usource:paymentbttsj.usource,
                 FROID:paymentbttsj.FROID,
-                utype:utype
+                utype:"Passenger"   // 付钱的是当前身份
             };
             console.log(param);
              $.post(url,param,function(data){
@@ -332,7 +351,10 @@ $(function(){
                         case "get_brand_wcpay_request:ok":
                             //报名成功要付报名费给我们,
                             showMessage1btn("支付报名成功,请联系车主","",0);
-                            //  要向后台发送数据
+
+                            // 成功了要把电话显示出来   
+                            $(".sfvaldiv").text(sj.userInfo.mobile.trim());
+                           
                             $("#tmpbutton").empty();
                             $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
                             $(".sdstatusd").text("报名成功");
@@ -400,7 +422,7 @@ $(function(){
 
 /* 取消订单的操作 */
     function qxsfcxinxi(){
-        if(nowusermsg.state===0){
+        if(nowusermsg.state===0){  // 发布
             $.ajax({
                 type:"post",
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
@@ -409,15 +431,19 @@ $(function(){
                   id:nowusermsg.id
                 },
                 success:function(data){
-                    console.log("获取成功的数据",data);
                     if(data.result===-1){
                         /* 操作失败,请重新刷新 */
                         showMessage1btn("操作失败,请重新刷新","",0);
-                    }else if(data.result===1){
-                        $("#tmpbutton").empty();
-                        showMessage1btn("已取消发布,正在退款中","",0);
-                        // 操作成功，显示提示
-                        $(".sdstatusd").text("失效了");
+                    }else if(data.result===1 ){
+                        // 取消订单时，，如果是乘客身份要发起退款
+                        if( nowusermsg.requestData.pushType === "Passenger" ){
+                                retreatMoney();
+                        }else if( nowusermsg.requestData.pushType === "Driver" ){
+                            $("#tmpbutton").empty();
+                            showMessage1btn("已取消发布","",0);
+                            // 操作成功，显示提示
+                            $(".sdstatusd").text("失效了");
+                        }
                     }
                 },
                 error:function(data){
@@ -431,7 +457,37 @@ $(function(){
         }else {
             showMessage1btn("网络原因，刷新在试","",0);
         }
+        // 乘客身份发起取消订单时，退款的函数
+        function retreatMoney(){
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFRROPayments.asp",
+                type:"post",
+                data:{
+                    uid:nowusermsg.uid,
+                    id:nowusermsg.id
+                },
+                success:function(data){
+                    console.log("取消支付数据",data);
+                    if( data.result === -1 ){
+                        $("#tmpbutton").empty();
+                        showMessage1btn("该订单不存在,请联系客服","",0);
+                            // 操作成功，显示提示
+                        $(".sdstatusd").text("已取消发布,改订单未付钱");
+                    }else {
+                        $("#tmpbutton").empty();
+                        showMessage1btn("取消成功,正在退款","",0);
+                            // 操作成功，显示提示
+                        $(".sdstatusd").text("取消成功");
+                    };
+                },
+                error:function(data){
+                    console.log("取消支付失败",data);
+                    showMessage1btn("取消支付失败,请联系客服","",0);
+                }
+            })
+        } 
     }
+
 
 /* 地图的初始化 */
     var map = new AMap.Map('sdcontainer', {

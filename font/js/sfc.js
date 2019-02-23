@@ -797,10 +797,11 @@
                 success:function(data){
                     console.log("车主接单信息",data);
                     // 乘客处理代码在 1452行
-
+                    $(".phdiconfyq").empty();
                 },  
                 error:function(data){
                     console.log("车主接单获取失败",data);
+                    $(".phdiconfyq").empty();
                 }
             })
         }
@@ -1460,14 +1461,11 @@
                     // 处理支付页
                     hdpaymentzy();
                 }else if(val1[1]==="diver"){
-
                     // 点击时车主时 调用渲染函数
                     owenerCash.owerPage();
-
-                    $("#mypayidname").text("我的订单");
+                    $("#mypayidname").text("我的接单");
                     // 车主就显示
                     $("#balanceid").show();
-                    
                     // 车主要处理接单数据
 
                 }
@@ -1531,7 +1529,7 @@
              success: function (data) {
                 sfcsj.passenger = data;
                 // 获取成功，但是数据暂时为空 
-                // setPassenger() 处理 乘客端数据的函数
+                // 处理 乘客端数据的函数
                 setPassenger(data);
             }
            });
@@ -1583,7 +1581,7 @@
             success: function (data) {
                 qbxcvalsj.passenger = data;
                
-               // setPassenger() 处理 乘客端数据的函数
+               //  乘客端数据的函数
                setqbPassenger(data);
            }
           });
@@ -1625,7 +1623,7 @@
                qbxcvalsj.vowner = data;
                // 获取成功，但是数据暂时为空 
                
-               // setPassenger() 处理 乘客端数据的函数
+               // 处理 乘客端数据的函数
                setqbVowneraa(data);
            }
           });
@@ -2057,7 +2055,7 @@
                             // 付款单号可能会出现问题，需要取之前的来解决
                             // data.obj 返回数据给的单号
                             paymentModule.payMoney(parseFloat(fabuxiaoxi.amoney));
-                        }else if( pushType === "Drivrer" ){
+                        }else if( pushType === "Driver" ){
                              // 用完时间要初始化,完成了在初始化。
                             // 用完要把用过的值初始化 
                             fabuxiaoxi.dwsj = "";   // 定位的初始化 
