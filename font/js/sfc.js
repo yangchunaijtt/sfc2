@@ -778,13 +778,6 @@
 
         },
         owerPage:function(){ // 每次点开这个页面都渲染一次
-            // 渲染页面
-            // 每次点开页面都调用一次
-
-            // 调用取接单数据
-            owenerCash.myOrder();
-        },
-        myOrder:function(){
             $.ajax({
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts.asp",
                 type:"post",
@@ -797,10 +790,19 @@
                 success:function(data){
                     console.log("车主接单信息",data);
                     // 乘客处理代码在 1452行
+                    owenerCash.cashResult = data;
                     $(".phdiconfyq").empty();
+                    if(data.result>0){
+                        for(var jj = 0 ;jj<data.obj.froReceipts.length;jj++){
+                            $(".phdiconfyq").append(sfcsj.paymentpage);
+                        // 处理支付页面的数据 
+                            paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
+                        }
+                   }
                 },  
                 error:function(data){
                     console.log("车主接单获取失败",data);
+                    showMessage1btn("网络出错,获取我的订单失败","",0);
                     $(".phdiconfyq").empty();
                 }
             })
@@ -1247,7 +1249,7 @@
         // 支付页的模板 
         paymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>支付时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>支付金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>支付结果:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
         // 车主接单页模板
-        ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>订单时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>订单结果:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>"
+        ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>出发时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>始发地:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>"
     }
 
     //让时间绑定切换到页面的事件 
@@ -2122,9 +2124,11 @@
     }
     // 支付成功处理的页面的数据 
     //    <a href="#payment" class="aqkpayment clearfix" id="pmaqkpayment">  
-    function paymentpcl(i,data){
-        var sj = data.obj.froViewPayments[i];
-        // 处理点击支付的数据 
+    function paymentpcl(i,data,val){
+        owenerCash.cashResult;
+        if( val === "" || val === null || val === undefined){
+            var sj = data.obj.froViewPayments[i];
+            // 处理点击支付的数据 
             // 传递参数 
             var pmaqkpayment  = "#payment?id="+sj.id+"&froid="+sj.froid+"&puid="+sj.puid;
             $("#pmaqkpayment").attr("href",pmaqkpayment);
@@ -2151,6 +2155,9 @@
             $("#pmpayssuc").text(jg);
             var pmpayssuc = "pmpayssuc"+i;
             $("#pmpayssuc").attr("id",pmpayssuc);
+        }else if(val === 0 ){
+
+        }
     }   
 
 // 点击路由时 读取信息 

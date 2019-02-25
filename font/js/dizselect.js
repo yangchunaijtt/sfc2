@@ -474,7 +474,6 @@
             },
             error:function(data){
                 showMessage1btn("支付失败,刷新在试","",0);
-                return false ;
             }
         })
        

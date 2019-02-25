@@ -423,7 +423,6 @@ $(function(){
                     },
                     error:function(data){
                         showMessage1btn("人数已满","",0);
-                        return false ;
                     }
             })
 
