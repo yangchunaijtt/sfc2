@@ -2203,7 +2203,7 @@
                     // 点击查看页面功能
                    
                     $(".lookpaydan").bind("touch click",function(){
-                        var jwxx = "#ownshowdata?id="+val.froid+"&uid="+val.puid+"&sf=run";
+                        var jwxx = "#ownshowdata?id="+val.froid+"&uid="+val.puid+"&oneself";
                         var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
                         window.location.href = wlgref ;
                     })
