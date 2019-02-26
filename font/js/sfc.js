@@ -1706,7 +1706,7 @@
                     var cydstatedztcl = "#"+cydstatedzt;
                     $(cydstatedztcl).css('color',"#5cb85c");
                 }else  if(passengerData[i].state === 1){
-                    $("#cydstatedzt").text("结束");
+                    $("#cydstatedzt").text("完成");
                     var cydstatedzt = "cydstatedzt"+i;
                     $("#cydstatedzt").attr("id",cydstatedzt);
                     var cydstatedztcl = "#"+cydstatedzt;
@@ -1809,7 +1809,7 @@
                     var cirstatedztcl = "#"+cirstatedzt;
                     $(cirstatedztcl).css('color',"#5cb85c");
                 }else  if(vownerData[i].state === 1){
-                    $("#cirstatedzt").text("结束");
+                    $("#cirstatedzt").text("完成");
                     var cirstatedzt = "cirstatedzt"+i;
                     $("#cirstatedzt").attr("id",cirstatedzt);
                     var cirstatedztcl = "#"+cirstatedzt;
