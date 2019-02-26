@@ -9,6 +9,9 @@
     "overflow-x":"hidden",
     "overflow-y":"hidden"
     });
+
+    // 可以监听页面刷新事件
+
     $(function(){
         // 后台给的先调用下 这段js 
         getOpenid(function(openid){
@@ -33,7 +36,6 @@
                 hdrunvowner();
                 hactive();
                 formcontrol();
-                created();
                 getqbVowner();
                 getqbPassenger();
                 //  判断注册了没
@@ -145,7 +147,10 @@
 
         //修改样式 
         $("#ctxz").css("display","none")
+
         window.onhashchange = hashChange;
+
+        
 
         //另外js的初始化数据 
         createlival();
@@ -191,7 +196,6 @@
         removeacive();
         $(".ullish").addClass("ulliactive");
         cszhi(".ullish");
-        $(".hpassenger").css("color","#e39f7a");
     // 页面点击路由颜色设置 
         $(".hpassenger").bind("touch click",function(){
             hashlycolorsz();
@@ -735,6 +739,9 @@
             })
 //  调用本地定位函数
             sfclocation();
+            
+        // 页面刷新和跳转时也调用这个路由
+            hashChange();
     })
     // 函数 
         function hvownermyrun(){
@@ -1283,7 +1290,7 @@
 
     }
     
-    // 默认页面显示
+    // 默认页面显示，先不弄,放这里
     function created(){
         $(".passenger").show();
         $(".vowner").hide();
@@ -1315,6 +1322,7 @@
     // 切换路由的方法
     function hashChange(hashzhi){
         var locationHash = location.hash;
+        console.log("路由值",locationHash);
          // 处理一下参数
         // #details?a=3
         var val1 = locationHash.split("?");
@@ -1323,7 +1331,6 @@
             window.location.hash= hashzhi;
             $("#address").text("想要去哪儿");
         }else {
-            $("#idsearchvalshow").empty();
             if(val1[0]=="#passenger" || locationHash =="#passenger" ){
                 $(".runluyouaa").hide();
                 $(".hrunoneicon").attr('class',"glyphicon glyphicon-triangle-bottom hrunoneicon");
@@ -1704,8 +1711,8 @@
                     $("#cydstatedzt").attr("id",cydstatedzt);
                     var cydstatedztcl = "#"+cydstatedzt;
                     $(cydstatedztcl).css('color',"#f0ad4e");
-                }else {
-                    $("#cydstatedzt").text("未知情况");
+                }else if(passengerData[i].state === 2) {
+                    $("#cydstatedzt").text("已被接单");
                     var cydstatedzt = "cydstatedzt"+i;
                     $("#cydstatedzt").attr("id",cydstatedzt);
                     var cydstatedztcl = "#"+cydstatedzt;
@@ -1807,8 +1814,8 @@
                     $("#cirstatedzt").attr("id",cirstatedzt);
                     var cirstatedztcl = "#"+cirstatedzt;
                     $(cirstatedztcl).css('color',"#f0ad4e");
-                }else {
-                    $("#cirstatedzt").text("未知情况");
+                }else if(vownerData[i].state === 2){
+                    $("#cirstatedzt").text("已被报名");
                     var cirstatedzt = "cirstatedzt"+i;
                     $("#cirstatedzt").attr("id",cirstatedzt);
                     var cirstatedztcl = "#"+cirstatedzt;
@@ -1847,8 +1854,6 @@
 
       // 点击处理函数  公用的 
       function touchchuli(result){
-          // 首先清空所有 
-        $("#idsearchvalshow").empty();
         if(result.location==""){
             
             maponbh(false);
@@ -1896,10 +1901,8 @@
                 setdtCeneter(e.lnglat);
                 document.getElementById('lnglat').value = e.lnglat;
                 regeoCode();
-               
-                $("#idsearchvalshow").empty();
                 
-        })
+            })
 
         document.getElementById('lnglat').onkeydown = function(e) {
             if (e.keyCode === 13) {
@@ -1940,6 +1943,10 @@
         // 初始化函数 
         successdata:{},
         errdata:{},
+        olddpcity:"",
+        oldarcity:"",
+        olddptime:"",
+        oldartime:"",
         payment:function(){
              // 当点击提交时，把获取到的值给他们 
              
@@ -2020,7 +2027,12 @@
             if(successdattsxx!==""){
                 showMessage1btn(successdattsxx,"",0);
                 return false;
+            }else if( paymentModular.oldarcity == mdata.name.trim() && paymentModular.olddpcity == departure.trim() &&paymentModular.oldartime == fabuxiaoxi.cftime && paymentModular.olddptime ==  fabuxiaoxi.mdtime){
+                // 阻止因为卡顿，出现的多次发布同样的数据
+                showMessage1btn("已经发布成功,请忽重复发布","",0);
+                return false;
             }
+
             $.ajax({
                 type:"post",
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/saveMadeFROrders.asp",
@@ -2050,6 +2062,11 @@
                         showMessage1btn(successdattsxx,"",0);
                         return false;
                     }else {
+                        // 赋值，用于比较，防止卡顿，出现重复的
+                        paymentModular.oldarcity = mdata.name.trim();
+                        paymentModular.olddpcity = departure.trim() ;
+                        paymentModular.oldartime = fabuxiaoxi.cftime;
+                        paymentModular.olddptime =  fabuxiaoxi.mdtime;
                         // 提交的元素 
                         if( pushType === "Passenger" ){
                             //  如果是乘客发布，需要付钱给平台

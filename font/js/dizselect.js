@@ -735,7 +735,7 @@
                 wuxian(valzhi,0);
             }else if( valsf==="Driver" ){
                 paymentzyval.page = 2;
-                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+paymentzyval.page+"&uid="+userid+"&utype='Driver'&dateRange=";
+                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+paymentzyval.page+"&uid="+useruid+"&utype='Driver'&dateRange=";
                 wuxian(valzhi,1);
             }
             function wuxian ( val,bijiao) { 
