@@ -718,50 +718,71 @@
     }
 
 // 支付页 滑动获取数据效果 
+// 车主页 我的订单 数据的无限滚动
     var paymentzyval = {
             page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
             loadcount:3,   // 页面展示的为第几页的数据 
             sf:"",          // 身份
         }
 
-        function hdpaymentzy(){
-                paymentzyval.sf="Passenger";
+        function hdpaymentzy(valsf){
+            paymentzyval.sf = valsf;
+            var valzhi = "" ;
             var useruid =  nowusermsg.uid;
-            var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
-                path: function(){
-                    // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
-                    // 数据量很小情况下  报错了 
-                    if(paymentzyval.page <= paymentzyval.loadcount){
-                        // 获取全部时间的行程，失效页没有关系 
-                        return "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+paymentzyval.page+"&utype="+paymentzyval.sf+"&uid="+useruid+"&dateRange=";
-                    }
-                },
-                history: false,
-                elementScroll:".paymentzy",
-                scrollThreshold:50,
-                responseType:"json",
-                debug:true
-            });
-            $runpassengerval.on( 'load.infiniteScroll', function( event, response ) {
-                var data = response;
-                // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
-                                                // 10     2         
-                // 开始处理结果 
-                // 赋值最大页数 
-                paymentzyval.loadcount = data.page;
-                paymentzyval.page = paymentzyval.page+1;
-                    // 调用处理全部车主页的函数 
-                    paymentpageval.result = data ;
-                    if(data.result>0){
-                         for(var jj = 0 ;jj<data.obj.froViewPayments.length;jj++){
-                             $(".phdiconfyq").append(sfcsj.paymentpage);
-                         // 处理支付页面的数据 
-                             paymentpcl(jj,data);
-                         }
-                    }
-            })
+            if( valsf==="Passenger" ){
+                paymentzyval.page = 2;
+                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+paymentzyval.page+"&utype="+paymentzyval.sf+"&uid="+useruid+"&dateRange=";
+                wuxian(valzhi,0);
+            }else if( valsf==="Driver" ){
+                paymentzyval.page = 2;
+                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+paymentzyval.page+"&uid="+userid+"&utype='Driver'&dateRange=";
+                wuxian(valzhi,1);
+            }
+            function wuxian ( val,bijiao) { 
+                var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
+                    path: function(){
+                        // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
+                        // 数据量很小情况下  报错了 
+                        if(paymentzyval.page <= paymentzyval.loadcount){
+                            // 获取全部时间的行程，失效页没有关系 
+                            return val;
+                        }
+                    },
+                    history: false,
+                    elementScroll:".paymentzy",
+                    scrollThreshold:50,
+                    responseType:"json",
+                    debug:true
+                });
+                $runpassengerval.on( 'load.infiniteScroll', function( event, response ) {
+                    var data = response;
+                    // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
+                                                    // 10     2         
+                    // 开始处理结果 
+                    // 赋值最大页数 
+                    paymentzyval.loadcount = data.page;
+                    paymentzyval.page = paymentzyval.page+1;
+                        // 调用处理全部车主页的函数 
+                        paymentpageval.result = data ;
+                        if(data.result>0){
+                            for(var jj = 0 ;jj<data.obj.froViewPayments.length;jj++){
+                                $(".phdiconfyq").append(sfcsj.paymentpage);
+                            // 处理支付页面的数据 
+                                if(bijiao===0){
+                                    paymentpcl(jj,data);
+                                }else if(bijiao ===1 ){
+                                    paymentpcl(jj,data,0);
+                                }
+                                
+                            }
+                        }
+                })
+            }
         }
 
+
+
+    
 // 筛选判断的逻辑 
     var runscreenv = {
         winhash:"",      // 存储路由信息 

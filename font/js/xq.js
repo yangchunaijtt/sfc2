@@ -394,7 +394,7 @@ $(function(){
                                     showMessage1btn("支付报名成功,请联系车主","",0);
 
                                     // 成功了要把电话显示出来   
-                                    $(".sfvaldiv").text(sj.userInfo.mobile.trim());
+                                    $(".sfvaldiv").text(nowusermsg.requestData.customerList[0].trim());
                                 
                                     $("#tmpbutton").empty();
                                     $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
@@ -448,7 +448,12 @@ $(function(){
             /* 提示的城市名 */
                 $(".changz").text(sj.dpCity.trim());
             /* 手机号*/
-                $(".sfvaldiv").text(sj.userInfo.mobile.trim());
+                if(typeof(sj)=='undefined'?false:(typeof(sj.customerList)=='undefined'?false:true)){
+                    $(".sfvaldiv").text(sj.customerList[0].trim());
+                }else{  
+                    $(".sfvaldiv").text("成交后才能看到号码");
+                }
+                
             /* 订单结果 */
             nowusermsg.state = sj.state;
             // 乘车人数

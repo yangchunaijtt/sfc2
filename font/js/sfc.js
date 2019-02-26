@@ -1460,8 +1460,7 @@
                     $("#mypayidname").text("我的支付");
                     // 乘客隐藏掉那个
                     $("#balanceid").hide();
-                    // 处理支付页
-                    hdpaymentzy();
+                    hdpaymentzy("Passenger");
                 }else if(val1[1]==="diver"){
                     // 点击时车主时 调用渲染函数
                     owenerCash.owerPage();
@@ -1469,7 +1468,7 @@
                     // 车主就显示
                     $("#balanceid").show();
                     // 车主要处理接单数据
-
+                    hdpaymentzy("Driver");
                 }
                 $(".paymentzy").show();
             }else if(val1[0]=="#payment"){
@@ -2125,7 +2124,6 @@
     // 支付成功处理的页面的数据 
     //    <a href="#payment" class="aqkpayment clearfix" id="pmaqkpayment">  
     function paymentpcl(i,data,val){
-        owenerCash.cashResult;
         if( val === "" || val === null || val === undefined){
             var sj = data.obj.froViewPayments[i];
             // 处理点击支付的数据 
@@ -2156,20 +2154,24 @@
             var pmpayssuc = "pmpayssuc"+i;
             $("#pmpayssuc").attr("id",pmpayssuc);
         }else if( val === 0 ){
-            var  sj = data.obj.froReceipts[i];
+            var  sjone = data.obj.froReceipts[i];
             // 传递参数 
-            var pmaqkpayment  = "#payment?id="+i+"&identity=Driver";
-            $("#pmaqkpayment").attr("href",pmaqkpayment);
+            var pmaqkpaymentone  = "#payment?id="+i+"&identity=Driver";
+            $("#pmaqkpayment").attr("href",pmaqkpaymentone);
             var pmaqkpaymentid = "#pmaqkpayment"+i;
             $("#pmaqkpayment").attr("id",pmaqkpaymentid);
         // 处理出发时间
-            $("#pmpaytime").text(sj.departureTime);
+            $("#pmpaytime").text(sjone.departureTime);
             var pmpaytime = "pmpaytime"+i;
             $("#pmpaytime").attr("id",pmpaytime);
         // 处理订单金额 
-            $("#pmpayyiyuan").text(sj.price);
+            $("#pmpayyiyuan").text(sjone.price);
             var pmpayyiyuan = "pmpayyiyuan"+i;
             $("#pmpayyiyuan").attr("id",pmpayyiyuan);
+        // 处理始发地
+            $("#pmpayssuc").text(sjone.dpCity+sjone.departure);
+            var pmpayssuc = "pmpayssuc"+i;
+            $("#pmpayssuc").attr("id",pmpayssuc);
         }
     }   
 
@@ -2179,22 +2181,28 @@
         var winhash = window.location.hash;
        
         var sjone = winhash.split("?");   // #payment? id = 1 & identity = Driver
-        var sjid = sjone[1].split("&"); // id = 1     identity = Driver
-        var suncaifen  =  sjid.split("="); // id 1 identity  Driver
-        var indexes =   suncaifen[1];
-        var bijiao = suncaifen[3];
+        var sjid = sjone[1].split("&"); // ["id=0", "identity=Passenger"]
+        var sjindexes =  sjid[0].split("=");  // id 0 
+        var sjbijiao  =  sjid[1].split("=");   //   identity  Passenger
+        var indexes =   sjindexes[1];
+        var bijiao = sjbijiao[1];
         if( bijiao === "Passenger" ){  // 乘客的处理逻辑
+            
             // 赋值
                 var val = paymentpageval.result.obj.froViewPayments[indexes];   // ???
               // id = 1 sjvalzhi 数据的第几个数据
-              passengerclival(val);
               $(".pdetlsdadlook").empty();
+              
+              $(".pdetailszdxq").text("账单详情");
             // 付款
+                $("#pdtailsone").text("付款号");
                 $("#pdfkh").text(val.vpNo);
             // 支付价格 
+                $("#pdtailstwo").text("支付价格");
                 $("#pdzfjo").text(val.payPrice);
             // 支付情况 
                 var zfqk = "成功";
+                $("#pdtailsfive").text("支付情况");
                 var jg = "";   // 处理结果 
                 // 支付状态只有 -1 和 1 两个状态 
                 if(val.payState === 1){
@@ -2206,8 +2214,10 @@
                 }
                 $("#pdzfqk").text(jg);
             // 支付类型 
+                $("#pdtailsthree").text("支付类型");
                 $("#pdzflx").text(val.payType);
             // 支付日期 
+                $("#pdtailsfour").text("支付类型");
                 $("#pdzfrq").text(val.payDate);
             // 填充 
                 if(val.payState === 1){
@@ -2225,6 +2235,35 @@
         }else  if(bijiao === "Driver") {
              // 车主的处理逻辑
             var valtwo = owenerCash.cashResult.obj.froReceipts[indexes];
-            
+            $(".pdetlsdadlook").empty();
+            $(".pdetailszdxq").text("订单详情");
+            // 出发时间
+                $("#pdtailsone").text("出发时间");
+                $("#pdfkh").text(valtwo.departureTime);
+            // 出发城市
+                $("#pdtailstwo").text("出发城市");
+                if(valtwo.dpCity=="" || valtwo.dpCity==undefined ||valtwo.dpCity === null){
+                    $("#pdzfjo").text("空");
+                }else {
+                    $("#pdzfjo").text(valtwo.dpCity);
+                }
+                
+            // 乘车人数 
+                $("#pdtailsfive").text("乘车人数");
+                $("#pdzfqk").text(valtwo.personNum);
+            // 支付价格
+                $("#pdtailsthree").text("支付价格");
+                $("#pdzflx").text(valtwo.price);
+            // 出发地点
+                $("#pdtailsfour").text("出发地点");
+                $("#pdzfrq").text(valtwo.departure);
+            // 填充 
+                $(".pdetlsdadlook").append("<div class='clearfix' style='height: 56px;'><button class='lookpaydan btn btn-success'>查看行程页面</button><div class='lookpaydxx' style='display:none;'></div></div>");
+                $(".lookpaydan").bind("touch click",function(){
+                    var jwxx = "#ownshowdata?id="+valtwo.froid+"&uid="+valtwo.puid+"&oneself";
+                    var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
+                    window.location.href = wlgref ;
+                })
+              
         }
     }
