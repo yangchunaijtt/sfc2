@@ -9,6 +9,7 @@ var nowusermsg = {
     clickPerson:"own",   // 是那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
     openid:111,  
     phone:111,    // 登录用户自己的电话号
+    personNumber:0,  // 报名人数，默认为1
 }
 
 
@@ -45,7 +46,21 @@ $(function(){
         var result =  {P:parseFloat(nowusermsg.requestData.aLat),R:parseFloat(nowusermsg.requestData.aLng),lat:parseFloat(nowusermsg.requestData.aLat),lng:parseFloat(nowusermsg.requestData.aLng)};
         autocfdiv(result);
     })
-    
+    // 报名人数初始化
+    $("#person-jtnumber").text(nowusermsg.personNumber);
+    $("#person-plus").bind("touch click",function(){
+        nowusermsg.personNumber++;
+        $("#person-jtnumber").text(nowusermsg.personNumber);
+    })
+    $("#person-reduce").bind("touch click",function(){
+        if( nowusermsg.personNumber === 0 ){
+            return false;
+        }else {
+            nowusermsg.personNumber--;
+            $("#person-jtnumber").text(nowusermsg.personNumber);
+        }
+    })
+    $("#person-number").hide();
     // 页面的初始化
    /* 获取路由的值 */
    hqselectval();
@@ -199,11 +214,12 @@ $(function(){
                 }else if( data.state === 2 ){
                     // 已被接单  报名一个就算接单
                     $("#tmpbutton").empty();
-                    $(".sdstatusd").text("可以报名");
-                    $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
+                    $(".sdstatusd").text("等待报名中");
+                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;"">等待报名</div>');
                 }   
             }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
                 $(".sdstatusd").text("可以报名");
+                $("#person-number").show();
                 $("#tmpbutton").empty();
                 $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
             }else if( nowusermsg.clickPerson  === "oneself"  ){  // 乘客查看 我的支付，我的支付时车主行程，有成交按钮和取消成交按钮
@@ -243,10 +259,17 @@ $(function(){
     }
 // 向后台请求人数，接单
     function Receipt(val){
+
         if(val === 0){ // 车主接乘客的单(接单)
             receiptSign();
         }else if(val === 1){ // 乘客报名车主的单(报名直接付钱)
-            receiptAjax();
+            nowusermsg.personNumber = parseInt($("#person-jtnumber").text());
+            if( nowusermsg.personNumber === 0 ){
+                showMessage1btn("请先选择人数","",0);
+                return false ;
+            }else{
+                receiptAjax();
+            }
         }
         function receiptAjax(){
             $.ajax({
@@ -256,10 +279,20 @@ $(function(){
                     froId:nowusermsg.id
                 },
                 success:function(data){
+                    
+                    console.log("请求人数的数据",data);
                     if( data.result > 0 ){
-                        paymentModule.payMoney(nowusermsg.requestData.price); 
+                        if( nowusermsg.personNumber> data.result){
+                            showMessage1btn("座位不够,请重试","",0);
+                            return false ;
+                        }else{
+                            paymentModule.payMoney(nowusermsg.requestData.price); 
+                        }
                     }else if ( data.result <= 0 ) {
                         $("#tmpbutton").empty();
+                        // 不行就初始化
+                        nowusermsg.personNumber  = 0 ;
+                        $("#person-jtnumber").text(nowusermsg.personNumber);
                         showMessage1btn("报名失败,已满","",0);
                         $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,已满</div>');
                         $(".sdstatusd").text("已满");
@@ -340,7 +373,7 @@ $(function(){
                     froId:nowusermsg.id,	
                     utype:"Passenger",
                     vpno:paymentbttsj.billno,
-                    pnum:1
+                    pnum:nowusermsg.personNumber   // 人数为选择人数
                 },
                 success:function(data){
 
@@ -401,7 +434,10 @@ $(function(){
 
                                     // 成功了要把电话显示出来   
                                     $(".sfvaldiv").text(nowusermsg.requestData.customerList[0].trim());
-                                
+                                    // 成功后初始化
+                                    nowusermsg.personNumber  = 0 ;
+                                    $("#person-jtnumber").text(nowusermsg.personNumber);
+
                                     $("#tmpbutton").empty();
                                     $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
                                     $(".sdstatusd").text("报名成功");
@@ -411,6 +447,9 @@ $(function(){
                                     break;
                                 case "get_brand_wcpay_request:cancel":
                                     showMessage1btn("已取消支付！","Back()",0);
+                                    // 成功后初始化
+                                    nowusermsg.personNumber  = 0 ;
+                                    $("#person-jtnumber").text(nowusermsg.personNumber);
                                     break;
                                 }
                             }

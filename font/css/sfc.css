@@ -17,6 +17,7 @@
 .header .hrun a,
 .header #ddxq .htogglefour {
   display: block;
+  font-size: 16px;
 }
 /* 筛选 */
 .hpassenger {
@@ -36,7 +37,7 @@
   width: 200%;
   border-top: 1px solid #f2f2f2;
   font-size: 17px;
-  line-height: 80px;
+  line-height: 68px;
 }
 .hvowner .hvownerleft {
   width: 100%;
@@ -58,7 +59,6 @@
   display: inline-block;
   float:left;
   text-align: center;
-  line-height: 80px;
 }
 .hvowner .hvownerleftone {
   display: inline-block;
@@ -395,13 +395,13 @@
 }
 .run .circle .time .data {
   display: inline-block;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   text-indent: 10px;
 }
 .run .circle .time .rq {
   display: inline-block;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   margin-left: 5px;
 }
@@ -1035,8 +1035,8 @@ input[type=date] {
   z-index: 999;
   border-top: 1px solid #eae9e9;
   border-bottom: 1px solid #eae9e9;
-  height: 80px;
-  line-height: 80px;
+  height: 70px;
+  line-height: 70px;
 }
 .hrun .runluyouaa .runpsgone,
 .hrun .runluyouaa .rundvone {
@@ -2000,8 +2000,8 @@ body {
   }
   .paymentzy  .balance  .balance-wallet{
     width: 100%;
-    height: 46px;
-    line-height: 46px;
+    height: 56px;
+    line-height: 56px;
     border-bottom: 1px solid #f2f2f2;
   }
   .paymentzy  .balance .balance-wallet .balance-wspan{
@@ -2023,7 +2023,7 @@ body {
     border: 1px solid #a8a8a8;
     display: inline-block;
     float: right;
-    margin-top: 10px;
+    margin-top: 17px;
   }
   .paymentzy  .balance  .balance-wallet .balance-mywcash{
     display: inline-block;

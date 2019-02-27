@@ -40,6 +40,8 @@
                 getqbPassenger();
                 //  判断注册了没
                 owneridentity.ownerajax();
+                // 我的提现页的渲染
+                balanceMycash.cashMoneyPage();
             }
         },location.search);
         // 初始化时设置默认值 
@@ -737,8 +739,12 @@
             $("#idbalance-mycash").bind("touch click",function(){
                 owenerCash.cashWithdrawal();
             })
+        // 提现操作
+            $("#idbalance-mycash").bind("touch click",function(){
+                balanceMycash.cashMoney();
+            })
 
-            // 页面刷新和跳转时也调用这个路由
+        // 页面刷新和跳转时也调用这个路由
             hashChange();
 //  调用本地定位函数，定位很慢。
             sfclocation();
@@ -776,6 +782,21 @@
     // 选择城市的初始化函数 
     var cityselectval = {
         nowcity:""
+    }
+//  全部提现的操作 
+    var balanceMycash = {
+        cashMoneyPage:function(){ // 我的提现数据页的显示
+            // 同时显示钱数那些
+        },
+        getMoneyRecord:function(){ // 获取车主提现的所有信息
+            
+        },
+        cashMoney:function(){   // 调用提现钱的api
+            
+        },
+        setMoneyRecord:function(){ // 添加车主提现记录
+
+        }
     }
 
 // 给车主提现页绑定
@@ -1062,7 +1083,7 @@
        }
        //解析定位错误信息
        function onError(data) {
-           showMessage1btn("定位失败,刷新按钮在试","",0);
+           showMessage1btn("定位失败,请刷新在试","",0);
            gaode.errordata = data;
        } 
    }

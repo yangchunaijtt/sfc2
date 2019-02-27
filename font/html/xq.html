@@ -38,18 +38,28 @@
                     <!-- 添加按钮的地方 -->
                     <!-- <div onclick="Receipt('passer')" class="cancel_button" style="background:#31b0d5;">接单</div> -->
                 </div>
+                <div class="personNumber clearfix" id="person-number" style="display:none;">
+                    <div class="personnb-left clearfix">
+                        <span class="personrs">报名人数:</span>
+                        <span id="person-jtnumber"></span>
+                    </div>
+                    <div class="personnb-right clearfix">
+                        <span id="person-plus" class="person-button">+</span>
+                        <span id="person-reduce" class="person-button">-</span>
+                    </div>
+                </div>
                 <div class="sdstatus clearfix">
                     <span class="sdstatuss">订单结果:</span>
                     <div class="sdstatusd"></div>
                 </div>
                 <!-- 显示出发地 -->
-               <div class="cfdsdm clearfix" style="font-size: 16px;">
+               <div class="cfdsdm clearfix">
                     <span class="cfdsdmspan">出发地:</span>
                     <div class="cfdsdmdiv"></div>
                     <button class="cfdsdmdivbt btn btn-success">查看位置</button>
                </div>
                <!-- 目的地 -->
-               <div class="mddsdm clearfix"  style="font-size: 16px;">
+               <div class="mddsdm clearfix">
                     <span class="mdddsdmspan">目的地:</span>
                     <div class="mddsdmdiv "></div>
                     <button class="mddsdmdivbt btn btn-primary ">查看位置</button>

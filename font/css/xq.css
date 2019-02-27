@@ -1,6 +1,7 @@
 /* 顺风车页详情信息设置 */
 .showsjdata {
   width: 100%;
+  position: relative;
 }
 .showsjdata .srselect {
   height: 56px;
@@ -306,3 +307,51 @@
     margin: 0 auto;
     font-size: 16px;
   }
+/* 加减人数选择 */
+  #person-number{
+    width:100%;
+    border:1px solid #f2f2f2;
+  }
+  #person-number  .personnb-left{
+    width: 40%;
+    display: inline-block;
+    height: 40px;
+    line-height: 40px;
+  }
+  #person-number  .personnb-left .personrs{
+    width: 67%;
+    display: inline-block;
+    text-indent: 10px;
+  }
+  #person-number  .personnb-left #person-jtnumber{
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+    background: #91c7ff;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 6px;
+    color: #fff;
+  }
+  #person-number  .personnb-right{
+    display: inline-block;
+    width: 56%;
+  }
+  #person-number  .personnb-right  .person-button{
+    width: 40%;
+    height: 32px;
+    line-height: 32px;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    font-size: 16px;
+    margin-left: 6%;
+    display: inline-block;
+  }
+  #person-number  .personnb-right #person-plus{
+    background: #3154d5;
+  }
+  #person-number  .personnb-right #person-reduce{
+    background: #31cdd5;
+  }
+  
