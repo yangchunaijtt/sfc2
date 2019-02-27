@@ -737,11 +737,12 @@
             $("#idbalance-mycash").bind("touch click",function(){
                 owenerCash.cashWithdrawal();
             })
-//  调用本地定位函数
+
+            // 页面刷新和跳转时也调用这个路由
+            hashChange();
+//  调用本地定位函数，定位很慢。
             sfclocation();
             
-        // 页面刷新和跳转时也调用这个路由
-            hashChange();
     })
     // 函数 
         function hvownermyrun(){
