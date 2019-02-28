@@ -620,6 +620,11 @@
                         <span class="balance-mywmoney">00.00</span>
                     </div>
                 </div>
+                <div class="balance-cash clearfix">
+                    <span class="balance-cspage">我的账单(赚钱流水账单)</span>
+                    <span class="balance-csxian"></span>
+                    <span id="balance-csbutton">查看</span>
+                </div>
             </div>
             <!-- 我的支付订单详情 -->
             <div class="phdicon clearfix">
@@ -719,6 +724,75 @@
         </div>
         <!-- 注册提示的div -->
         <div class="to-examine clearfix" style="display:none">
+        </div>
+        <!-- 提现账单页 -->
+        <div id="cashMoneyPage" style="display:none">
+            <!-- 没有数据的显示 -->
+            <div class="public-divone clearfix" style="display: none;">
+                <img src="./font/fontjs/examine.gif"  class="public-imgone">
+                <span class="public-spanone">没有账单记录,快去接单吧</span>
+                <span class="public-spantwo">去接单</span>
+            </div>
+            <div class="cashmongy-header clearfix">
+                <span class="cashmongy-hdreturn glyphicon glyphicon-chevron-left"></span>
+                <div class="cashmongy-hdmy">
+                    我的账单
+                    <span class="cashmongy-hdmyicon"></span>
+                </div>
+                
+                <div class="cashmongy-hdsx clearfix">
+                    筛选
+                    <span class="cashmongy-hdsxicon glyphicon glyphicon-triangle-bottom"></span>
+                </div>
+                <!-- 筛选数据的，默认全部-->
+                <div class="cashmoney-center  clearfix">
+                    <div class="cashmoney-ctsource clearfix">
+                        <!-- 发布：Push；接单：Receipt； 提现：Cash -->
+                        <span  class="cashmoney-ctbiaoti">来源:</span>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">发布</span>
+                            <span class="cashmoney-ctxian"></span>
+                        </div>
+                        <div class="cashmoney-ctdiv clearfix">
+                            <span class="cashmoney-ctspan">接单</span>
+                            <span class="cashmoney-ctxian"></span>
+                        </div>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">提现</span>
+                            <span class="cashmoney-ctxian"></span>
+                        </div>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">全部</span>
+                        </div>
+                    </div>
+                    <div class="cashmoney-ctsource">
+                        <span  class="cashmoney-ctbiaoti">时间:</span>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">今天</span>
+                            <span class="cashmoney-ctxian"></span>
+                        </div>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">一周内</span>
+                            <span class="cashmoney-ctxian"></span>
+                        </div>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">一个月内</span>
+                            <span class="cashmoney-ctxian"></span>
+                        </div>
+                        <div class="cashmoney-ctdiv  clearfix">
+                            <span class="cashmoney-ctspan">全部</span>
+                        </div>
+                    </div>
+                    <!-- 一个点击会滑动隐藏的按钮 -->
+                    <div class="cashmoney-btdiv clearfix">
+                        <span class="cashmoney-btbutton glyphicon glyphicon-eject"></span>
+                    </div>
+                </div>
+            </div>
+            <!-- 显示的div，用来填充数据 -->
+            <div class="clearfix" id="cashm-footer">
+                
+            </div>
         </div>
     </div>
     <!-- 高德地图的两个引入 -->

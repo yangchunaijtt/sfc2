@@ -42,6 +42,8 @@
                 owneridentity.ownerajax();
                 // 我的提现页的渲染
                 balanceMycash.cashMoneyPage();
+                // 默认获取车主提现的数据
+                balanceMycash.cashMoneyPage("","");
             }
         },location.search);
         // 初始化时设置默认值 
@@ -79,6 +81,8 @@
         $(".owner-register").height($(document.body).height()-$(".header").height());
         // 审核页的样式
         $(".to-examine").height($(document.body).height());
+        // 我的账单页
+        $("#cashMoneyPage").height($(document.body).height()-$(".header").height());
         // 当 hash变化时切换显示
     // 页面初始化时就执行这些数据 
     $(".searchtime #datetime").datetimepicker({
@@ -351,32 +355,6 @@
                 runscreenv.mdd = "";
                 $(".rsdcsoipt").val("");
             })
-    //跟新版本的绑定
-        $(".hvownermyrun").bind("touch click",function(){
-            hvownermyrun();
-            $(".hvownermyrun").css("color","#5bc0de");
-        })
-        $(".hvownerqbrun").bind("touch click",function(){
-            hvownermyrun();
-            $(".hvownerqbrun").css("color","#5bc0de");
-        })
-        $(".hvownermypay").bind("touch click",function(){
-            hvownermyrun();
-            $(".hvownermypay").css("color","#5bc0de");
-        })
-        //  车主页的三个数据
-        $(".hrunmycar").bind("touch click",function(){
-            hvownermyrun();
-            $(".hrunmycar").css("color","#5bc0de");
-        })
-        $(".hrunqbcar").bind("touch click",function(){
-            hvownermyrun();
-            $(".hrunqbcar").css("color","#5bc0de");
-        })
-        $(".hrucarpay").bind("touch click",function(){
-            hvownermyrun();
-            $(".hrucarpay").css("color","#5bc0de");
-        })
     // 绑定切换城市的方法
         $(".free-incity").bind("touch click",function(){
             FreeRide.freeMode = "incity";   // 城内
@@ -785,8 +763,30 @@
     }
 //  全部提现的操作 
     var balanceMycash = {
-        cashMoneyPage:function(){ // 我的提现数据页的显示
-            // 同时显示钱数那些
+        cashMoneyPageData:{},   // 我的账单页数据
+        cashMoneyPage:function(typeval,dateRangeval){ // 我的账单页的显示
+            $.ajax({
+                type:"post",
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs.asp",
+                data:{
+                    /*
+                    cur         	查看页码
+                    uid         	用户id
+                    type	  		金额来源类型（发布：Push；接单：Receipt； 提现：Cash）
+                    dateRange   	日期范围（"today","weekday","month"）
+                    */
+                   uid:nowusermsg.uid,
+                   cur:1,
+                   type:typeval,
+                   datePange:dateRangeval
+                },
+                success:function(data){
+                    console.log("获取车主金额信息",data);
+                },
+                error:function(data){
+                    console.log("获取车主金额失败",data);
+                }
+            })
         },
         getMoneyRecord:function(){ // 获取车主提现的所有信息
             
@@ -844,6 +844,7 @@
         idCardBack:0,   //身份证反面数据
         dLicenseFront:0,    // 驾驶照正面数据
         dLicenseBack:0,     // 驾驶照反面数据
+        second:0,
         filechange:function(val,file,xrdiv){  // 变化事件
             if(val==="#idCardFront"){
                 carregister.turnbase(carregister.idCardFront,file,xrdiv,0);
@@ -880,6 +881,10 @@
             reader.readAsDataURL(file.files[0]);       
         },
         photoajax:function(){   // 向后台发送
+            if( carregister === 1){
+                return false;
+            }
+            carregister.second = 1;
             var tips = "";
             if(carregister.idCardFront===0){
                 tips="请上传身份证正面照";
@@ -906,15 +911,18 @@
                 },
                 type:"post",
                 success:function(data){
-                    console.log(data);
+                    console.log("提交图片的数据",data);
                     if(data.result===1){
                         // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册审核失败，跳转出重新注册页面
                         owneridentity.states = 3 ;
+                        
                         // 成功了,跳转到提醒页面
                         $(".to-examine").empty();
                         $(".to-examine").append("<div class='to-examinets'>发送成功,正在审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
                         window.location.hash = "#examine";
+
                         owneridentity.states = 2;
+                        carregister.second = 0;
                     }
                 },
                 error:function(data){
@@ -1309,6 +1317,10 @@
             locationqjval.val = "b=v";
             hashChange("#details?b=v");
         })
+    
+        $("#balance-csbutton").bind("touch click",function(){
+            window.location.hash = "#cashMoney";
+        })
 
     }
     
@@ -1339,21 +1351,35 @@
         $(".pdetails").hide();
         $(".owner-register").hide();
         $(".to-examine").hide();
+        $("#cashMoneyPage").hide();
         // 点击了，先隐藏，在进行效果展示 
     }
     // 切换路由的方法
     function hashChange(hashzhi){
-        var locationHash = location.hash;
+        var locationHash = window.location.hash;
         console.log("路由值",locationHash);
          // 处理一下参数
         // #details?a=3
         var val1 = locationHash.split("?");
-        if(hashzhi=="#details?a=p" || hashzhi=="#details?b=v"){
+        if( locationHash === ""){  // 默认是passenger
+            // 大的颜色变化
+            hashlycolorsz();
+            $(".hpassenger").css("color", "#e39f7a");
+
+            window.location.hash="#passenger";
+        }else if(hashzhi=="#details?a=p" || hashzhi=="#details?b=v"){
             locationHash="#details";
             window.location.hash= hashzhi;
             $("#address").text("想要去哪儿");
         }else {
             if(val1[0]=="#passenger" || locationHash =="#passenger" ){
+                // 大的颜色变化
+                hashlycolorsz();
+                $(".hpassenger").css("color", "#e39f7a");
+                // 颜色变化
+                hvownermyrun();
+                $(".hvownermyrun").css("color", "#5bc0de");
+
                 $(".runluyouaa").hide();
                 $(".hrunoneicon").attr('class',"glyphicon glyphicon-triangle-bottom hrunoneicon");
                 hashcreate();
@@ -1374,15 +1400,27 @@
                 
                 $(".runpassenger").show();
                 if(val1[1]=="diver"){
+                    // 大的颜色变化
+                    hashlycolorsz();
+                    $(".hpassenger").css("color", "#e39f7a");
+                    // 颜色变化
+                    hvownermyrun();
+                    $(".hrunqbcar").css("color","#5bc0de");
+
                     $(".runpassenger").hide();
                     $(".runscreen").hide();
                     $(".runvowner").show();
-                   //  getqbVowner(); 
                 }else if(val1[1]=="passger"){
+                    // 车主大的颜色变化
+                    hashlycolorsz();
+                    $(".hrun").css("color","#e39f7a");
+                    // 颜色变化
+                    hvownermyrun();
+                    $(".hvownerqbrun").css("color","#5bc0de");
+
                     $(".runvowner").hide();
                     $(".runscreen").hide();
                     $(".runpassenger").show();
-                    // getqbPassenger(); 
                 }else if(val1[1]=="passgeran" || val1[1]=="diveran"){
                    
                     $(".runvowner").hide();
@@ -1403,6 +1441,13 @@
             }
             $(".hvowner").hide();
              if(val1[0]=="#vowner" ||locationHash=="#vowner"){
+                // 车主大的颜色变化
+                hashlycolorsz();
+                $(".hrun").css("color","#e39f7a");
+                 // 颜色变化
+                hvownermyrun();
+                $(".hrunmycar").css("color","#5bc0de");
+
                 hashcreate();
                 $(".vowner").show();
             }else if(locationHash==="#details"|| val1[0]==="#details"){
@@ -1484,13 +1529,25 @@
             }else if(val1[0] =="#ddxq"|| locationHash=="#ddxq"){
                 hashcreate();
                 if(val1[1]==="passger"){
-                    paymentpage(nowusermsg.uid);
+                    // 大的颜色变化
+                    hashlycolorsz();
+                    $(".hpassenger").css("color", "#e39f7a");
+                    // 颜色的变化
+                    hvownermyrun();
+                    $(".hvownermypay").css("color","#5bc0de");
 
+                    paymentpage(nowusermsg.uid);
                     $("#mypayidname").text("我的支付");
                     // 乘客隐藏掉那个
                     $("#balanceid").hide();
                     hdpaymentzy("Passenger");
                 }else if(val1[1]==="diver"){
+                    // 车主大的颜色变化
+                    hashlycolorsz();
+                    $(".hrun").css("color","#e39f7a");
+                    // 颜色变化
+                    hvownermyrun();
+                    $(".hrucarpay").css("color","#5bc0de");
                     // 点击时车主时 调用渲染函数
                     owenerCash.owerPage();
                     $("#mypayidname").text("我的接单");
@@ -1511,6 +1568,9 @@
             }else if(val1[0]==="#examine" || locationHash === "#examine"){
                 hashcreate();
                 $(".to-examine").show();
+            }else if ( val1[0]==="#cashMoney" || locationHash === "#cashMoney" ) {
+                hashcreate();
+                $("#cashMoneyPage").show();
             }
         }
     }
@@ -2098,8 +2158,6 @@
                         }else if( pushType === "Driver" ){
                              // 用完时间要初始化,完成了在初始化。
                             // 用完要把用过的值初始化 
-                            fabuxiaoxi.dwsj = "";   // 定位的初始化 
-                            fabuxiaoxi.cfdcity =""; // 城市至为空 
                             fabuxiaoxi.mddcity = "";    // 置空 
                             fabuxiaoxi.cfddata = "";    // 置空 
                             fabuxiaoxi.mmddata = "";    // 置空 
@@ -2111,12 +2169,14 @@
                 },
                 error:function(data){
                     // 用完要把用过的值初始化 
-                    fabuxiaoxi.dwsj = "";       // 定位的初始化 
-                    fabuxiaoxi.cfdcity ="";     // 城市至为空 
                     fabuxiaoxi.mddcity = "";    // 置空 
                     fabuxiaoxi.cfddata = "";    // 置空 
                     fabuxiaoxi.mmddata = "";    // 置空 
                     settleAccounts.rendertimes = 0 ;
+                    paymentModular.oldarcity = "";
+                    paymentModular.olddpcity = "" ;
+                    paymentModular.oldartime = "";
+                    paymentModular.olddptime = "";
                     showMessage1btn("网络出错,请刷新在试!","",0);
                 }
             })

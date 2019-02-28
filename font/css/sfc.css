@@ -2010,17 +2010,17 @@ body {
     font-size: 19px;
     color: #f0935a;
     text-align: center;
-    line-height: 46px;
   }
   .paymentzy  .balance  .balance-wallet .balance-wdiv{
     display: inline-block;
     font-size: 17px;
     width: 50%;
+    color: #4c4c4c;
     text-align: center;
   }
   .paymentzy  .balance  .balance-wallet .balance-wdvspan{
     height: 26px;
-    border: 1px solid #a8a8a8;
+    border: 1px solid #f2f2f2;
     display: inline-block;
     float: right;
     margin-top: 17px;
@@ -2065,3 +2065,148 @@ body {
     text-align: center;
     width: 100%;
   }
+  /* 提现按钮设置 */
+  .paymentzy  .balance .balance-cash{
+    height: 46px;
+    width: 100%;
+    background: #64b0f2;
+    color: #fff;
+    border-top: 1px solid #f2f2f2;
+    line-height: 46px;
+  }
+  .paymentzy  .balance .balance-cash .balance-cspage{
+    width: 70%;
+    text-indent: 30px;
+    display: inline-block;
+    font-size: 16px;
+  }
+  .paymentzy  .balance .balance-cash .balance-csxian{
+    height: 26px;
+    border: 1px solid #fff;
+    margin-top: 10px;
+  }
+  .paymentzy  .balance .balance-cash #balance-csbutton{
+    width: 25%;
+    text-align: center;
+    font-size: 16px;
+    display: inline-block;
+    color: #ffc757;
+  }
+  /* 提现账单页设置 */
+  #cashMoneyPage{
+    width: 100%;
+    overflow-y: auto;
+    background: #fff;
+    border-top: 1px solid #f2f2f2;
+  }
+  #cashMoneyPage .cashmongy-header{
+    position: relative;
+    width: 100%;
+    height: 56px;
+    line-height: 56px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  #cashMoneyPage .cashmongy-header  .cashmongy-hdreturn{
+    width: 20%;
+    display: inline-block;
+    font-size: 19px;
+    color: #f0935a;
+    text-align: center;
+  }
+  #cashMoneyPage .cashmongy-header .cashmongy-hdmy{
+    display: inline-block;
+    font-size: 17px;
+    width: 50%;
+    color: #4c4c4c;
+    text-align: center;
+  }
+  #cashMoneyPage .cashmongy-header  .cashmongy-hdmy  .cashmongy-hdmyicon{
+    height: 26px;
+    border: 1px solid #f2f2f2;
+    display: inline-block;
+    float: right;
+    margin-top: 17px;
+  }
+  #cashMoneyPage .cashmongy-header .cashmongy-hdsx{
+    display: inline-block;
+    width: 26%;
+    text-align: center;
+    font-size: 17px;
+    color: #64b0f2;
+  }
+  #cashMoneyPage .cashmongy-header .cashmongy-hdsx .cashmongy-hdsxicon{
+    font-size: 14px;
+  }
+  /* 下半部分点击显示的部分 */
+  #cashMoneyPage .cashmongy-header .cashmoney-center{
+    border-bottom: 1px solid #f2f2f2;
+  }
+  #cashMoneyPage .cashmongy-header .cashmoney-center   .cashmoney-ctsource{
+    height: 46px;
+    width: 100%;
+    line-height: 46px;
+    border-bottom: 1px solid #f2f2f2;
+  }
+  #cashMoneyPage .cashmongy-header .cashmoney-center  .cashmoney-ctsource   .cashmoney-ctbiaoti{
+    display: inline-block;
+    width: 14%;
+    text-align: center;
+    font-size: 15px;
+  }  
+  #cashMoneyPage .cashmongy-header .cashmoney-center  .cashmoney-ctsource  .cashmoney-ctdiv{
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+  }
+  #cashMoneyPage .cashmongy-header .cashmoney-center  .cashmoney-ctsource  .cashmoney-ctspan{
+
+  }
+  #cashMoneyPage .cashmongy-header .cashmoney-center  .cashmoney-ctsource  .cashmoney-ctxian{
+    height: 26px;
+    border: 1px solid #f2f2f2;
+    display: inline-block;
+    float: right;
+    margin-top: 10px;
+  }
+  /* 下面的按钮 */
+  #cashMoneyPage .cashmongy-header .cashmoney-center .cashmoney-btdiv{
+    height: 30px;
+    width:100%;
+    background: #64b0f2;
+  }
+  #cashMoneyPage .cashmongy-header .cashmoney-center .cashmoney-btdiv .cashmoney-btbutton{
+    font-size: 18px;
+    text-align: center;
+    display: block;
+    line-height: 30px;
+    color: #fff;
+  }
+  /* 公用的提示div样式设置 */
+  .public-divone{
+    height: 100%;
+  }
+  .public-divone .public-imgone{
+    display: block;
+    margin: 0 auto;
+    margin-top: 20%;
+  } 
+  .public-divone .public-spanone{
+    display: block;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 3%;
+  }
+  .public-divone .public-spantwo{
+    display:block;
+    background: #64b0f2;
+    width: 64px;
+    height: 35px;
+    font-size: 16px;
+    border-radius: 6px;
+    line-height: 35px;
+    text-align: center;
+    margin:0 auto;
+    margin-top: 6%;
+    color: #fff;
+  }
+  
