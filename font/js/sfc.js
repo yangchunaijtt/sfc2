@@ -40,8 +40,6 @@
                 getqbPassenger();
                 //  判断注册了没
                 owneridentity.ownerajax();
-                // 我的提现页的渲染
-                balanceMycash.cashMoneyPage();
                 // 默认获取车主提现的数据
                 balanceMycash.cashMoneyPage("","");
             }
@@ -157,7 +155,6 @@
         window.onhashchange = hashChange;
 
         
-
         //另外js的初始化数据 
         createlival();
         //绑定时间函数 
