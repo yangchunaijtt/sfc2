@@ -2112,6 +2112,9 @@ body {
     font-size: 19px;
     color: #f0935a;
     text-align: center;
+    height: 100%;
+    float: left;
+    line-height: 55px;
   }
   #cashMoneyPage .cashmongy-header .cashmongy-hdmy{
     display: inline-block;
@@ -2139,7 +2142,15 @@ body {
   }
   /* 下半部分点击显示的部分 */
   #cashMoneyPage .cashmongy-header .cashmoney-center{
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid #ffffff;
+    display: none;
+    position: absolute;
+    height: 123px;
+    top: 56px;
+    left: 0px;
+    z-index: 999;
+    background: #fff;
+    width: 100%;
   }
   #cashMoneyPage .cashmongy-header .cashmoney-center   .cashmoney-ctsource{
     height: 46px;
@@ -2158,9 +2169,7 @@ body {
     width: 20%;
     text-align: center;
   }
-  #cashMoneyPage .cashmongy-header .cashmoney-center  .cashmoney-ctsource  .cashmoney-ctspan{
-
-  }
+  
   #cashMoneyPage .cashmongy-header .cashmoney-center  .cashmoney-ctsource  .cashmoney-ctxian{
     height: 26px;
     border: 1px solid #f2f2f2;
@@ -2172,7 +2181,7 @@ body {
   #cashMoneyPage .cashmongy-header .cashmoney-center .cashmoney-btdiv{
     height: 30px;
     width:100%;
-    background: #64b0f2;
+    background: #5685ad;
   }
   #cashMoneyPage .cashmongy-header .cashmoney-center .cashmoney-btdiv .cashmoney-btbutton{
     font-size: 18px;
@@ -2197,7 +2206,7 @@ body {
     margin-top: 3%;
   }
   .public-divone .public-spantwo{
-    display:block;
+    display:inline-block;
     background: #64b0f2;
     width: 64px;
     height: 35px;
@@ -2205,8 +2214,67 @@ body {
     border-radius: 6px;
     line-height: 35px;
     text-align: center;
-    margin:0 auto;
-    margin-top: 6%;
     color: #fff;
   }
-  
+  .public-divone   .public-divtwo{
+    width: 144px;
+    margin: 0 auto;
+    margin-top: 6%;
+  }
+  .public-divone   .public-divtwo  #cashMoneyPage-refresh{
+    background: #64b0f2;
+  }
+  .public-divone   .public-divtwo  #cashMoneyPage-return{
+    background: #53708a;
+  }
+  /* 账单页显示数据 */
+  #cashm-footer{
+    margin-bottom: 20px;
+    border-top: 1px solid #f2f2f2;
+  }
+  #cashm-footer .cashm-header{
+    line-height: 30px;
+    height: 30px;
+    width: 100%;
+    background: #64b0f2;
+    color: #fff;
+  }
+  #cashm-footer  .cashm-header .cashm-hdspanone{
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+  }
+  #cashm-footer .cashm-header .cashm-hdspantwo{
+    display: inline-block;
+    width: 66%;
+  }
+  #cashm-footer .cashm-center{
+    height: 46px;
+    width: 100%;
+    background: #64b0f2;
+    color: #fff;
+    border-top: 1px solid #f2f2f2;
+    border-bottom: 1px solid #f2f2f2;
+    margin-bottom: 12px;
+  }
+  #cashm-footer .cashm-center .cashm-ctrdiv{
+    width: 32%;
+    display: inline-block;
+    float:left;
+  }
+  #cashm-footer .cashm-center .cashm-ctspan{
+    height: 23px;
+    display: block;
+    text-align: center;
+    width: 100%;
+  }
+  #cashm-footer .cashm-center  .cashm-left{
+    float: left;
+    width: 96%;
+  }
+  #cashm-footer .cashm-center .cashm-xian{
+    height: 26px;
+    border: 1px solid #fff;
+    float: right;
+    margin-top: 10px;
+  }

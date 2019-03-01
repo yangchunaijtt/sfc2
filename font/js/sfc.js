@@ -42,6 +42,8 @@
                 owneridentity.ownerajax();
                 // 默认获取车主提现的数据
                 balanceMycash.cashMoneyPage("","");
+                //车主提现信息
+                balanceMycash.getMoneyRecord();
             }
         },location.search);
         // 初始化时设置默认值 
@@ -718,7 +720,80 @@
             $("#idbalance-mycash").bind("touch click",function(){
                 balanceMycash.cashMoney();
             })
-
+    //账单页操作
+            // 发布
+            // 接单
+            // 提现
+            // 全部发布：Push；接单：Receipt； 提现：Cash
+            $("#cashmoney-ctbigqb").css("color","red");
+            $("#cashmoney-ctbgtime").css("color","red");
+        $("#cashmoney-hdclick").bind("touch click",function(){
+            cashmoneyfunction.click();
+        })
+        
+        $("#cashmoney-ctbigfb").bind("touch click",function(){
+            cashmoneyfunction.type = "Push";
+            cashmoneyfunction.topcolornew();
+            $("#cashmoney-ctbigfb").css("color","red");
+            cashmoneyfunction.addevent(0);
+        })
+        $("#cashmoney-ctbigjd").bind("touch click",function(){
+            cashmoneyfunction.type = "Receipt";
+            cashmoneyfunction.topcolornew();
+            $("#cashmoney-ctbigjd").css("color","red");
+            cashmoneyfunction.addevent(0);
+        })
+        $("#cashmoney-ctbigtx").bind("touch click",function(){
+            cashmoneyfunction.type = "Cash";
+            cashmoneyfunction.topcolornew();
+            $("#cashmoney-ctbigtx").css("color","red");
+            cashmoneyfunction.addevent(0);
+        })
+        $("#cashmoney-ctbigqb").bind("touch click",function(){
+            cashmoneyfunction.type = "";
+            cashmoneyfunction.topcolornew();
+            $("#cashmoney-ctbigqb").css("color","red");
+            cashmoneyfunction.addevent(0);
+        })
+        // 下面的操作,点两次的问题
+        $("#cashmoney-ctbgtoday").bind("touch click",function(){
+            cashmoneyfunction.dateRange = "today";
+            cashmoneyfunction.bootcolornew();
+            $("#cashmoney-ctbgtoday").css("color","red");
+            cashmoneyfunction.addevent(1);            
+        })
+        $("#cashmoney-ctbgweek").bind("touch click",function(){
+            cashmoneyfunction.dateRange = "weekday";
+            cashmoneyfunction.bootcolornew();
+            $("#cashmoney-ctbgweek").css("color","red");
+            cashmoneyfunction.addevent(1); 
+        })
+        $("#cashmoney-ctbgmonth").bind("touch click",function(){
+            cashmoneyfunction.dateRange = "month";
+            cashmoneyfunction.bootcolornew();
+            $("#cashmoney-ctbgmonth").css("color","red");
+            cashmoneyfunction.addevent(1); 
+        })
+        $("#cashmoney-ctbgtime").bind("touch click",function(){
+            cashmoneyfunction.dateRange = "";
+            cashmoneyfunction.bootcolornew();
+            $("#cashmoney-ctbgtime").css("color","red");
+            cashmoneyfunction.addevent(1);   
+        })
+        $("#cashmoney-slitoo").bind("touch click",function(){
+            cashmoneyfunction.states ++;
+            cashmoneyfunction.close();
+        })
+        $(".cashmongy-hdreturn").bind("touch click",function(){
+            window.location.hash = "#ddxq?diver";
+        })
+        // 刷新返回
+        $("#cashMoneyPage-refresh").bind("touch click",function(){
+            balanceMycash.cashMoneyPage("","");
+        })
+        $("#cashMoneyPage-return").bind("touch click",function(){
+            window.location.hash = "#run?passger";
+        })
         // 页面刷新和跳转时也调用这个路由
             hashChange();
 //  调用本地定位函数，定位很慢。
@@ -758,20 +833,69 @@
     var cityselectval = {
         nowcity:""
     }
+// 账单页的操作
+    var cashmoneyfunction = {
+        states:0,
+        click:function(){
+            cashmoneyfunction.states ++;
+            if(cashmoneyfunction.states%2===0){
+                cashmoneyfunction.open();
+            }else {
+                cashmoneyfunction.close();
+            }
+        },
+        open:function(){
+            $("#cashmoney-ctbigicons").attr('class',"cashmongy-hdsxicon glyphicon glyphicon-triangle-top");
+            $("#cashmoney-ctbig").slideToggle("normal");
+        },
+        close:function(){
+            $("#cashmoney-ctbigicons").attr('class',"cashmongy-hdsxicon glyphicon glyphicon-triangle-bottom");
+            $("#cashmoney-ctbig").slideToggle("normal");
+        },
+        type:"",
+        dateRange:'',
+        topstates:0,    
+        bottomstates:0,
+        addevent:function(val){
+            if( val === 0){
+                cashmoneyfunction.topstates++;
+            }else if(val ===1) {
+                cashmoneyfunction.bottomstates++;
+            }
+            if((cashmoneyfunction.topstates+cashmoneyfunction.bottomstates)%2===0){
+                cashmoneyfunction.states ++;
+                cashmoneyfunction.close();
+                balanceMycash.cashMoneyPage(cashmoneyfunction.type,cashmoneyfunction.dateRange);
+            }else {
+                return false ;
+            }
+        },
+        topcolornew:function(){
+            $("#cashmoney-ctbigfb").css("color","#555");
+            $("#cashmoney-ctbigjd").css("color","#555");
+            $("#cashmoney-ctbigtx").css("color","#555");
+            $("#cashmoney-ctbigqb").css("color","#555");
+        },
+        bootcolornew:function(){
+            $("#cashmoney-ctbgtoday").css("color","#555");
+            $("#cashmoney-ctbgweek").css("color","#555");
+            $("#cashmoney-ctbgmonth").css("color","#555");
+            $("#cashmoney-ctbgtime").css("color","#555");
+        },
+        newcsg:function(){
+            cashmoneyfunction.type = "";
+            cashmoneyfunction.dateRange = "";
+        }
+    }
 //  全部提现的操作 
     var balanceMycash = {
-        cashMoneyPageData:{},   // 我的账单页数据
+        cashMoneyPageData:[],   // 我的账单页数据
+        moneydata:{},   // 钱数信息
         cashMoneyPage:function(typeval,dateRangeval){ // 我的账单页的显示
             $.ajax({
                 type:"post",
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs.asp",
                 data:{
-                    /*
-                    cur         	查看页码
-                    uid         	用户id
-                    type	  		金额来源类型（发布：Push；接单：Receipt； 提现：Cash）
-                    dateRange   	日期范围（"today","weekday","month"）
-                    */
                    uid:nowusermsg.uid,
                    cur:1,
                    type:typeval,
@@ -779,6 +903,24 @@
                 },
                 success:function(data){
                     console.log("获取车主金额信息",data);
+                    cashmoneyfunction.type = "";
+                    cashmoneyfunction.dateRange = "";
+                    if(data.result>0){
+                        $("#cashMoneyPage-nosj").hide();
+                        $(".cashmongy-header").show();
+                        $("#cashm-footer").show();
+                        balanceMycash.cashMoneyPageData = data.obj.uCashs;
+                        var casgdata = balanceMycash.cashMoneyPageData;
+                        $("#cashm-footer").empty();
+                        for(var i = 0; i<casgdata.length;i++){
+                            $("#cashm-footer").append(sfcsj.cashMoneyPage);
+                            balanceMycash.setMoneyRecord(i,casgdata[i]);
+                        }
+                    }else { // 小于等于0
+                        $("#cashMoneyPage-nosj").show();
+                        $(".cashmongy-header").hide();
+                        $("#cashm-footer").hide();
+                    }
                 },
                 error:function(data){
                     console.log("获取车主金额失败",data);
@@ -786,13 +928,52 @@
             })
         },
         getMoneyRecord:function(){ // 获取车主提现的所有信息
-            
+            $.ajax({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/getOACStatistics.asp",
+                type:"post",
+                data:{
+                    uid:nowusermsg.uid
+                },
+                success:function(data){
+                    console.log("车组提现信息",data);
+                    balanceMycash.moneydata = data.obj;
+                    if(data.result > 0){
+                        // 没有数据，等有数据写
+                        $("#balance-summoney").text(data.obj.total);
+                        $("#balance-ytmoney").text(data.obj.cash);
+                        $("#balance-ktmoney").text(data.obj.total-data.obj.cash);
+                    }else {
+                        $("#balance-summoney").text(0.0);
+                        $("#balance-ytmoney").text(0.0);
+                        $("#balance-ktmoney").text(0.0);
+                    }
+                },
+                error:function(data){
+                    console.log("车组失败",data);
+                    showMessage1btn("网络出错,获取我的提现总额失败","",0);
+                }
+            })
         },
         cashMoney:function(){   // 调用提现钱的api
             
         },
-        setMoneyRecord:function(){ // 添加车主提现记录
-
+        setMoneyRecord:function(i,valdata){ // 添加车主提现记录
+            // 日期
+            $("#cashm-fttime").text(valdata.date);
+            var cashm_fttime = "cashm-fttime"+i;
+            $("#cashm-fttime").attr("id",cashm_fttime);
+            // 金额
+            $("#cashm-money").text(valdata.price);
+            var cashm_money = "cashm-money"+i;
+            $("#cashm-money").attr("id",cashm_money);
+            // 总金额
+            $("#cashm-nowmoney").text(valdata.total);
+            var cashm_nowmoney = "cashm-nowmoney"+i;
+            $("#cashm-nowmoney").attr("id",cashm_nowmoney);
+            // 已提金额
+            $("#cashm-cashmoney").text(valdata.cash);
+            var cashm_cashmoney = "cashm-cashmoney"+i;
+            $("#cashm-cashmoney").attr("id",cashm_cashmoney);
         }
     }
 
@@ -1283,7 +1464,9 @@
         // 支付页的模板 
         paymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>支付时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>支付金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>支付结果:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
         // 车主接单页模板
-        ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>出发时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>始发地:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>"
+        ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>出发时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>始发地:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
+        // 账单页数据
+        cashMoneyPage:'</div><div class="cashm-header clearfix"><span class="cashm-hdspanone">账单时间:</span><span class="cashm-hdspantwo" id="cashm-fttime"></span></div><div class="cashm-center  clearfix"><div class="cashm-ctrdiv clearfix"><div class="cashm-left"><span class="cashm-ctspan">金额</span><span class="cashm-ctspan" id="cashm-money"></span></div><span class="cashm-xian"></span></div><div class="cashm-ctrdiv clearfix"><div class="cashm-left"><span class="cashm-ctspan">当月总金额</span><span class="cashm-ctspan" id="cashm-nowmoney"></span></div><span class="cashm-xian"></span></div><div class="cashm-ctrdiv clearfix"><span class="cashm-ctspan">当月已提金额</span><span class="cashm-ctspan" id="cashm-cashmoney"></span></div></div>'
     }
 
     //让时间绑定切换到页面的事件 

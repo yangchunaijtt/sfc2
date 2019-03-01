@@ -604,20 +604,20 @@
                     <div class="balance-mymoneysum clearfix">
                         <div class="balance-mywleft clearfix">
                             <span class="balance-mywspan">余额总额:</span>
-                            <span class="balance-mywmoney">00.00</span>
+                            <span class="balance-mywmoney" id="balance-summoney"></span>
                         </div>
                         <span class="balance-mywlspan"></span>
                     </div>
                     <div class="balance-mymoneysum clearfix">
                         <div class="balance-mywleft clearfix">
                             <span class="balance-mywspan">已提余额</span>
-                            <span class="balance-mywmoney">00.00</span>
+                            <span class="balance-mywmoney" id="balance-ytmoney"></span>
                         </div>
                         <span class="balance-mywlspan"></span>
                     </div>
                     <div class="balance-mymoneysum clearfix" style="float:right;color:#ffc757;">
                         <span class="balance-mywspan">可提余额</span>
-                        <span class="balance-mywmoney">00.00</span>
+                        <span class="balance-mywmoney" id="balance-ktmoney"></span>
                     </div>
                 </div>
                 <div class="balance-cash clearfix">
@@ -635,6 +635,22 @@
             </div>
             <!-- 复用区 -->
             <div class="phdiconfyq clearfix">
+            </div>
+            <div class="clearfix">
+                <div class="clearfix">
+                    <span>提现金额</span>
+                    <input type="text">
+                    <span>全部提现</span>
+                </div>
+                <div class="clearfix">
+                    <span>提现账号真实姓名</span>
+                    <input type="text">
+                </div>
+                <div class="clearfix">
+                    <span>提现支付宝账号</span>
+                    <input type="text">
+                </div>
+                <span>确定提现</span>
             </div>
         </div>
         <!-- 支付详情页 -->
@@ -728,10 +744,13 @@
         <!-- 提现账单页 -->
         <div id="cashMoneyPage" style="display:none">
             <!-- 没有数据的显示 -->
-            <div class="public-divone clearfix" style="display: none;">
+            <div id="cashMoneyPage-nosj" class="public-divone clearfix" style="display: none;">
                 <img src="./font/fontjs/examine.gif"  class="public-imgone">
                 <span class="public-spanone">没有账单记录,快去接单吧</span>
-                <span class="public-spantwo">去接单</span>
+                <div class="public-divtwo clearfix">
+                    <span class="public-spantwo" id="cashMoneyPage-refresh">返回</span>
+                    <span class="public-spantwo" id="cashMoneyPage-return">去接单</span>
+                </div>
             </div>
             <div class="cashmongy-header clearfix">
                 <span class="cashmongy-hdreturn glyphicon glyphicon-chevron-left"></span>
@@ -740,58 +759,59 @@
                     <span class="cashmongy-hdmyicon"></span>
                 </div>
                 
-                <div class="cashmongy-hdsx clearfix">
+                <div class="cashmongy-hdsx clearfix" id="cashmoney-hdclick">
                     筛选
-                    <span class="cashmongy-hdsxicon glyphicon glyphicon-triangle-bottom"></span>
+                    <span class="cashmongy-hdsxicon glyphicon glyphicon-triangle-bottom" id="cashmoney-ctbigicons"></span>
                 </div>
                 <!-- 筛选数据的，默认全部-->
-                <div class="cashmoney-center  clearfix">
+                <div class="cashmoney-center  clearfix" id="cashmoney-ctbig">
                     <div class="cashmoney-ctsource clearfix">
                         <!-- 发布：Push；接单：Receipt； 提现：Cash -->
                         <span  class="cashmoney-ctbiaoti">来源:</span>
-                        <div class="cashmoney-ctdiv  clearfix">
+                        <div class="cashmoney-ctdiv  clearfix" id="cashmoney-ctbigfb">
                             <span class="cashmoney-ctspan">发布</span>
                             <span class="cashmoney-ctxian"></span>
                         </div>
-                        <div class="cashmoney-ctdiv clearfix">
+                        <div class="cashmoney-ctdiv clearfix" id="cashmoney-ctbigjd">
                             <span class="cashmoney-ctspan">接单</span>
                             <span class="cashmoney-ctxian"></span>
                         </div>
-                        <div class="cashmoney-ctdiv  clearfix">
+                        <div class="cashmoney-ctdiv  clearfix" id="cashmoney-ctbigtx">
                             <span class="cashmoney-ctspan">提现</span>
                             <span class="cashmoney-ctxian"></span>
                         </div>
-                        <div class="cashmoney-ctdiv  clearfix">
+                        <div class="cashmoney-ctdiv  clearfix" id="cashmoney-ctbigqb">
                             <span class="cashmoney-ctspan">全部</span>
                         </div>
                     </div>
                     <div class="cashmoney-ctsource">
                         <span  class="cashmoney-ctbiaoti">时间:</span>
-                        <div class="cashmoney-ctdiv  clearfix">
+                        <div class="cashmoney-ctdiv  clearfix"  id="cashmoney-ctbgtoday">
                             <span class="cashmoney-ctspan">今天</span>
                             <span class="cashmoney-ctxian"></span>
                         </div>
-                        <div class="cashmoney-ctdiv  clearfix">
+                        <div class="cashmoney-ctdiv  clearfix"  id="cashmoney-ctbgweek">
                             <span class="cashmoney-ctspan">一周内</span>
                             <span class="cashmoney-ctxian"></span>
                         </div>
-                        <div class="cashmoney-ctdiv  clearfix">
-                            <span class="cashmoney-ctspan">一个月内</span>
+                        <div class="cashmoney-ctdiv  clearfix" id="cashmoney-ctbgmonth">
+                            <span class="cashmoney-ctspan"  >一个月内</span>
                             <span class="cashmoney-ctxian"></span>
                         </div>
-                        <div class="cashmoney-ctdiv  clearfix">
-                            <span class="cashmoney-ctspan">全部</span>
+                        <div class="cashmoney-ctdiv  clearfix" id="cashmoney-ctbgtime">
+                            <span class="cashmoney-ctspan" >全部</span>
                         </div>
                     </div>
                     <!-- 一个点击会滑动隐藏的按钮 -->
-                    <div class="cashmoney-btdiv clearfix">
+                    <div class="cashmoney-btdiv clearfix" id="cashmoney-slitoo">
                         <span class="cashmoney-btbutton glyphicon glyphicon-eject"></span>
                     </div>
                 </div>
             </div>
+
             <!-- 显示的div，用来填充数据 用来动态添加数据 -->
             <div class="clearfix" id="cashm-footer">
-    
+                 
             </div>
         </div>
     </div>
