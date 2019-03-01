@@ -891,6 +891,9 @@
     var balanceMycash = {
         cashMoneyPageData:[],   // 我的账单页数据
         moneydata:{},   // 钱数信息
+        price:0,   //提现金额
+        cashAliRelName:"", //提现账户对应真实姓名
+        cashAliAccount:0,  //提现支付宝账户
         cashMoneyPage:function(typeval,dateRangeval){ // 我的账单页的显示
             $.ajax({
                 type:"post",
@@ -954,8 +957,27 @@
                 }
             })
         },
-        cashMoney:function(){   // 调用提现钱的api
-            
+        cashMoney:function(){   // 向后台发送提现api
+            // price       	提现金额
+            // cashAliRelName		提现账户对应真实姓名
+            // cashAliAccount 		提现支付宝账户
+            $.post({
+                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/saveMadeOwnerHasCashs.asp",
+                data:{
+                    uid:nowusermsg.uid,
+                    price:balanceMycash.price,
+                    cashAliRelName:balanceMycash.cashAliRelName,
+                    cashAliAccount:balanceMycash.cashAliAccount
+                },
+                success:function(data){
+                    console.log("提现成功",data);
+                    showMessage1btn("发送成功,正在处理您的提现请求","",0);
+                },
+                error:function(data){
+                    console.log("提现失败",data);
+                    showMessage1btn("网络出错,请重试","",0);
+                }
+            })
         },
         setMoneyRecord:function(i,valdata){ // 添加车主提现记录
             // 日期
@@ -2382,7 +2404,7 @@
                 utype:"Passenger"
             },
             success:function(data){
-                
+                console.log("乘客支付信息表",data);
                 paymentpageval.result = data ;
                 console.log("支付信息",data);
                 $(".phdiconfyq").empty();
