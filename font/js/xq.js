@@ -14,19 +14,9 @@ var nowusermsg = {
 
 
 $(function(){
-    getOpenid(function(openid){
         nowusermsg.myuid = localCache("uid-kongbatong");
         nowusermsg.openid = localCache("openid-kongbatong");
-        nowusermsg.phone = localCache("mobile-kongbatong");
-        nowusermsg.openid = openid;
-        console.log("openid",nowusermsg.openid,openid);
-        if(null == nowusermsg.myuid || "" == nowusermsg.myuid) {
-            register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
-        } else {
-           console.log("获取成功");
-        }
-    },location.search);
-  
+        console.log("nowusermsg.myuid",nowusermsg.myuid,"openid",nowusermsg.openid);
     showLodding("请稍等，加载中...");
     /* 点击时  地图上添加一个maker点 并且聚焦 */
     parseFloat()
@@ -165,7 +155,7 @@ $(function(){
                     $("#tmpbutton").append('<div class="clearfix" style="width:50%;display:inline-block;"><div class="cancel_button" style="background: #31b0d5;"  onclick="qxsfcxinxi()">取消发布</div></div><div class="clearfix"  style="width:47%;display:inline-block;"><div class="cancel_button"  style="background:#2b5ae3;" onclick="trips.passerDeal()">成交</div></div>');
                 }
             }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
-                if( nowusermsg.uid === nowusermsg.myuid ){
+                if( parseInt(nowusermsg.uid) === parseInt(nowusermsg.myuid) ){
                     $("#tmpbutton").empty();
                     $(".sdstatusd").text("等待他人接单");
                 }else{
@@ -223,7 +213,7 @@ $(function(){
                     $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;"">等待报名</div>');
                 }   
             }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
-                if( nowusermsg.uid === nowusermsg.myuid ){
+                if( parseInt(nowusermsg.uid) === parseInt(nowusermsg.myuid) ){
                     $("#tmpbutton").empty();
                     $(".sdstatusd").text("等待别人报名");
                 }else {
