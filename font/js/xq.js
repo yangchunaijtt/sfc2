@@ -165,20 +165,25 @@ $(function(){
                     $("#tmpbutton").append('<div class="clearfix" style="width:50%;display:inline-block;"><div class="cancel_button" style="background: #31b0d5;"  onclick="qxsfcxinxi()">取消发布</div></div><div class="clearfix"  style="width:47%;display:inline-block;"><div class="cancel_button"  style="background:#2b5ae3;" onclick="trips.passerDeal()">成交</div></div>');
                 }
             }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
-                if( data.state === -1 ){
-                    $(".sdstatusd").text("已失效");
+                if( nowusermsg.uid === nowusermsg.myuid ){
                     $("#tmpbutton").empty();
-                }else if( data.state === 0 ){  // 单子可接
-                    $(".sdstatusd").text("可接单");
-                    $("#tmpbutton").empty();
-                    // 添加一个接单按钮
-                    $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(0)">接单</div>');
-                }else if ( data.state === 1 ){   // 已完成
-                    $(".sdstatusd").text("抱歉,单子已完成");
-                    $("#tmpbutton").empty();
-                }else if( data.state === 2 ){   // 已被接单
-                    $(".sdstatusd").text("抱歉,单子已被接");
-                    $("#tmpbutton").empty();
+                    $(".sdstatusd").text("等待他人接单");
+                }else{
+                    if( data.state === -1 ){
+                        $(".sdstatusd").text("已失效");
+                        $("#tmpbutton").empty();
+                    }else if( data.state === 0 ){  // 单子可接
+                        $(".sdstatusd").text("可接单");
+                        $("#tmpbutton").empty();
+                        // 添加一个接单按钮
+                        $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(0)">接单</div>');
+                    }else if ( data.state === 1 ){   // 已完成
+                        $(".sdstatusd").text("抱歉,单子已完成");
+                        $("#tmpbutton").empty();
+                    }else if( data.state === 2 ){   // 已被接单
+                        $(".sdstatusd").text("抱歉,单子已被接");
+                        $("#tmpbutton").empty();
+                    }
                 }
             }else if( nowusermsg.clickPerson  === "oneself"  ){   // 车主的我的订单里只有提醒话，其他什么都没有。
                 // 车主看乘客的  如果 2  则是 乘客点击了成交按钮，其他则提示提醒乘客点击成交
@@ -218,10 +223,29 @@ $(function(){
                     $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;"">等待报名</div>');
                 }   
             }else if( nowusermsg.clickPerson === "other"){   // 被别人查看的
-                $(".sdstatusd").text("可以报名");
-                $("#person-number").show();
-                $("#tmpbutton").empty();
-                $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
+                if( nowusermsg.uid === nowusermsg.myuid ){
+                    $("#tmpbutton").empty();
+                    $(".sdstatusd").text("等待别人报名");
+                }else {
+                    if( data.state === -1 ){
+                        $(".sdstatusd").text("已失效");
+                        $("#tmpbutton").empty();
+                    }else if( data.state === 0 ){  // 单子可接
+                        $(".sdstatusd").text("可以报名");
+                        $("#person-number").show();
+                        $("#tmpbutton").empty();
+                        $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
+                    }else if ( data.state === 1 ){   // 已完成
+                        $(".sdstatusd").text("抱歉,单子已完成");
+                        $("#tmpbutton").empty();
+                    }else if( data.state === 2 ){   // 已被接单
+                        $(".sdstatusd").text("可以报名");
+                        $("#person-number").show();
+                        $("#tmpbutton").empty();
+                        $("#tmpbutton").append('<div class="cancel_button" style="background:#31b0d5;" onclick="Receipt(1)">报名</div>');
+                    }
+                }
+                
             }else if( nowusermsg.clickPerson  === "oneself"  ){  // 乘客查看 我的支付，我的支付时车主行程，有成交按钮和取消成交按钮
                 if( data.state === 1 ){  // 用户已经点击确认了
                     $(".sdstatusd").text("已确认订单");

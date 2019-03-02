@@ -1081,6 +1081,7 @@ body {
 /* 支付页滑动效果 */
 .paymentzy {
   overflow-y: auto;
+  position: relative;
 }
 /* 解决有些页面内容多溢出的问题，无法点击的问题 */
 /* 地图页发布消息地方 */
@@ -2277,4 +2278,73 @@ body {
     border: 1px solid #fff;
     float: right;
     margin-top: 10px;
+  }
+/* 提现弹出的样式 */
+  .paymentzy .paytan{
+    position: absolute;
+    top: 12%;
+    border: 1px solid #c6c6c6;
+    background: #f6f6f6;
+    z-index: 999;
+    border-radius: 6px;
+    left: 10%;
+    right: 10%;
+  }
+  .paymentzy .paytan .paytan-remove{
+    line-height: 32px;
+    font-size: 18px;
+    width: 100%;
+    text-indent: 85%;
+  }
+  .paymentzy .paytan .paytan-div{
+    width: 100%;
+  }
+  .paymentzy .paytan .paytan-div .paytan-txspan{
+    color: #337ab7;
+    text-align: center;
+    line-height: 38px;
+    text-indent: 7px;
+    display: inline-block;
+    width: 30%;
+  }
+  .paymentzy .paytan .paytan-div .paytan-txinput{
+    width: 40%;
+    display: inline-block;
+  }
+  .paymentzy .paytan .paytan-div .paytan-txqb{
+    display: inline-block;
+    width: 23%;
+    height: 30px;
+    margin: 0 auto;
+    line-height: 30px;
+    margin-top: 18px;
+    border-radius: 3px;
+    background: #358e99;
+    text-align: center;
+    color: #fff;
+  }
+  .paymentzy .paytan .paytan-div .paytan-name{
+    color: #337ab7;
+    text-align: center;
+    line-height: 38px;
+    text-indent: 7px;
+    display: inline-block;
+    width: 46%;
+  }
+  .paymentzy .paytan .paytan-div .paytan-nameinput{
+    width: 50%;
+    display: inline-block;
+  }
+  .paymentzy .paytan  .paytan-qbtixian{
+    width: 33%;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+    background: #3b66b1;
+    text-align: center;
+    color: #fff;
+    margin: 0 auto;
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 8px;
   }

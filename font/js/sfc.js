@@ -712,13 +712,14 @@
             $("#balace-return").bind("touch click",function(){
                 window.location.href = "#vowner";
             })
-        // 提现按钮
-            $("#idbalance-mycash").bind("touch click",function(){
-                owenerCash.cashWithdrawal();
-            })
         // 提现操作
             $("#idbalance-mycash").bind("touch click",function(){
-                balanceMycash.cashMoney();
+                if(balanceMycash.moneydata.total - balanceMycash.moneydata.cash > 0){
+                    $(".paytan").slideToggle();
+                }else {
+                    showMessage1btn("可提额度为0","",0);
+                    return false ;
+                }
             })
     //账单页操作
             // 发布
@@ -793,6 +794,64 @@
         })
         $("#cashMoneyPage-return").bind("touch click",function(){
             window.location.hash = "#run?passger";
+        })
+    // 提现页的事件
+        // 全部提现
+        $(".paytan-txqb").bind("touch click",function(){
+            var qbmoney = balanceMycash.moneydata.total - balanceMycash.moneydata.cash;
+            $(".paytan-txinput").val(qbmoney);
+        })
+        // 确定提现
+        $(".paytan-qbtixian").bind("touch click",function(){
+            var tell =  "";
+            if( $(".paytan-txinput").val() ==="" || $(".paytan-txinput").val() ===undefined){
+                tell = "提现金额不能为空";
+            }else if ($("#paytan-txname").val() ==="" || $("#paytan-txname").val() ===undefined) {
+                tell = "真实姓名不能为空";
+            }else if ($("#paytan-txzh").val() ==="" || $("#paytan-txzh").val() ===undefined) {
+                tell = "支付宝账号不能为空";
+            }
+            if (tell !=="") {
+                showMessage1btn(tell,"",0);
+                return false;
+            }else {
+                balanceMycash.cashMoney();
+            }
+            
+        })
+        // 删除返回
+        $(".paytan-remove").bind("touch click",function(){
+            $(".paytan").slideToggle();
+        })
+        // 路由点击的问题
+        $(".hvownermypay").bind("touch click",function(){
+            // 大的颜色变化
+            hashlycolorsz();
+            $(".hpassenger").css("color", "#e39f7a");
+            // 颜色的变化
+            hvownermyrun();
+            $(".hvownermypay").css("color","#5bc0de");
+
+            paymentpage(nowusermsg.uid);
+            $("#mypayidname").text("我的支付");
+            // 乘客隐藏掉那个
+            $("#balanceid").hide();
+            hdpaymentzy("Passenger");
+        })
+        $(".hrucarpay").bind("touch click",function(){
+            // 车主大的颜色变化
+            hashlycolorsz();
+            $(".hrun").css("color","#e39f7a");
+            // 颜色变化
+            hvownermyrun();
+            $(".hrucarpay").css("color","#5bc0de");
+            // 点击时车主时 调用渲染函数
+            owenerCash.owerPage();
+            $("#mypayidname").text("我的接单");
+            // 车主就显示
+            $("#balanceid").show();
+            // 车主要处理接单数据
+            hdpaymentzy("Driver");
         })
         // 页面刷新和跳转时也调用这个路由
             hashChange();
@@ -891,9 +950,6 @@
     var balanceMycash = {
         cashMoneyPageData:[],   // 我的账单页数据
         moneydata:{},   // 钱数信息
-        price:0,   //提现金额
-        cashAliRelName:"", //提现账户对应真实姓名
-        cashAliAccount:0,  //提现支付宝账户
         cashMoneyPage:function(typeval,dateRangeval){ // 我的账单页的显示
             $.ajax({
                 type:"post",
@@ -961,21 +1017,33 @@
             // price       	提现金额
             // cashAliRelName		提现账户对应真实姓名
             // cashAliAccount 		提现支付宝账户
-            $.post({
+            var price = $(".paytan-txinput").val().trim();
+            var cashAliRelName = $("#paytan-txname").val().trim();
+            var cashAliAccount = $("#paytan-txzh").val().trim();
+            $.ajax({
+                type:"post",
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/saveMadeOwnerHasCashs.asp",
                 data:{
                     uid:nowusermsg.uid,
-                    price:balanceMycash.price,
-                    cashAliRelName:balanceMycash.cashAliRelName,
-                    cashAliAccount:balanceMycash.cashAliAccount
+                    price:price,
+                    cashAliRelName:cashAliRelName,
+                    cashAliAccount:cashAliAccount
                 },
                 success:function(data){
                     console.log("提现成功",data);
-                    showMessage1btn("发送成功,正在处理您的提现请求","",0);
+                    if(data.result > 0 ){
+                        showMessage1btn("发送成功,正在处理您的提现请求","",0);
+                        $(".paytan").slideToggle();
+                    }else {
+                        $(".paytan").slideToggle();
+                        showMessage1btn("网络出错,请重试","",0);
+                    }
+                    
                 },
                 error:function(data){
                     console.log("提现失败",data);
-                    showMessage1btn("网络出错,请重试","",0);
+                    $(".paytan").slideToggle();
+                    showMessage1btn("服务器出现故障,正在通知管理人员","",0);
                 }
             })
         },
@@ -1002,10 +1070,6 @@
 // 给车主提现页绑定
     var owenerCash = {
         cashResult:{}, // 车主存储的数据
-        cashWithdrawal:function(){  // 全部提现的函数
-            // 提现时也教研一次
-
-        },
         owerPage:function(){ // 每次点开这个页面都渲染一次
             $.ajax({
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts.asp",
@@ -2487,10 +2551,18 @@
         var sjbijiao  =  sjid[1].split("=");   //   identity  Passenger
         var indexes =   sjindexes[1];
         var bijiao = sjbijiao[1];
+
+        $("#pdetail-refund").hide();
+        
         if( bijiao === "Passenger" ){  // 乘客的处理逻辑
             
             // 赋值
                 var val = paymentpageval.result.obj.froViewPayments[indexes];   // ???
+                console.log("val值",val);
+            // 判断有没退款记录
+                if(val.payState!==1){
+                    $("#pdetail-refund").show();
+                }
               // id = 1 sjvalzhi 数据的第几个数据
               $(".pdetlsdadlook").empty();
               

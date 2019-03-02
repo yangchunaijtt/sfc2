@@ -636,22 +636,22 @@
             <!-- 复用区 -->
             <div class="phdiconfyq clearfix">
             </div>
-            <div class="clearfix">
-                <span class="glyphicon glyphicon-remove"></span>
-                <div class="clearfix">
-                    <span>提现金额</span>
-                    <input type="text">
-                    <span>全部提现</span>
+            <div class="paytan clearfix" style="display:none;">
+                <span class="paytan-remove glyphicon glyphicon-remove"></span>
+                <div class="paytan-div  clearfix">
+                    <span class="paytan-txspan">提现金额</span>
+                    <input type="text"  class="paytan-txinput form-control">
+                    <span class="paytan-txqb">全部提现</span>
                 </div>
-                <div class="clearfix">
-                    <span>提现账号真实姓名</span>
-                    <input type="text">
+                <div class="paytan-div  clearfix">
+                    <span class="paytan-name">提现账号真实姓名</span>
+                    <input type="text"  class="paytan-nameinput form-control" id="paytan-txname">
                 </div>
-                <div class="clearfix">
-                    <span>提现支付宝账号</span>
-                    <input type="text">
+                <div class="paytan-div  clearfix">
+                    <span  class="paytan-name">提现支付宝账号</span>
+                    <input type="text"  class="paytan-nameinput form-control" id="paytan-txzh">
                 </div>
-                <span>确定提现</span>
+                <span  class="paytan-qbtixian">确定提现</span>
             </div>
         </div>
         <!-- 支付详情页 -->
@@ -684,18 +684,18 @@
                     <span class="pdetailspan" id="pdtailsfive">支付结果:</span>
                     <div class="pdetaildiv" id="pdzfqk"></div>
                </div>
-               <div class="clearfix">
+               <div class="clearfix"  id="pdetail-refund" style="display: none;">
                     <div class="pdetailsdad  clearfix">
                         <span class="pdetailspan">退款日期</span>
-                        <span class="pdetaildiv"></span>
+                        <span class="pdetaildiv"  id="pdetail-rtime"></span>
                     </div>
                     <div class="pdetailsdad  clearfix">
                         <span class="pdetailspan">退款价格</span>
-                        <span class="pdetaildiv"></span>
+                        <span class="pdetaildiv" id="pdetail-rmoney"></span>
                     </div>
                     <div class="pdetailsdad  clearfix">
                         <span class="pdetailspan">退款单号</span>
-                        <span class="pdetaildiv"></span>
+                        <span class="pdetaildiv" id="pdetail-rpage"></span>
                     </div>
                </div>
                <div class="pdetailsdad  pdetlsdadlook clearfix">
