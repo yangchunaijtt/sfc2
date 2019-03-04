@@ -44,6 +44,8 @@
                 balanceMycash.cashMoneyPage("","");
                 //车主提现信息
                 balanceMycash.getMoneyRecord();
+                // 账单页无限滑动
+                cashMoneyPageline();
             }
         },location.search);
         // 初始化时设置默认值 

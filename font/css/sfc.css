@@ -2349,3 +2349,7 @@ body {
     margin-top: 8px;
     margin-bottom: 8px;
   }
+/* 车主我的账单的无限滚动效果 */
+#cashMoneyPage{
+  overflow-y: auto;
+}

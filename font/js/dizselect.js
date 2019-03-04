@@ -800,7 +800,40 @@
         }
 
 // 账单页无限滚动效果
-        
+var cashMoneyPage = {
+    page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
+    loadcount:3  // 页面展示的为第几页的数据 
+}
+function cashMoneyPageline(){
+    var useruid =  nowusermsg.uid;
+    var $runpassengerval = $('#cashm-footer').infiniteScroll({     //#content是包含所有图或块的容器
+        path: function(){
+            // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
+            // 数据量很小情况下  报错了 
+            if(  cashMoneyPage.page <= cashMoneyPage.loadcount){
+                // 获取全部时间的行程，失效页没有关系 
+            
+                return "http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs_get.asp?cur="+cashMoneyPage.page+"&uid="+useruid+"&dateRange="+"&type=";
+            }
+        },
+        history: false,
+        elementScroll:"#cashMoneyPage",
+        scrollThreshold:50,
+        status:".cashNode-load-status",
+        responseType:"json",
+        debug:true
+    });
+    $runpassengerval.on( 'load.infiniteScroll', function( event, response ) {
+        var data = response;
+        // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
+        // 开始处理结果 
+         // 赋值最大页数 
+        cashMoneyPage.loadcount = data.page;
+        cashMoneyPage.page = cashMoneyPage.page+1;
+             // 调用处理全部车主页的函数 
+             setqbVowneraa(data);
+    })
+}    
 
 
     
