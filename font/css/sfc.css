@@ -2195,6 +2195,7 @@ body {
   /* 公用的提示div样式设置 */
   .public-divone{
     height: 100%;
+    background: #fff;
   }
   .public-divone .public-imgone{
     display: block;

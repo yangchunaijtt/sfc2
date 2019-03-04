@@ -749,11 +749,9 @@
             var valzhi = "" ;
             var useruid =  nowusermsg.uid;
             if( valsf==="Passenger" ){
-                paymentzyval.page = 2;
                 valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+paymentzyval.page+"&utype="+paymentzyval.sf+"&uid="+useruid+"&dateRange=";
                 wuxian(valzhi,0);
             }else if( valsf==="Driver" ){
-                paymentzyval.page = 2;
                 valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+paymentzyval.page+"&uid="+useruid+"&utype='Driver'&dateRange=";
                 wuxian(valzhi,1);
             }
