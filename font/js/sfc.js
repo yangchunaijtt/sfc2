@@ -86,13 +86,6 @@
         // 我的账单页
         $("#cashMoneyPage").height($(document.body).height()-$(".header").height());
         // 当 hash变化时切换显示
-    // 页面初始化时就执行这些数据 
-    $(".searchtime #datetime").datetimepicker({
-        format: 'YYYY-MM-DD HH:mm',
-        locale: moment.locale('zh-CN'),
-        // 目前之前的时间都不能选
-        minDate: false
-        });
 // 给导航条绑定切换
     var globalVariable = {
         hpassengerpd:1,
@@ -2378,8 +2371,14 @@
                 showMessage1btn(successdattsxx,"",0);
                 return false;
             }else if( paymentModular.oldarcity == mdata.name.trim() && paymentModular.olddpcity == departure.trim() &&paymentModular.oldartime == fabuxiaoxi.cftime && paymentModular.olddptime ==  fabuxiaoxi.mdtime){
-                // 阻止因为卡顿，出现的多次发布同样的数据
-                showMessage1btn("已经发布成功,请忽重复发布","",0);
+                // 阻止重复提交
+               // 10秒后初始化下。
+                setTimeout(function(){
+                    paymentModular.oldarcity  = '';
+                    paymentModular.olddpcity = '';
+                    paymentModular.oldartime='';
+                    paymentModular.olddptime
+                 },5000);
                 return false;
             }
 
@@ -2572,6 +2571,8 @@
             // 付款
                 $("#pdtailsone").text("付款号");
                 $("#pdfkh").text(val.vpNo);
+            // 服务费比率
+
             // 支付价格 
                 $("#pdtailstwo").text("支付价格");
                 $("#pdzfjo").text(val.payPrice);
@@ -2588,6 +2589,8 @@
                     jg = "出现问题";
                 }
                 $("#pdzfqk").text(jg);
+            // 服务费率
+                // $("#pdfwfl").text(valtwo.feeRate+"%");
             // 支付类型 
                 $("#pdtailsthree").text("支付类型");
                 $("#pdzflx").text(val.payType);
@@ -2615,6 +2618,8 @@
             // 出发时间
                 $("#pdtailsone").text("出发时间");
                 $("#pdfkh").text(valtwo.departureTime);
+            // 服务费率
+                // $("#pdfwfl").text(valtwo.feeRate+"%");
             // 出发城市
                 $("#pdtailstwo").text("出发城市");
                 if(valtwo.dpCity=="" || valtwo.dpCity==undefined ||valtwo.dpCity === null){
