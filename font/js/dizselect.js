@@ -738,6 +738,9 @@
             }else if( valsf==="Driver" ){
                 valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+paymentzyval.page+"&uid="+useruid+"&utype='Driver'&dateRange=";
                 wuxian(valzhi,1);
+            }else if ( valsf==="other" ){
+                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+paymentzyval.page+"&utype="+paymentzyval.sf+"&uid="+useruid+"&dateRange=";
+                wuxian(valzhi,2);
             }
             function wuxian ( val,bijiao) { 
                 var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
@@ -773,6 +776,8 @@
                                     paymentpcl(jj,data);
                                 }else if(bijiao ===1 ){
                                     paymentpcl(jj,data,0);
+                                }else if (bijiao ===2 ){
+                                    paymentpcl(jj,data,2);
                                 }
                                 
                             }

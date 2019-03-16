@@ -49,8 +49,11 @@
             }
         },location.search);
         // 初始化时设置默认值 
+
         $(".dqcsval").text($(".xcspanleft").text());
         //给滑动元素获取高度 
+        // 主页的高度
+        $(document.body).height($(window).height());
         //乘客页的高度 
         $(".cylx").height($(document.body).height()-$(".passenger .select").height()-$(".header").height());
         //车主页的高度 
@@ -2506,7 +2509,7 @@
     // 支付成功处理的页面的数据 
     //    <a href="#payment" class="aqkpayment clearfix" id="pmaqkpayment">  
     function paymentpcl(i,data,val){
-        if( val === "" || val === null || val === undefined){
+        if( val === "" || val === null || val === undefined || val ===2){
             var sj = data.obj.froViewPayments[i];
             // 处理点击支付的数据 
             // 传递参数 
