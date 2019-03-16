@@ -259,11 +259,7 @@ $(function(){
                     state:1   // 1 是完结
                 },
                 success:function(data){
-                    console.log("点击成交",data);
-                    $("#tmpbutton").empty();
-                    showMessage1btn("已成交,祝您旅途愉快！","",0);
-                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
-                    $(".sdstatusd").text("已成交");
+                    paymentModule.payMoney(nowusermsg.requestData.price,"成交");
                 },
                 error:function(data){
                     console.log("成交失败",data);
@@ -300,7 +296,7 @@ $(function(){
                             showMessage1btn("座位不够,请重试","",0);
                             return false ;
                         }else{
-                            paymentModule.payMoney(nowusermsg.requestData.price); 
+                            paymentModule.payMoney(nowusermsg.requestData.price,"报名"); 
                         }
                     }else if ( data.result <= 0 ) {
                         $("#tmpbutton").empty();
@@ -356,7 +352,7 @@ $(function(){
             usource:"Wx_Kbt",   // 用户的来源 
             FROID:111     // 发布单号，取当前信息的id值 
         },
-        payMoney:function(moneyVal){  // 只有乘客报名车主的行程才需要付钱 
+        payMoney:function(moneyVal,pdval){  // 只有乘客报名车主的行程才需要付钱 
            var paymentbttsj =  paymentModule.paymentbttsj;
             paymentbttsj.title = "乘客报名";
             
@@ -443,18 +439,26 @@ $(function(){
                             //showMessage1btn(JSON.stringify(res),"",0);
                             switch(res.err_msg){
                                 case "get_brand_wcpay_request:ok":
-                                    //报名成功要付报名费给我们,
-                                    showMessage1btn("支付报名成功,请联系车主","",0);
+                                    if (pdval=="报名") {
+                                            //报名成功要付报名费给我们,
+                                        showMessage1btn("支付报名成功,请联系车主","",0);
 
-                                    // 成功了要把电话显示出来   
-                                    $(".sfvaldiv").text(nowusermsg.requestData.customerList[0].trim());
-                                    // 成功后初始化
-                                    nowusermsg.personNumber  = 0 ;
-                                    $("#person-jtnumber").text(nowusermsg.personNumber);
+                                        // 成功了要把电话显示出来   
+                                        $(".sfvaldiv").text(nowusermsg.requestData.customerList[0].trim());
+                                        // 成功后初始化
+                                        nowusermsg.personNumber  = 0 ;
+                                        $("#person-jtnumber").text(nowusermsg.personNumber);
 
-                                    $("#tmpbutton").empty();
-                                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
-                                    $(".sdstatusd").text("报名成功");
+                                        $("#tmpbutton").empty();
+                                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
+                                        $(".sdstatusd").text("报名成功");
+                                    }else if (pdval=="成交") {
+                                        console.log("点击成交",data);
+                                        $("#tmpbutton").empty();
+                                        showMessage1btn("已成交,祝您旅途愉快！","",0);
+                                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
+                                        $(".sdstatusd").text("已成交");
+                                    }
                                     break;
                                 case "get_brand_wcpay_request:fail":
                                     showMessage1btn("系统出错，请联系我们！","Back()",0);
@@ -506,13 +510,23 @@ $(function(){
                 $(".mdcitydv").text(sj.arCity.trim());
             /* 提示的城市名 */
                 $(".changz").text(sj.dpCity.trim());
-            /* 手机号*/
-                if(typeof(sj)=='undefined'?false:(typeof(sj.customerList)=='undefined'?false:true)){
-                    $(".sfvaldiv").text(sj.customerList[0].trim());
-                }else{  
-                    $(".sfvaldiv").text("成交后才能看到号码");
+            /* 手机号
+                分为：1：自己看的结果。
+                      2：别人看的结果。
+            */
+                if (nowusermsg.valone =="own") {   // 自己看自己的
+                    if(typeof(sj)=='undefined'?false:(typeof(sj.customerList)=='undefined'?false:true)){
+                        $(".sfvaldiv").text(sj.customerList[0].trim());
+                    }else{  
+                        $(".sfvaldiv").text("成交后才能看到号码");
+                    }
+                }else {             // 被别人看
+                    if(typeof(sj)=='undefined'?false:(typeof(sj.userInfo)=='undefined'?false:true)){
+                        $(".sfvaldiv").text(sj.userInfo.mobile);
+                    }else{  
+                        $(".sfvaldiv").text("成交后才能看到号码");
+                    }
                 }
-                
             /* 订单结果 */
             nowusermsg.state = sj.state;
             // 乘车人数

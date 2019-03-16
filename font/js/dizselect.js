@@ -345,7 +345,7 @@
     }   
 
 
-// 支付模块
+// 支付模块(目前不需要支付功能,改为成交时在支付)。
   var  paymentModule = {
     paymentbttsj:{
         title:"",
@@ -439,23 +439,7 @@
                             //showMessage1btn(JSON.stringify(res),"",0);
                             switch(res.err_msg){
                                 case "get_brand_wcpay_request:ok":
-                                    // 用完要把用过的值初始化 
-                                    // 用完时间要初始化,完成了在初始化。
-                                    fabuxiaoxi.mddcity = "";    // 置空 
-                                    fabuxiaoxi.cfddata = "";    // 置空 
-                                    fabuxiaoxi.mmddata = "";    // 置空 
-                                    settleAccounts.rendertimes = 0 ;
-                                    paymentModular.oldarcity = "";
-                                    paymentModular.olddpcity = "" ;
-                                    paymentModular.oldartime = "";
-                                    paymentModular.olddptime = "";
-                                    // div 里的值赋为空
-                                    $("#address").text("");
-                                    $("#cgz-mdd").val("");
-                                    // 乘客发布时,支付成功的同时向后台发送数据
-                                    showMessage1btn("发布成功,如需退款，请提前24小时取消订单","",0);
-                                    // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
-                                    window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
+                                    
                                     break;
                                 case "get_brand_wcpay_request:fail":
                                     showMessage1btn("系统出错，请联系我们！","Back()",0);

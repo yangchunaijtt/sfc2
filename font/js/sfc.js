@@ -1984,11 +1984,11 @@
                 var vownerData = data.obj.frOrders;
                 // 先判断状态码 
                 if(data.result>0){ //为0才可以进行操作
-                  
+                  console.log("查看我的车主的信息",vownerData);
                     for(var i = 0 ;i<vownerData.length;i++){
                         if(vownerData[i].state > -1){
                             $("#runvownerNode").append(sfcsj.runvownerDiv);
-                            var arunvownerDivsj = "./font/html/xq.html#ownshowdata?"+"id="+vownerData[i].id+"&uid="+nowusermsg.uid+"&sf=run";
+                            var arunvownerDivsj = "./font/html/xq.html#ownshowdata?"+"id="+vownerData[i].id+"&uid="+vownerData[i].uid+"&sf=run";
                             $("#arunvownerDiv").attr("href",arunvownerDivsj);
                             var idarunvownerDiv = "arunvownerDiv"+i;
                             $("#arunvownerDiv").attr("id",idarunvownerDiv);
@@ -2421,7 +2421,23 @@
                             //  如果是乘客发布，需要付钱给平台
                             // 付款单号可能会出现问题，需要取之前的来解决
                             // data.obj 返回数据给的单号
-                            paymentModule.payMoney(parseFloat(fabuxiaoxi.amoney));
+                           // 用完要把用过的值初始化，现在不用付款了。
+                                    // 用完时间要初始化,完成了在初始化。
+                                    fabuxiaoxi.mddcity = "";    // 置空 
+                                    fabuxiaoxi.cfddata = "";    // 置空 
+                                    fabuxiaoxi.mmddata = "";    // 置空 
+                                    settleAccounts.rendertimes = 0 ;
+                                    paymentModular.oldarcity = "";
+                                    paymentModular.olddpcity = "" ;
+                                    paymentModular.oldartime = "";
+                                    paymentModular.olddptime = "";
+                                    // div 里的值赋为空
+                                    $("#address").text("");
+                                    $("#cgz-mdd").val("");
+                                    // 乘客发布时,支付成功的同时向后台发送数据
+                                    showMessage1btn("发布成功,如需退款，请提前24小时取消订单","",0);
+                                    // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
+                                    window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
                         }else if( pushType === "Driver" ){
                              // 用完时间要初始化,完成了在初始化。
                             // 用完要把用过的值初始化 
