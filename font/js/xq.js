@@ -259,7 +259,7 @@ $(function(){
                     state:1   // 1 是完结
                 },
                 success:function(data){
-                    paymentModule.payMoney(nowusermsg.requestData.price,"成交");
+                    paymentModule.payMoney(nowusermsg.requestData.price,"成交",nowusermsg.requestData.personNum);
                 },
                 error:function(data){
                     console.log("成交失败",data);
@@ -291,21 +291,21 @@ $(function(){
                 success:function(data){
                     
                     console.log("请求人数的数据",data);
-                    if( data.result > 0 ){
-                        if( nowusermsg.personNumber> data.result){
-                            showMessage1btn("座位不够,请重试","",0);
+                    if( data.result.leftNum < nowusermsg.personNumber ){
+                        if( nowusermsg.personNumber >  (data.result.leftNum+data.result.unPayNum)){
+                            showMessage1btn("已满","",0);
                             return false ;
                         }else{
-                            paymentModule.payMoney(nowusermsg.requestData.price,"报名"); 
+                            $("#tmpbutton").empty();
+                            // 不行就初始化
+                            nowusermsg.personNumber  = 0 ;
+                            $("#person-jtnumber").text(nowusermsg.personNumber);
+                            showMessage1btn("五分钟后刷新重试","",0);
+                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">五分钟后刷新重试</div>');
+                            $(".sdstatusd").text("五分钟后刷新重试");
                         }
-                    }else if ( data.result <= 0 ) {
-                        $("#tmpbutton").empty();
-                        // 不行就初始化
-                        nowusermsg.personNumber  = 0 ;
-                        $("#person-jtnumber").text(nowusermsg.personNumber);
-                        showMessage1btn("报名失败,已满","",0);
-                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">抱歉,已满</div>');
-                        $(".sdstatusd").text("已满");
+                    }else if ( data.result.leftNum >= nowusermsg.personNumber  ) {
+                        paymentModule.payMoney(nowusermsg.requestData.price,"报名",nowusermsg.requestData.personNum); 
                     }
                 },
                 error:function(data){
@@ -352,7 +352,7 @@ $(function(){
             usource:"Wx_Kbt",   // 用户的来源 
             FROID:111     // 发布单号，取当前信息的id值 
         },
-        payMoney:function(moneyVal,pdval){  // 只有乘客报名车主的行程才需要付钱 
+        payMoney:function(moneyVal,pdval,psersonnumber){  // 只有乘客报名车主的行程才需要付钱 
            var paymentbttsj =  paymentModule.paymentbttsj;
             paymentbttsj.title = "乘客报名";
             
@@ -382,7 +382,6 @@ $(function(){
                     uid:nowusermsg.myuid,
                     froId:nowusermsg.id,	
                     utype:"Passenger",
-                    vpno:paymentbttsj.billno,
                     pnum:nowusermsg.personNumber   // 人数为选择人数
                 },
                 success:function(data){
@@ -393,7 +392,7 @@ $(function(){
                     var paymentbttsj =  paymentModule.paymentbttsj;
                     paymentbttsj.FROID   =  data.result;
                         // 参数
-                    paymentbttsj.amount   = moneyVal*100;
+                    paymentbttsj.amount   = moneyVal*100*psersonnumber;
                     var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
                     // 地址
                     var url = "../../../common/getBSign-kongbatong.asp";
@@ -484,9 +483,9 @@ $(function(){
                         },"json")
 
                     },
-                    error:function(data){
-                        showMessage1btn("人数已满","",0);
-                    }
+                error:function(data){
+                    showMessage1btn("网络出错,请重试!","",0);
+                }
             })
 
             }

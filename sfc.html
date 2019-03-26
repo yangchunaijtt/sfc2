@@ -80,14 +80,15 @@
                     我是乘客,我要预约顺风车
                 </a>
             </div>
-            <!-- 常用路线 -->
-            <div class="cylx clearfix">
-                <div class="chd">
+            <div class="chd">
                     <sapn class="glyphicon glyphicon-map-marker cylx-icon"></sapn>
                     <span class="circle">
                         已发布行程
                     </span>
-                </div>
+            </div>
+            <!-- 常用路线 -->
+            <div class="cylx clearfix">
+                
                 <div id="passengerNode"  class="clearfix">
                     <!-- 乘客div内容嵌套区 -->
                 </div>
@@ -114,22 +115,22 @@
                     我是车主,我要发布行程
                 </a>
             </div>
-            <div class="vonpondclxc clearfix">
-                <div class="top clearfix"> 
+            <div class="top clearfix"> 
                     <span class="iconfont icon-xingcheng top-icon"></span>
                     <span class="deng">
                         已发布行程
                     </span>
                 </div>
+            <div class="vonpondclxc clearfix">
                 <div id="vownperNode"  class="clearfix">
                     <!-- 复用添加地方 -->
                 </div>
-                <div class="vowpage-load-status">
+                <div class="vowpage-load-status"> 
                     <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
                     <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
                     <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
                 </div>
-            </div>    
+            </div> 
         </div>
         <!-- 全部行程的div -->
         <div class="run clearfix" style="display:none;">
@@ -228,8 +229,7 @@
             </div>
             <!-- 乘客全部行程 -->
             <div class="runpassenger clearfix">
-                <div class="dclxc clearfix">     
-                    <div class="top clearfix"> 
+                <div class="top clearfix"> 
                         <span class="glyphicon glyphicon-user top-icon"></span>
                         <span class="deng">
                             全部乘客行程
@@ -240,11 +240,15 @@
                                 筛选
                             </a>
                         </div>
-                    </div>
+                </div>
+                <div class="dclxc clearfix">     
                     <!-- 复用创建部分 -->
-                    <div id="runpassengerNode" class="clearfix">
+                    <div class="runpassengerNodediv  clearfix">
+                        <div id="runpassengerNode" class="clearfix">
                             <!-- div填充地方 -->
+                        </div>
                     </div>
+            
                     <div class="runpaspage-load-status">
                         <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
                         <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
@@ -255,8 +259,7 @@
             <!-- <div class="runxian"></div> -->
             <!-- 车主全部行程 -->
             <div class="runvowner clearfix" style="display:none">  
-                <div class="dclxc clearfix">
-                    <div class="top clearfix"> 
+                <div class="top clearfix"> 
                         <span class="iconfont icon-qiche
                         top-icon"></span>
                         <span class="deng">
@@ -268,10 +271,14 @@
                                 筛选
                             </a>
                         </div>
-                    </div>
+                </div>
+                <div class="dclxc clearfix">
+                   
                     <!-- 复用创建部分 -->
-                    <div id="runvownerNode" class="clearfix" >
-                        <!-- div填充地方 -->
+                    <div class="runvownerNodediv clearfix">
+                        <div id="runvownerNode" class="clearfix" >
+                            <!-- div填充地方 -->
+                        </div>
                     </div>
                     <div class="runvownerNode-load-status">
                         <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
@@ -633,7 +640,10 @@
                 </div>
             </div>
             <!-- 复用区 -->
-            <div class="phdiconfyq clearfix">
+            <div class="phdiconfyqdiv clearfix">
+                <div class="phdiconfyq clearfix">
+                    
+                </div>
             </div>
             <div class="paytan clearfix" style="display:none;">
                 <span class="paytan-remove glyphicon glyphicon-remove"></span>
@@ -662,49 +672,144 @@
                     <span>返回</span>
                 </a>
             </div>
-            <div class="pdetailsbody">
-                <div class="pdetailsdad pdetailsone clearfix">
-                    <span class="pdetailspan" id="pdtailsone">付款号:</span>
-                    <div class="pdetaildiv pdtvpno" id="pdfkh"></div>
+            <div class="pdetailsbody" >
+               
+                <!-- 内容区 -->
+                <div class="details-footer clearfix">
+                    <!-- 支付信息 -->
+                    <!-- 要根据状态来改变 -->
+                <div class="clearfix" id="details-passengershow" style="display: none;">
+                        <div  class="pdetailsdad pdetailsfour clearfix" id="details-paymoney" style="border:1px solid #f2f2f2;border-left:none;border-right:none;">
+                                <!-- 添加支付和取消的按钮 -->
+                                
+                            </div>
+                        <div class="details-center clearfix" >
+                            <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单人数</span>
+                            <div class="details-ctright right" id="details-passengerState" style="line-height:40px;width:75%;"></div>
+                        </div>
+                        <div  id="details-oddNumber">
+                                <div class="details-center clearfix" >
+                                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">支付单号</span>
+                                    <div class="details-ctright right" id="details-oddsz" style="line-height:40px;width:75%;"></div>
+                                </div>
+                                <div class="details-center clearfix">
+                                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单价格</span>
+                                    <i style="font-style: normal;margin-right: 2px;line-height:40px;margin-left: 20px;" class="details-centeryen left">&yen;</i>
+                                    <span id="details-pricedh" class="details-ctright right" style="line-height:40px;width:60%;float:left;text-indent: 0px;"></span>
+                                </div>
+                                <div class="details-center clearfix">
+                                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">服务费率</span>
+                                    <span id="details-pricefeedata" class="details-ctright right" style="line-height:40px;width:60%;float:left;text-indent: 0px;"></span>
+                                </div>
+                            </div>
+                            <div class="details-center clearfix" id="details-price" style="display: none;">
+                                <span class="details-ctleft left">支付</span>
+                                <div class="details-ctright right clearfix">
+                                    <i style="font-style: normal;margin-right: 2px;" class="details-centeryen left">&yen;</i>
+                                    <span id="details-priceje" class="details-ctrightje"></span>
+                                    <span id="details-pricetime" class="details-ctrighttime"></span>
+                                </div>
+                            </div>
+                            <!-- 有没退款，有退款则显示 -->
+                            <div class="details-center  clearfix" id="details-refund" style="display: none;">
+                                <span class="details-ctleft left">退款</span>
+                                <div class="details-ctright right clearfix">
+                                    <i style="font-style: normal;margin-right: 2px;" class="details-centeryen left">&yen;</i>
+                                    <span id="details-refundje" class="details-ctrightje"></span>
+                                    <span id="details-refundtime" class="details-ctrighttime"></span>
+                                    <span id="details-refunddh" class="details-ctrightdh"></span>
+                                </div>
+                            </div>
+                            <!-- 内容区，存储内容的地方 -->
+                            <div class="details-footer clearfix">
+                    <!-- 位置 -->
+                        <div class="details-footer clearfix">
+                            <!-- 位置 -->
+                            <div class="details-ftdadiv cearfix">
+                                <div class="details-ftleft left clearfix">
+                                    出发地
+                                </div>
+                                <div class="details-ftright right clearfix">
+                                    <div class="details-ftrttop clearfix">
+                                        <span id="details-dptime" class="details-ftrttopspan"></span>
+                                    </div>
+                                    <div class="details-ftrtbottom clearfix">
+                                        <span id="details-dpname" class="details-ftrtbttop"></span>
+                                        <span  id="details-dpcity" class="details-ftrtbtcity"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="details-ftdadiv cearfix">
+                                <div class="details-ftleft left clearfix">
+                                        目的地
+                                </div>
+                                <div class="details-ftright right clearfix">
+                                    <div class="details-ftrttop clearfix">
+                                        <span  id="details-artime"  class="details-ftrttopspan"></span>
+                                    </div>
+                                    <div class="details-ftrtbottom clearfix">
+                                        <span  id="details-arname"  class="details-ftrtbttop"></span>
+                                        <span  id="details-arcity"   class="details-ftrtbtcity"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                   </div>
                 </div>
-                <!-- <div class="pdetailsdad pdetailsone clearfix">
-                    <span class="pdetailspan">服务费率:</span>
-                    <div class="pdetaildiv pdtvpno" id="pdfwfl"></div>
-                </div> -->
-                <div class="pdetailsdad pdetailstwo clearfix" >
-                    <span class="pdetailspan"  id="pdtailstwo">支付价格:</span>
-                    <div class="pdetaildiv" id="pdzfjo"></div>
-                </div>  
-                <div  class="pdetailsdad pdetailsthree clearfix">
-                     <span class="pdetailspan"  id="pdtailsthree">支付类型:</span>
-                     <div class="pdetaildiv" id="pdzflx"></div>
-                </div>
-                <div  class="pdetailsdad pdetailsthree clearfix">
-                    <span class="pdetailspan"  id="pdtailsfour">支付日期:</span>
-                    <div class="pdetaildiv" id="pdzfrq"></div>
-               </div>
-               <div  class="pdetailsdad pdetailsfour clearfix">
-                    <span class="pdetailspan" id="pdtailsfive">支付结果:</span>
-                    <div class="pdetaildiv" id="pdzfqk"></div>
-               </div>
+                   
+               <!-- 车主信息显示的地方 -->
                <div class="clearfix"  id="pdetail-refund" style="display: none;">
-                    <div class="pdetailsdad  clearfix">
-                        <span class="pdetailspan">退款日期</span>
-                        <span class="pdetaildiv"  id="pdetail-rtime"></span>
+                <div class="details-center clearfix" >
+                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单人数</span>
+                    <div class="details-ctright right" id="details-driverState" style="line-height:40px;width:75%;"></div>
+                </div>
+                <!-- 价格 -->
+                    <div class="details-center clearfix">
+                        <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单价格</span>
+                        <i style="font-style: normal;margin-right: 2px;line-height:40px;margin-left: 20px;" class="details-centeryen left">&yen;</i>
+                        <span id="details-driverPricedh" class="details-ctright right" style="line-height:40px;width:60%;float:left;text-indent: 0px;"></span>
                     </div>
-                    <div class="pdetailsdad  clearfix">
-                        <span class="pdetailspan">退款价格</span>
-                        <span class="pdetaildiv" id="pdetail-rmoney"></span>
-                    </div>
-                    <div class="pdetailsdad  clearfix">
-                        <span class="pdetailspan">退款单号</span>
-                        <span class="pdetaildiv" id="pdetail-rpage"></span>
-                    </div>
+                    <div class="details-center clearfix" >
+                            <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单人数</span>
+                            <div class="details-ctright right" id="details-driverOddsz" style="line-height:40px;width:75%;"></div>
+                        </div>
+                    <div class="details-footer clearfix">
+                            <!-- 位置 -->
+                            <div class="details-ftdadiv cearfix">
+                                <div class="details-ftleft left clearfix">
+                                    出发地
+                                </div>
+                                <div class="details-ftright right clearfix">
+                                    <div class="details-ftrttop clearfix">
+                                        <span id="details-driverdptime" class="details-ftrttopspan"></span>
+                                    </div>
+                                    <div class="details-ftrtbottom clearfix">
+                                        <span id="details-driverdname" class="details-ftrtbttop"></span>
+                                        <span  id="details-driverdpcity" class="details-ftrtbtcity"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="details-ftdadiv cearfix">
+                                <div class="details-ftleft left clearfix">
+                                        目的地
+                                </div>
+                                <div class="details-ftright right clearfix">
+                                    <div class="details-ftrttop clearfix">
+                                        <span  id="details-driverartime"  class="details-ftrttopspan"></span>
+                                    </div>
+                                    <div class="details-ftrtbottom clearfix">
+                                        <span  id="details-driverarname"  class="details-ftrtbttop"></span>
+                                        <span  id="details-driverarcity"   class="details-ftrtbtcity"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                </div>
                <div class="pdetailsdad  pdetlsdadlook clearfix">
                    <!-- 添加填充button的地方 -->
                </div>
             </div>
+        </div>
         </div>
         <!-- 车主注册页 -->
         <div class="owner-register clearfix" style="display:none;">
@@ -825,15 +930,17 @@
                     </div>
                 </div>
             </div>
-
-            <!-- 显示的div，用来填充数据 用来动态添加数据 -->
-            <div class="clearfix" id="cashm-footer">
-                 
-            </div>
-            <div class="cashNode-load-status">
-                <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
-                <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
-                <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
+            <!-- 滚动的div -->
+            <div class="cashm-footerdiv clearfix">
+                <!-- 显示的div，用来填充数据 用来动态添加数据 -->
+                <div class="clearfix" id="cashm-footer">
+                    
+                    </div>
+                    <div class="cashNode-load-status">
+                        <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
+                        <p class="infinite-scroll-last jzxsjgaa" style="display:none">加载内容结束</p>
+                        <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有数据加载页面了！去其他地方逛逛吧！</p>
+                    </div>
             </div>
         </div>
     </div>

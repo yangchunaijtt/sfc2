@@ -325,20 +325,19 @@
   }
   #person-number  .personnb-left #person-jtnumber{
     display: inline-block;
-    width: 30%;
+    width: 29%;
     text-align: center;
-    background: #91c7ff;
+    border: 1px solid #91c7ff;
     height: 32px;
     line-height: 32px;
     border-radius: 6px;
-    color: #fff;
   }
   #person-number  .personnb-right{
     display: inline-block;
     width: 56%;
   }
   #person-number  .personnb-right  .person-button{
-    width: 40%;
+    width: 20%;
     height: 32px;
     line-height: 32px;
     color: #fff;
