@@ -422,7 +422,7 @@ $(function(){
                         console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
                     BC.click({
                         "instant_channel" : paymentbttsj.instant_channel,
-                        "debug" : true,
+                        "debug" : false,
                         "need_ali_guide" : true,
                         "use_app" : true,
                         "title" : paymentbttsj.title, //商品名

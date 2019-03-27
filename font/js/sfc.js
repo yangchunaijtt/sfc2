@@ -25,9 +25,6 @@
                 // initData(nowusermsg.uid); //加载页面数据
                 getPassenger();
                 getVowner();
-               
-                
-
                 hactive();
                 formcontrol();
                 getqbVowner();
@@ -35,14 +32,18 @@
                 //  判断注册了没
                 owneridentity.ownerajax();
                 // 默认获取车主提现的数据
-                balanceMycash.cashMoneyPage("","");
+                balanceMycash.cashMoneyPage("","",0);
                 // 车主提现信息
                 balanceMycash.getMoneyRecord();
-                
+
+                // 主页的高度
+                $(document.body).outerHeight($(window).outerHeight());      
                 // 高度设置的问题
                 // 全部行程页 车主页的高度 
+                $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
                 $(".runvownerNodediv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
                 // 全部行程页 乘客页的高度 
+                $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
                 $(".runpassengerNodediv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
                 
             }
@@ -51,13 +52,12 @@
 
         $(".dqcsval").text($(".xcspanleft").text());
         // 给滑动元素获取高度 
-        // 主页的高度
-        $(document.body).outerHeight($(window).outerHeight());
+        
         // 乘客页的高度 
-        $(".cylx").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight());
+        $(".cylx").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-40);
         // 车主页的高度 
         // 这里容易出问题，最后在改改 
-        $(".vonpondclxc").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-20);
+        $(".vonpondclxc").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-60);
         
         
         
@@ -784,11 +784,13 @@
         })
         // 刷新返回
         $("#cashMoneyPage-refresh").bind("touch click",function(){
-            balanceMycash.cashMoneyPage("","");
+            balanceMycash.cashMoneyPage("","",0);
         })
         $("#cashMoneyPage-return").bind("touch click",function(){
             window.location.hash = "#run?passger";
         })
+
+        
     // 提现页的事件
         // 全部提现
         $(".paytan-txqb").bind("touch click",function(){
@@ -826,12 +828,11 @@
             hvownermyrun();
             $(".hvownermypay").css("color","#5bc0de");
 
-            paymentpage(nowusermsg.uid,"Passenger");
+            paymentpage(nowusermsg.uid,"Passenger",1);
             $("#mypayidname").text("我的支付");
             // 乘客隐藏掉那个
             $("#balanceid").hide();
-            paymentzyval.page = paymentpageval.result.page;
-            hdpaymentzy("Passenger");
+            
         })
         $(".hrucarpay").bind("touch click",function(){
             // 车主大的颜色变化
@@ -841,14 +842,10 @@
             hvownermyrun();
             $(".hrucarpay").css("color","#5bc0de");
             // 点击时车主时 调用渲染函数
-            owenerCash.owerPage();
+            owenerCash.owerPage(1);
             $("#mypayidname").text("我的接单");
             // 车主就显示
             $("#balanceid").show();
-            paymentpage(nowusermsg.uid,"Driver");
-            // 车主要处理接单数据
-            paymentzyval.page = paymentpageval.result.page;
-            hdpaymentzy("Driver");
             
         })
         // 页面刷新和跳转时也调用这个路由
@@ -922,7 +919,8 @@
             if((cashmoneyfunction.topstates+cashmoneyfunction.bottomstates)%2===0){
                 cashmoneyfunction.states ++;
                 cashmoneyfunction.close();
-                balanceMycash.cashMoneyPage(cashmoneyfunction.type,cashmoneyfunction.dateRange);
+                balanceMycash.cashMoneyPage(cashmoneyfunction.type,cashmoneyfunction.dateRange,1);
+
             }else {
                 return false ;
             }
@@ -944,11 +942,33 @@
             cashmoneyfunction.dateRange = "";
         }
     }
+
+     // 账单页无限滚动效果
+     var cashMange_click = {
+        statusHide:function(){
+            $(".cashNode-load-status").find("p").hide();	
+        },
+        lastShow:function(){
+            this.statusHide();
+            $(".cashNode-load-status>.infinite-scroll-last").show();
+        },
+        errShow:function(){
+            this.statusHide();
+            $(".cashNode-load-status>.infinite-scroll-error").show();
+        },
+        driverScreen:function(){
+            // 点击后销毁滑动效果
+            drivelinfie_click.statusHide();	//重置状态栏
+            $('#cashm-footer').infiniteScroll('destroy'); //销毁滚动加载
+            $('#cashm-footer').off( 'load.infiniteScroll',footerdiv_onpage); //注销滑动监听
+            $(".cashm-footerdiv").animate({ scrollTop: 0 }, 10);  //返回顶部
+        }
+    }
 //  全部提现的操作 
     var balanceMycash = {
         cashMoneyPageData:[],   // 我的账单页数据
         moneydata:{},   // 钱数信息
-        cashMoneyPage:function(typeval,dateRangeval){ // 我的账单页的显示
+        cashMoneyPage:function(typeval,dateRangeval,valzhi){ // 我的账单页的显示
             $.ajax({
                 type:"post",
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs.asp",
@@ -959,6 +979,9 @@
                    datePange:dateRangeval
                 },
                 success:function(data){
+                    if ( valzhi ==1 ){
+                        cashMange_click.driverScreen();
+                    }
                     console.log("获取车主金额信息",data);
                     cashmoneyfunction.type = "";
                     cashmoneyfunction.dateRange = "";
@@ -973,14 +996,30 @@
                             $("#cashm-footer").append(sfcsj.cashMoneyPage);
                             balanceMycash.setMoneyRecord(i,casgdata[i]);
                         }
+                        if(valzhi == 1){
+                            // 点击选择车主数据
+                            cashMoneyPage.page = data.page;
+                            if(data.page === 1){
+                                cashMange_click.lastShow();
+                            }
+                        }
+                        if (valzhi == 0){
+                            if(data.page > 1 ){
+                                // 账单页无限滑动
+                                cashMoneyPage.page = data.page;
+                                cashMoneyPageline();
+                            }else {
+                                cashMange_click.lastShow();
+                            }
+                        }
                     }else { // 小于等于0
                         $("#cashMoneyPage-nosj").show();
                         $(".cashmongy-header").hide();
                         $("#cashm-footer").hide();
+                        if(valzhi == 1){
+                            cashMange_click.errShow();
+                        }
                     }
-                    // 账单页无限滑动
-                    cashMoneyPage.page = data.page;
-                    cashMoneyPageline();
                 },
                 error:function(data){
                     console.log("获取车主金额失败",data);
@@ -1071,7 +1110,7 @@
 // 给车主提现页绑定
     var owenerCash = {
         cashResult:{}, // 车主存储的数据
-        owerPage:function(){ // 每次点开这个页面都渲染一次
+        owerPage:function(valzhi){ // 每次点开这个页面都渲染一次
             $.ajax({
                 url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts.asp",
                 type:"post",
@@ -1091,6 +1130,13 @@
                             $(".phdiconfyq").append(sfcsj.ownerpaymentpage);
                         // 处理支付页面的数据 
                             paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
+                        }
+                        if(valzhi ==1){
+                            if(data.page>1){
+                                // 车主要处理接单数据
+                                paymentzyval.page = data.page;
+                                hdpaymentzy("Driver");
+                            }
                         }
                    }
                 },  
@@ -1296,7 +1342,7 @@
         // 定位功能  
         AMap.plugin('AMap.Geolocation', function() {
            var geolocation = new AMap.Geolocation({
-               enableHighAccuracy: true, //是否使用高精度定位，默认:true
+               enableHighAccuracy: false, //是否使用高精度定位，默认:true
                timeout: 10000,          //超过10秒后停止定位，默认：5s
                buttonPosition:'RB',     //定位按钮的停靠位置
                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
@@ -1805,13 +1851,11 @@
                     hvownermyrun();
                     $(".hvownermypay").css("color","#5bc0de");
 
-                    paymentpage(nowusermsg.uid,"Passenger");
+                    paymentpage(nowusermsg.uid,"Passenger",1);
                     $("#mypayidname").text("我的支付");
                     // 乘客隐藏掉那个
                     $("#balanceid").hide();
-                    
-                    paymentzyval.page = paymentpageval.result.page;
-                    hdpaymentzy("Passenger");
+
                 }else if(val1[1]==="diver"){
                     // 我的订单页
                     $(".phdiconfyqdiv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-148);
@@ -1822,14 +1866,11 @@
                     hvownermyrun();
                     $(".hrucarpay").css("color","#5bc0de");
                     // 点击时车主时 调用渲染函数
-                    owenerCash.owerPage();
+                    owenerCash.owerPage(1);
                     $("#mypayidname").text("我的接单");
                     // 车主就显示
                     $("#balanceid").show();
-                    paymentpage(nowusermsg.uid,'Driver');
-                    // 车主要处理接单数据
-                    paymentzyval.page = paymentpageval.result.page;
-                    hdpaymentzy("Driver");
+                   
                 }
                 $(".paymentzy").show();
             }else if(val1[0]=="#payment"){
@@ -1893,13 +1934,21 @@
                 dpCity:"",      // 出发城市 
             },
              success: function (data) {
-                sfcsj.passenger = data;
-                // 获取成功，但是数据暂时为空 
-                // 处理 乘客端数据的函数
-                setPassenger(data);
-                 // 获取到Uid后，乘客页添加滑动效果 
-                 passengerNodeval.page = data.page;
-                 hdpassengerNode();
+                 if(data.result>0){
+                    sfcsj.passenger = data;
+                    // 获取成功，但是数据暂时为空 
+                    // 处理 乘客端数据的函数
+                    setPassenger(data);
+                    if ( data.page > 1 ){
+                            // 获取到Uid后，乘客页添加滑动效果 
+                        passengerNodeval.page = data.page;
+                        hdpassengerNode();
+                    }else{
+                        hdpassengerNode_click.lastShow();
+                    }
+                 }else {
+                    hdpassengerNode_click.errShow();
+                 }
             }
            });
     }
@@ -1920,14 +1969,24 @@
                 dpCity:""      // 出发城市 
             },
             success: function (data) {
-                sfcsj.vowner = data ;
-                // 获取成功，但是数据暂时为空 
+                if ( data.result > 0 ) {
+                    sfcsj.vowner = data ;
+                    // 获取成功，但是数据暂时为空 
                 
-                // setVowner() 处理车主端的数据 
-               setVowner(data);
-               // 我的行程车主绑定的滑动效果
-               vownperNodeval.page = data.page;
-               hdvownperNode();
+                    // setVowner() 处理车主端的数据 
+                    setVowner(data);
+                    if (data.page>1 ){
+                        // 我的行程车主绑定的滑动效果
+                        vownperNodeval.page = data.page;
+                        hdvownperNode();
+                    }else {
+                        hdvownperNode_click.lastShow();
+                    }
+                }else {
+                    hdvownperNode_click.errShow();
+                }   
+                
+               
            }
         });
     }
@@ -1953,16 +2012,22 @@
                dpCity:""     // 出发城市 
            },
             success: function (data) {
-                qbxcvalsj.passenger = data;
-               $("#runpassengerNode").empty();
-               //  乘客端数据的函数
-               setqbPassenger(data);
-
-                // 赋值
-                runpassengerval.loadcount = data.page;
-                runpassengerval.page  = data.page;
-               // 添加无限滑动效果
-               hdrunpassenger("","","");
+                if ( data.result > 0 ){
+                    qbxcvalsj.passenger = data;
+                    $("#runpassengerNode").empty();
+                    //  乘客端数据的函数
+                    setqbPassenger(data);
+                    if (data.page>1 ) {
+                        // 赋值
+                        runpassengerval.page  = data.page;
+                        // 添加无限滑动效果
+                        hdrunpassenger("","","");
+                    }else {
+                        passerlinfie_click.lastShow();
+                    }
+                }else {
+                    passerlinfie_click.errShow();
+                }
            }
           });
     }
@@ -2002,17 +2067,24 @@
                dpCity:""      // 出发城市 
            },
             success: function (data) {
-               qbxcvalsj.vowner = data;
-               // 获取成功，但是数据暂时为空 
-               $("#runvownerNode").empty();
-               // 处理 乘客端数据的函数
-               setqbVowneraa(data);
-
-               // 赋值
-               runvownerval.loadcount = data.page;
-                runvownerval.page = data.page;
-               //绑定查看车主页无限滚事件
-               hdrunvowner("","","");
+               
+               if (data.result > 0 ){
+                    qbxcvalsj.vowner = data;
+                    // 获取成功，但是数据暂时为空 
+                    $("#runvownerNode").empty();
+                    // 处理 乘客端数据的函数
+                    setqbVowneraa(data);
+                    if (data.page>1){
+                        // 赋值
+                        runvownerval.page = data.page;
+                        //绑定查看车主页无限滚事件
+                        hdrunvowner("","","");
+                    }else {
+                        drivelinfie_click.errShow();
+                    }
+               }else {
+                    drivelinfie_click.errShow();
+               }
            }
           });
     }
@@ -2512,7 +2584,7 @@
         type:"passger"  // 请求类型
     }
     // 只有乘客才有支付表，车主不需要，车主只有接单表
-    function paymentpage(uid,val){
+    function paymentpage(uid,val,valzhi){
         $.ajax({
             type:"post",
             url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp",
@@ -2534,6 +2606,12 @@
                         $(".phdiconfyq").append(sfcsj.paymentpage);
                     // 处理支付页面的数据 
                         paymentpcl(i,data,2);
+                    }
+                    if(valzhi == 1){
+                        if (data.page > 1){
+                            paymentzyval.page = data.page;
+                            hdpaymentzy("Passenger");
+                        }
                     }
                }
             },
