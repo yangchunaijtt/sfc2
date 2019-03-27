@@ -327,7 +327,7 @@
             // 支付成功  可以观看用户的信息 
             // 如果一样，直接用本地的id就好 
             var jwxxone = "#ownshowdata?id="+FROID+"&uid="+qmguid+"&sf=run";
-            var wlgrefone = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxxone;
+            var wlgrefone = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxxone;
             window.location.href = wlgrefone ;
             
             // 现在判断解决， 
@@ -339,7 +339,7 @@
             var jwxx = "#ownshowdata?id="+paymentbttsj.FROID+"&uid="+qmguid+"&sf=run";
                     // 传入id号 和 uid 
                     // 应该是发布数据的那个人的 
-            var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
+            var wlgref = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
             window.location.href = wlgref ;
         }
     }   
@@ -380,7 +380,7 @@
         paymentbttsj.billno = "FRO";
         paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
         $.ajax({
-            url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/saveMadeFROVPayments.asp",
+            url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/saveMadeFROVPayments.asp",
             type:"post",
             data:{
                 uid:nowusermsg.myuid,
@@ -501,7 +501,7 @@
             dateFormat: 'yyyy-mm-dd',
             startYear:currYear, //开始年份
             endYear:currYear + 1, //结束年份
-            stepMinute: 1,  // More info about stepMinute: http://docs.mobiscroll.com/2-16-1/datetime#!opt-stepMinute
+            stepMinute: 1,  // More info about stepMinute: //docs.mobiscroll.com/2-16-1/datetime#!opt-stepMinute
             onSelect: function (valueText, inst) {  
                 var sday = inst.getDate();  
                 var today = new Array('周日','周一','周二','周三','周四','周五','周六'); 
@@ -599,7 +599,7 @@
                 // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
                 // 这里判断有问题 
                 if( this.pageIndex <=  passengerNodeval.page -1 ){
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Passenger"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity="+"&pageSize=8";
+                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Passenger"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity="+"&pageSize=8";
                 }
             },
             append:".cylx-cy",
@@ -654,7 +654,7 @@
             path: function(){
                 if(  this.pageIndex <=  vownperNodeval.page -1 ){
                     // 获取全部时间的行程，失效页没有关系 
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Driver"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity="+"&pageSize=8";
+                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Driver"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity="+"&pageSize=8";
                 }
             },
             append:"#vownerDiv",
@@ -708,7 +708,7 @@
             path: function(){
                 if( this.loadCount <= runpassengerval.page - 2 ){
                     // 获取全部时间的行程，失效页没有关系 
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.loadCount+2)+"&viewType=all"+"&pushType=Passenger"+"&uid="+nowusermsg.uid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"; 
+                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.loadCount+2)+"&viewType=all"+"&pushType=Passenger"+"&uid="+nowusermsg.uid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"; 
                 }
             },
             append:"#runpassengerDiv",
@@ -746,7 +746,7 @@
                 // 数据量很小情况下  报错了 
                 if(   this.loadCount <= runvownerval.page - 2 ){
                     // 获取全部时间的行程，失效页没有关系 
-                    return "http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.loadCount+2)+"&viewType=all"+"&pushType=Driver"+"&uid="+nowusermsg.uid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"; 
+                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.loadCount+2)+"&viewType=all"+"&pushType=Driver"+"&uid="+nowusermsg.uid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"; 
                 }
             },
             append:".circle",
@@ -787,7 +787,7 @@ function cashMoneyPageline(){
             // 数据量很小情况下  报错了 
             if( this.pageIndex <= cashMoneyPage.page ){
                 // 获取全部时间的行程，失效页没有关系 
-                return "http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&dateRange="+"&type=";
+                return "//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&dateRange="+"&type=";
             }
         },
         append:".cashm-center",
@@ -843,11 +843,15 @@ function cashMoneyPageline(){
             var valzhi = "" ;
             var useruid = parseInt(nowusermsg.uid);
             if( valsf==="Passenger" ){
-                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+(this.pageIndex+1)+"&utype=Passenger"+"&uid="+useruid+"&dateRange="+"&pageSize=8";
-                wuxian(valzhi,0);
+                if( this.pageIndex <= paymentzyval.page ){
+                    valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+(this.pageIndex+1)+"&utype=Passenger"+"&uid="+useruid+"&dateRange="+"&pageSize=8";
+                    wuxian(valzhi,0);
+                }
             }else if( valsf==="Driver" ){
-                valzhi = "http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&utype=Driver&dateRange="+"&pageSize=8";
-                wuxian(valzhi,1);
+                if( this.pageIndex <= paymentzyval.page ){
+                    valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&utype=Driver&dateRange="+"&pageSize=8";
+                    wuxian(valzhi,1);
+                }
             }
             function wuxian (val,bijiao) { 
                 var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
@@ -1273,7 +1277,7 @@ function cashMoneyPageline(){
                 $('#runvownerNode').infiniteScroll('destroy'); //销毁滚动加载
                 $('#runvownerNode').off( 'load.infiniteScroll', drive_onpage); //注销滑动监听
                 
-                $(".runvownerNodediv").animate({ scrollTop: 0 }, 10);  //返回顶部
+                $(".runvownerNodedclxc").animate({ scrollTop: 0 }, 10);  //返回顶部
             }
         }
 
@@ -1295,7 +1299,7 @@ function cashMoneyPageline(){
                 drivelinfie_click.statusHide();	//重置状态栏
                 $('#runpassengerNode').infiniteScroll('destroy'); //销毁滚动加载
                 $('#runpassengerNode').off( 'load.infiniteScroll',passen_onpage); //注销滑动监听
-                $(".runpassengerNodediv").animate({ scrollTop: 0 }, 10);  //返回顶部
+                $(".runpassengerNodedivdclxc").animate({ scrollTop: 0 }, 10);  //返回顶部
             }
         }
 

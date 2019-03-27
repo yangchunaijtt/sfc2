@@ -20,7 +20,7 @@
             nowusermsg.openid = openid;
             console.log("openid",openid,nowusermsg.openid);
             if(null == nowusermsg.uid || "" == nowusermsg.uid) {
-                register("http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
+                register("//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
             } else {
                 // initData(nowusermsg.uid); //加载页面数据
                 getPassenger();
@@ -971,7 +971,7 @@
         cashMoneyPage:function(typeval,dateRangeval,valzhi){ // 我的账单页的显示
             $.ajax({
                 type:"post",
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs.asp",
                 data:{
                    uid:nowusermsg.uid,
                    cur:1,
@@ -1028,7 +1028,7 @@
         },
         getMoneyRecord:function(){ // 获取车主提现的所有信息
             $.ajax({
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/getOACStatistics.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/getOACStatistics.asp",
                 type:"post",
                 data:{
                     uid:nowusermsg.uid
@@ -1062,7 +1062,7 @@
             var cashAliAccount = $("#paytan-txzh").val().trim();
             $.ajax({
                 type:"post",
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/saveMadeOwnerHasCashs.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/saveMadeOwnerHasCashs.asp",
                 data:{
                     uid:nowusermsg.uid,
                     price:price,
@@ -1112,7 +1112,7 @@
         cashResult:{}, // 车主存储的数据
         owerPage:function(valzhi){ // 每次点开这个页面都渲染一次
             $.ajax({
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts.asp",
                 type:"post",
                 data:{
                     cur:1,
@@ -1212,7 +1212,7 @@
             }
             console.log()
             $.ajax({
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeOwnerCertification/saveMadeOwnerCertification.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerCertification/saveMadeOwnerCertification.asp",
                 data:{
                     uid:nowusermsg.uid,
                     idCardFront:carregister.idCardFront,
@@ -1292,7 +1292,7 @@
         states:0,    // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册失败，跳转出重新注册页面
         ownerajax:function(){   // 页面一开始调用下,
             $.ajax({
-                url:"http://qckj.czgdly.com/bus/MobileWeb/buyTicket/isCarOwner.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/buyTicket/isCarOwner.asp",
                 type:"post",
                 data:{
                     uid:nowusermsg.uid
@@ -1571,7 +1571,7 @@
         dingweicity:""  // 搜索定位城市需要的城市名 
     }
     var localdiz = {
-        nowSignin:"http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html"      // 登录地址 
+        nowSignin:"//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html"      // 登录地址 
     }
 
     // 点击得到的的数据 
@@ -1985,8 +1985,6 @@
                 }else {
                     hdvownperNode_click.errShow();
                 }   
-                
-               
            }
         });
     }
@@ -2494,7 +2492,7 @@
 
             $.ajax({
                 type:"post",
-                url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/saveMadeFROrders.asp",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/saveMadeFROrders.asp",
                 data:{
                     uid	:nowusermsg.uid,        // 用户id  
                     departure:departure.trim(),   // 出发地 
@@ -2547,7 +2545,7 @@
                                     // 乘客发布时,支付成功的同时向后台发送数据
                                     showMessage1btn("发布成功,如需退款，请提前24小时取消订单","",0);
                                     // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
-                                    window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
+                                    window.location.href = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
                         }else if( pushType === "Driver" ){
                              // 用完时间要初始化,完成了在初始化。
                             // 用完要把用过的值初始化 
@@ -2556,7 +2554,7 @@
                             fabuxiaoxi.mmddata = "";    // 置空 
                             settleAccounts.rendertimes = 0 ;
                             // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
-                            window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html";   
+                            window.location.href = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html";   
                         }
                     }
                 },
@@ -2587,7 +2585,7 @@
     function paymentpage(uid,val,valzhi){
         $.ajax({
             type:"post",
-            url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp",
+            url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp",
             data:{
                 cur:1, // 查看页码 
                 uid:uid,
@@ -2763,21 +2761,24 @@
             $("#details-arname").text(val.arrival);
             $("#details-arcity").text(val.arCity);
 
-            if (val.vpNo==null || val.vpNo==undefined) {
+            
                 $("#details-oddNumber").hide();
-            }else {
-                $("#details-oddNumber").show();
+           
                 // 价格 
                 $("#details-pricedh").text(val.price);
                 // 单号
                 $("#details-oddsz").text(val.vpNo);
                 // 服务费比率
                 $("#details-pricefeedata").text(val.feeRate+"%");
-            }
+                $("#details-passenger-num").text(val.pnum);
+            
             if ( nowusermsg.uid != val.puid){
                 if(val.payState === 1){
                     jg ="已支付";
                     $("#details-passengerState").text(jg);
+
+                    // 已支付则显示
+                    $("#details-oddNumber").show();
                     if(Date.parse(new Date()) < (Date.parse(val.dpTime)+86400000)){
                         
                         // 没过规定时间  有取消和立即支付按钮
@@ -2833,7 +2834,7 @@
                    
                     $(".lookpaydan").bind("touch click",function(){
                         var jwxx = "#ownshowdata?id="+val.froid+"&uid="+val.puid+"&oneself";
-                        var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
+                        var wlgref = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
                         window.location.href = wlgref ;
                     })
                 }else {
@@ -2874,7 +2875,7 @@
                 $(".pdetlsdadlook").append("<div class='clearfix' style='height: 56px;'><button class='lookpaydan btn btn-success'>查看行程页面</button><div class='lookpaydxx' style='display:none;'></div></div>");
                 $(".lookpaydan").bind("touch click",function(){
                     var jwxx = "#ownshowdata?id="+valtwo.froid+"&uid="+valtwo.puid+"&oneself";
-                    var wlgref = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
+                    var wlgref = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/font/html/xq.html"+jwxx;
                     window.location.href = wlgref ;
                 })
               
@@ -2884,7 +2885,7 @@
 function qxsfcxinxi(uid,id,sftuimonry){
     $.ajax({
         type:"post",
-        url:"http://qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
+        url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
         data:{
             uid:uid,
             id:id
@@ -2913,7 +2914,7 @@ function qxsfcxinxi(uid,id,sftuimonry){
 // 乘客身份在已付款时，点击取消，要退钱。
 function retreatMoney(uid,id){
     $.ajax({
-        url:"http://qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFRROPayments.asp",
+        url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFRROPayments.asp",
         type:"post",
         data:{
             uid:uid,

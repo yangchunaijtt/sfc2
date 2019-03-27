@@ -5,7 +5,6 @@
     <meta content="width=device-width,user-scalable=no,initial-scale=1.0, maximum-scale=1" name="viewport" />    
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- bootstrap样式表 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="./css/bootstrap.css" rel="stylesheet">    
     <!-- 图片 -->
     <link rel="shortcut icon" href="./font/fontjs/sfc.jpg">   
@@ -681,21 +680,24 @@
                 <div class="clearfix" id="details-passengershow" style="display: none;">
                         <div  class="pdetailsdad pdetailsfour clearfix" id="details-paymoney" style="border:1px solid #f2f2f2;border-left:none;border-right:none;">
                                 <!-- 添加支付和取消的按钮 -->
-                                
-                            </div>
+                        </div>
+                        <div class="details-center clearfix" >
+                            <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单状态</span>
+                            <div class="details-ctright right" id="details-passengerState" style="line-height:40px;width:75%;"></div>
+                        </div>
+                        <div class="details-center clearfix">
+                            <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单价格</span>
+                            <i style="font-style: normal;margin-right: 2px;line-height:40px;margin-left: 20px;" class="details-centeryen left">&yen;</i>
+                            <span id="details-pricedh" class="details-ctright right" style="line-height:40px;width:60%;float:left;text-indent: 0px;"></span>
+                        </div>
                         <div class="details-center clearfix" >
                             <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单人数</span>
-                            <div class="details-ctright right" id="details-passengerState" style="line-height:40px;width:75%;"></div>
+                            <div class="details-ctright right" id="details-passenger-num" style="line-height:40px;width:75%;"></div>
                         </div>
                         <div  id="details-oddNumber">
                                 <div class="details-center clearfix" >
                                     <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">支付单号</span>
                                     <div class="details-ctright right" id="details-oddsz" style="line-height:40px;width:75%;"></div>
-                                </div>
-                                <div class="details-center clearfix">
-                                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单价格</span>
-                                    <i style="font-style: normal;margin-right: 2px;line-height:40px;margin-left: 20px;" class="details-centeryen left">&yen;</i>
-                                    <span id="details-pricedh" class="details-ctright right" style="line-height:40px;width:60%;float:left;text-indent: 0px;"></span>
                                 </div>
                                 <div class="details-center clearfix">
                                     <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">服务费率</span>
@@ -760,7 +762,7 @@
                <!-- 车主信息显示的地方 -->
                <div class="clearfix"  id="pdetail-refund" style="display: none;">
                 <div class="details-center clearfix" >
-                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单人数</span>
+                    <span class="details-ctleft left" style="margin-left:0px;width:25%;margin-top:0px;line-height:40px;text-align:center;">订单状态</span>
                     <div class="details-ctright right" id="details-driverState" style="line-height:40px;width:75%;"></div>
                 </div>
                 <!-- 价格 -->

@@ -2590,12 +2590,12 @@ body {
 }
 
 /* 无限滚动的问题 */
-.runvowner .runvownerNodediv{
+.runvowner .runvownerNodedclxc{
   overflow-y: auto;
   width: 100%;
 }
 /* 全部行程车主页 */
-.runpassenger .runpassengerNodediv{
+.runpassenger .runpassengerNodedivdclxc{
   overflow-y: auto;
   width: 100%;
 }
