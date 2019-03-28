@@ -41,10 +41,10 @@
                 // 高度设置的问题
                 // 全部行程页 车主页的高度 
                 $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
-                $(".runvownerNodediv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
+                
                 // 全部行程页 乘客页的高度 
                 $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
-                $(".runpassengerNodediv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
+              
                 
             }
         },location.search);
@@ -348,21 +348,7 @@
                 runscreenv.mdd = "";
                 $(".rsdcsoipt").val("");
             })
-    // 绑定切换城市的方法
-        $(".free-incity").bind("touch click",function(){
-            FreeRide.freeMode = "incity";   // 城内
-            $(".free-intercity").css("border-bottom","none");
-            $(".free-incity").css("border-bottom","3px solid #ffb249");
-            $("#cgz-cfcity").text("常州市");
-            $("#cgz-mdcity").text("常州市");
-        })
-        $(".free-intercity").bind("touch click",function(){
-            FreeRide.freeMode = "intercity";    // 城际
-            $(".free-incity").css("border-bottom","none");
-            $(".free-intercity").css("border-bottom","3px solid #ffb249");
-            $("#cgz-cfcity").text("常州市");
-            $("#cgz-mdcity").text("常州市");
-        })
+    
     // 新添加的城市输入功能的绑定事件
         // 清空操作
         $("#cgz-cfdelete").bind("touch click",function(){
@@ -1118,7 +1104,8 @@
                     cur:1,
                     uid:nowusermsg.uid,
                     utype:"Driver",
-                    dateRange:""
+                    dateRange:"",
+                    pageSize:8
                 },
                 success:function(data){
                     console.log("车主接单信息",data);
@@ -1489,7 +1476,7 @@
 
 // 模范嘀嗒添加功能     模块
     var FreeRide = {
-        freeMode:"intercity",   // 默认页面的选择方式为城际incity
+        freeMode:"incity",   // 默认页面的选择方式为城际incity
         clickdirection:0,      // input输入时，判断时那个在输入
         // 默认是0，直接点击时填上输入框。 0代表出发地,1代表目的地输入，0代表点击了出发城市后，直接看到有的。1代表选择了目的城市后，直接点击出现的。
         topisjump:0,    //  上一个输入框是否已经输入完成。0 未完成。
@@ -1858,7 +1845,7 @@
 
                 }else if(val1[1]==="diver"){
                     // 我的订单页
-                    $(".phdiconfyqdiv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-148);
+                    $(".phdiconfyqdiv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-188);
                     // 车主大的颜色变化
                     hashlycolorsz();
                     $(".hrun").css("color","#e39f7a");
@@ -2624,6 +2611,7 @@
         if( val === "" || val === null || val === undefined || val ===2){
             // 乘客支付的数据
             var sj = data.obj.froViewPayments[i];
+            i = data.obj.froViewPayments[i].id;
             // 处理点击支付的数据 
             // 传递参数 
             var pmaqkpayment  = "#payment?id="+i+"&identity=Passenger";
@@ -2690,6 +2678,7 @@
         }else if( val === 0 ){
             // 车主的我的订单的处理
             var  sjone = data.obj.froReceipts[i];
+            i = data.obj.froReceipts[i].id;
             // 传递参数 
             var pmaqkpaymentone  = "#payment?id="+i+"&identity=Driver";
             $("#pmaqkpayment").attr("href",pmaqkpaymentone);
@@ -2771,8 +2760,10 @@
                 // 服务费比率
                 $("#details-pricefeedata").text(val.feeRate+"%");
                 $("#details-passenger-num").text(val.pnum);
-            
-            if ( nowusermsg.uid != val.puid){
+
+            if ( nowusermsg.uid == val.puid && val.pushType =='Driver' ){
+                    $("#details-paymoney").empty();
+            }else {
                 if(val.payState === 1){
                     jg ="已支付";
                     $("#details-passengerState").text(jg);
@@ -2785,7 +2776,7 @@
                         $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao" style="margin:6px auto;display:block;">取消订单</span></div>');
                         // 取消操作
                         $("#details-payquxiao").bind("touch click",function(){
-                            qxsfcxinxi(val.puid,val.id,"已支付");
+                            qxsfcxinxi(val.puid,val.froid,"已支付");
                         })
                         var details_payquxiao = "details-payquxiao"+1;
                         $("#details-payquxiao").attr("id",details_payquxiao);
@@ -2810,7 +2801,7 @@
                     $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao">取消订单</span><span class="details-paymorebutton" id="details-paymaypay">立即支付</span></div>');
                     // 取消操作
                     $("#details-payquxiao").bind("touch click",function(){
-                        qxsfcxinxi(val.puid,val.id,"未支付");
+                        qxsfcxinxi(val.puid,val.froid,"未支付");
                     })
                     var details_payquxiao = "details-payquxiao"+1;
                     $("#details-payquxiao").attr("id",details_payquxiao);
@@ -2823,8 +2814,6 @@
                     $("#details-paymaypay").attr("id",details_paymaypay);
                 }
 
-            }else {
-                $("#details-paymoney").empty();
             }
                
             // 填充 
@@ -2883,32 +2872,7 @@
     }
 /* 取消订单的操作 */
 function qxsfcxinxi(uid,id,sftuimonry){
-    $.ajax({
-        type:"post",
-        url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
-        data:{
-            uid:uid,
-            id:id
-        },
-        success:function(data){
-            if(data.result===-1){
-                /* 操作失败,请重新刷新 */
-                showMessage1btn("操作失败,请重新刷新","",0);
-            }else if(data.result===1 ){
-                if( sftuimonry == "已支付" ){
-                    retreatMoney(uid,id);
-                }else {
-                    $("#details-paymoney").empty();
-                    showMessage1btn("取消成功","",0);
-                    // 操作成功，显示提示
-                        $("#details-paymoney").text('<div class="details-paymontext">取消成功</div>');
-                }  
-            }
-        },
-        error:function(data){
-            showMessage1btn("网络原因,刷新在试","",0);
-        }
-    })
+    retreatMoney(uid,id);
 }
 
 // 乘客身份在已付款时，点击取消，要退钱。

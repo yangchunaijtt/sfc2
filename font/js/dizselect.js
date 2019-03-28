@@ -132,16 +132,8 @@
     function inchufadi(){
         if( $("#cgz-mdcity").text() === "" || $("#cgz-mdcity").text() === undefined  ){
             $("#cgz-mdcity").text("常州市");
-        }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj===""){
-            if($("#cgz-mdcity").text()==="" ||$("#cgz-mdcity").text()===undefined){
-                $("#cgz-mdcity").text("常州市")
-            }
-            window.location.hash = "#s";
-        }else if(FreeRide.freeMode ==="intercity" && fabuxiaoxi.dwsj!==""){
-            $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
-            $("#cgz-cfd").val(fabuxiaoxi.locationnam);
-            window.location.hash = "#sxxwz";
         }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj===""){
+            $("#cgz-cfcity").text("常州市");
             $("#inxcbody").val("常州市");
             $(".xcspanleft").text("常州市");
             xzlichuli("常州市");
@@ -154,17 +146,16 @@
     }
      // 进入input时address  目的地时 进入可以自动选择的页面 
      function inaddress(){
-        if(FreeRide.freeMode ==="intercity"){
-            if($("#cgz-cfcity").text()==="" ||$("#cgz-cfcity").text()===undefined){
-                $("#cgz-cfcity").text("常州市");
-            }
-            window.location.hash = "#m";
-        }else if(FreeRide.freeMode ==="incity"){
-            $("#inxcbody").val("常州市");
-            $(".xcspanleft").text("常州市");
-            xzlichuli("常州市");
-            window.location.hash = "#mxxwz";
+        if ($("#cgz-cfcity").text() == "" || $("#cgz-cfcity").text() == undefined) {
+            $("#cgz-cfcity").text("常州市");
+        }else if ($("#cgz-mdcity").text() == "" || $("#cgz-mdcity").text() == undefined){
+            $("#cgz-mdcity").text("常州市");
         }
+        $("#inxcbody").val("常州市");
+        $(".xcspanleft").text("常州市");
+        xzlichuli("常州市");
+        window.location.hash = "#mxxwz";
+        
      }
 
      // 始发地 目的地 点击后 赋值并给下一页
@@ -184,7 +175,7 @@
                 }else if(locationhash=="#s" && fabuxiaoxi.dwsj !==""){
                     $("#cgz-cfcity").text(fabuxiaoxi.cfdcity);
                     $("#cgz-cfd").val(fabuxiaoxi.locationnam);
-                    window.location.hash = "#sxxwz";0
+                    window.location.hash = "#sxxwz";
                 }else if (locationhash=="#m"&&fabuxiaoxi.dwsj ===""){
                     $("#cgz-mdcity").text(textval);
                     window.location.hash = "#mxxwz";
@@ -439,10 +430,9 @@
                             //showMessage1btn(JSON.stringify(res),"",0);
                             switch(res.err_msg){
                                 case "get_brand_wcpay_request:ok":
-                                    
                                     break;
                                 case "get_brand_wcpay_request:fail":
-                                    showMessage1btn("系统出错，请联系我们！","Back()",0);
+                                    showMessage1btn("系统出错，请联系我们！","BackPayment()",0);
                                     paymentModular.oldarcity = "";
                                     paymentModular.olddpcity = "" ;
                                     paymentModular.oldartime = "";
@@ -452,7 +442,7 @@
                                     $("#cgz-mdd").val("");
                                     break;
                                 case "get_brand_wcpay_request:cancel":
-                                    showMessage1btn("已取消支付！","Back()",0);
+                                    showMessage1btn("已取消支付！","BackPayment()",0);
                                     paymentModular.oldarcity = "";
                                     paymentModular.olddpcity = "" ;
                                     paymentModular.oldartime = "";
@@ -482,7 +472,10 @@
        
         }
     }
-
+    
+    function BackPayment(){
+        window.location.hash = "#ddxq?passger";
+    }
 // 时间页面的组件 
     // 时间选择所需要的数据 
     function setTimeWheel(){            
@@ -568,8 +561,9 @@
                 }else if($("#dt-c-1").text()==="选择期望到达时间"){
                     showMessage1btn("请选择期望到达时间!","",0);
                 }else {
-                    var cfsj =  $("#dt-a-0").attr("data-val");
-                    var mdsj =  $("#dt-c-1").attr("data-val");
+                    var cfsj =  $("#dt-a-0").attr("data-val").replace(/-/g,"/");
+                    var mdsj =  $("#dt-c-1").attr("data-val").replace(/-/g,"/");
+                    
                     if(Date.parse(mdsj)>Date.parse(cfsj)){
                         // 赋值
                         FreeRide.cftime = cfsj;
@@ -711,7 +705,7 @@
                     return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.loadCount+2)+"&viewType=all"+"&pushType=Passenger"+"&uid="+nowusermsg.uid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"; 
                 }
             },
-            append:"#runpassengerDiv",
+            append:".runpassengerNodedivdclxc",
             history: false,
             elementScroll:".runpassengerNodedivdclxc",
             scrollThreshold:50,
@@ -749,7 +743,7 @@
                     return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.loadCount+2)+"&viewType=all"+"&pushType=Driver"+"&uid="+nowusermsg.uid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"; 
                 }
             },
-            append:".circle",
+            append:".runvownerNodedclxc",
             historyTitle: false,
             history: false,
             elementScroll:".runvownerNodedclxc",
@@ -843,15 +837,11 @@ function cashMoneyPageline(){
             var valzhi = "" ;
             var useruid = parseInt(nowusermsg.uid);
             if( valsf==="Passenger" ){
-                if( this.pageIndex <= paymentzyval.page ){
-                    valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments.asp?cur="+(this.pageIndex+1)+"&utype=Passenger"+"&uid="+useruid+"&dateRange="+"&pageSize=8";
-                    wuxian(valzhi,0);
-                }
+                valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments_get.asp?"+"utype=Passenger"+"&uid="+useruid+"&dateRange="+"&pageSize=8";
+                wuxian(valzhi,"Passenger");
             }else if( valsf==="Driver" ){
-                if( this.pageIndex <= paymentzyval.page ){
-                    valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&utype=Driver&dateRange="+"&pageSize=8";
-                    wuxian(valzhi,1);
-                }
+                valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?"+"uid="+useruid+"&utype=Driver&dateRange="+"&pageSize=8";
+                wuxian(valzhi,"Driver");
             }
             function wuxian (val,bijiao) { 
                 var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
@@ -860,7 +850,7 @@ function cashMoneyPageline(){
                         // 数据量很小情况下  报错了 
                         if( this.pageIndex <= paymentzyval.page - 1){
                             // 获取全部时间的行程，失效页没有关系 
-                            return  val;
+                            return  val+"&cur="+(this.pageIndex+1);
                         }
                     },
                     append:".aqkpayment",
@@ -877,20 +867,27 @@ function cashMoneyPageline(){
                     // 开始处理结果 
                     // 赋值最大页数 
                     paymentzyval.page = data.page;
-                        // 调用处理全部车主页的函数 
-                        paymentpageval.result = data ;
-                        if(data.result>0){
-                            for(var jj = 0 ;jj<data.obj.froViewPayments.length;jj++){
-                                $(".phdiconfyq").append(sfcsj.paymentpage);
-                            // 处理支付页面的数据 
-                                if(bijiao===0){
-                                    paymentpcl(jj,data);
-                                }else if(bijiao ===1 ){
-                                    paymentpcl(jj,data,0);
-                                }else if (bijiao ===2 ){
-                                    paymentpcl(jj,data,2);
+                        if (bijiao =="Passenger"){
+                            console.log("乘客支付信息表",data);
+                            paymentpageval.result = data ;
+                           if(data.result>0){
+                                for( var i = 0 ;i<data.obj.froViewPayments.length;i++){
+                                    paymentpageval.chisu++;
+                                    $(".phdiconfyq").append(sfcsj.paymentpage);
+                                // 处理支付页面的数据 
+                                    paymentpcl(i,data,2);
                                 }
-                                
+                           }
+                        }else if (bijiao =="Driver"){
+                            console.log("车主接单信息",data);
+                            
+                            owenerCash.cashResult = data;
+                            if(data.result>0){
+                                for(var jj = 0 ;jj<data.obj.froReceipts.length;jj++){
+                                    $(".phdiconfyq").append(sfcsj.ownerpaymentpage);
+                                // 处理支付页面的数据 
+                                    paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
+                                }
                             }
                         }
                 })
