@@ -474,6 +474,17 @@
     }
     
     function BackPayment(){
+        // 大的颜色变化
+        hashlycolorsz();
+        $(".hpassenger").css("color", "#e39f7a");
+        // 颜色的变化
+        hvownermyrun();
+        $(".hvownermypay").css("color","#5bc0de");
+
+        paymentpage(nowusermsg.uid,"Passenger",1);
+        $("#mypayidname").text("我的支付");
+        // 乘客隐藏掉那个
+        $("#balanceid").hide();
         window.location.hash = "#ddxq?passger";
     }
 // 时间页面的组件 

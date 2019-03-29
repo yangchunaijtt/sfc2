@@ -10,6 +10,8 @@ var nowusermsg = {
     openid:111,  
     phone:111,    // 登录用户自己的电话号
     personNumber:0,  // 报名人数，默认为1
+    singnUpNum:0,      // 可以报名的人数
+    unPayNum:0,         // 剩余未付款人数
 }
 
 
@@ -40,7 +42,12 @@ $(function(){
     // 报名人数初始化
     $("#person-jtnumber").text(nowusermsg.personNumber);
     $("#person-plus").bind("touch click",function(){
-        nowusermsg.personNumber++;
+        if (nowusermsg.personNumber > nowusermsg.singnUpNum){
+            nowusermsg.personNumber = nowusermsg.singnUpNum;
+            showMessage1btn("抱歉,可报名人数为"+nowusermsg.singnUpNum,"",0);
+        }else {
+            nowusermsg.personNumber++;
+        }
         $("#person-jtnumber").text(nowusermsg.personNumber);
     })
     $("#person-reduce").bind("touch click",function(){
@@ -48,12 +55,13 @@ $(function(){
             return false;
         }else {
             nowusermsg.personNumber--;
-            $("#person-jtnumber").text(nowusermsg.personNumber);
         }
+        $("#person-jtnumber").text(nowusermsg.personNumber);
     })
     $("#person-number").hide();
     // 页面的初始化
    /* 获取路由的值 */
+   newPage_receiptAjax();  // 初始化获取可报名人数
    hqselectval();
    console.log(2,nowusermsg);
 })
@@ -314,36 +322,25 @@ $(function(){
             }
         }
         function receiptAjax(){
-            $.ajax({
-                type:"post",
-                url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/getCurrentPNum.asp",
-                data:{
-                    froId:nowusermsg.id
-                },
-                success:function(data){
-                    
-                    console.log("请求人数的数据",data);
-                    if( data.result.leftNum < nowusermsg.personNumber ){
-                        if( nowusermsg.personNumber >  (data.result.leftNum+data.result.unPayNum)){
-                            showMessage1btn("已满","",0);
-                            return false ;
-                        }else{
-                            $("#tmpbutton").empty();
-                            // 不行就初始化
-                            nowusermsg.personNumber  = 0 ;
-                            $("#person-jtnumber").text(nowusermsg.personNumber);
-                            showMessage1btn("五分钟后刷新重试","",0);
-                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">五分钟后刷新重试</div>');
-                            $(".sdstatusd").text("五分钟后刷新重试");
-                        }
-                    }else if ( data.result.leftNum >= nowusermsg.personNumber  ) {
-                        paymentModule.payMoney(nowusermsg.requestData.price,"报名",nowusermsg.personNumber); 
-                    }
-                },
-                error:function(data){
-                    showMessage1btn("网络出错,请重试!","",0);
+            if (nowusermsg.singnUpNum  == 0){
+                newPage_receiptAjax();
+            }
+            if( nowusermsg.singnUpNum < nowusermsg.personNumber ){
+                if( nowusermsg.personNumber >  (nowusermsg.singnUpNum + nowusermsg.unPayNum)){
+                    showMessage1btn("已满","",0);
+                    return false ;
+                }else{
+                    $("#tmpbutton").empty();
+                    // 不行就初始化
+                    nowusermsg.personNumber  = 0 ;
+                    $("#person-jtnumber").text(nowusermsg.personNumber);
+                    showMessage1btn("五分钟后刷新重试","",0);
+                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;">五分钟后刷新重试</div>');
+                    $(".sdstatusd").text("五分钟后刷新重试");
                 }
-            })
+            }else if ( nowusermsg.singnUpNum >= nowusermsg.personNumber  ) {
+                paymentModule.payMoney(nowusermsg.requestData.price,"报名",nowusermsg.personNumber); 
+            }
         }
         function receiptSign(){
             $.ajax({
@@ -371,6 +368,29 @@ $(function(){
             })
             
         }
+    }
+// 初始化时获取人数
+    function newPage_receiptAjax(){
+        $.ajax({
+            type:"post",
+            url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/getCurrentPNum.asp",
+            data:{
+                froId:nowusermsg.id
+            },
+            success:function(data){
+                if (data.result.leftNum>0){
+                    nowusermsg.singnUpNum = data.result.leftNum;
+                    nowusermsg.unPayNum = data.result.unPayNum;
+                }else {
+                    nowusermsg.singnUpNum = 0;
+                    nowusermsg.unPayNum  = 0;
+                }     
+            },
+            error:function(data){
+                nowusermsg.singnUpNum = 0;
+                nowusermsg.unPayNum  = 0;
+            }
+        })
     }
 // 订单详情页的支付模块
     // 支付模块
@@ -458,7 +478,7 @@ $(function(){
                         console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
                     BC.click({
                         "instant_channel" : paymentbttsj.instant_channel,
-                        "debug" : true,
+                        "debug" : false,
                         "need_ali_guide" : true,
                         "use_app" : true,
                         "title" : paymentbttsj.title, //商品名

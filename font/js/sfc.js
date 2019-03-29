@@ -44,46 +44,40 @@
                 
                 // 全部行程页 乘客页的高度 
                 $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
-              
-                
+                // 初始化时设置默认值 
+                $(".dqcsval").text($(".xcspanleft").text());
+                // 给滑动元素获取高度 
+                // 乘客页的高度 
+                $(".cylx").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-40);
+                // 车主页的高度 
+                // 这里容易出问题，最后在改改 
+                $(".vonpondclxc").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-60);
+                // 解决一些页面内容太多无法滑动的问题 
+                $(".details").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
+                $("#searchxincheng").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
+                // 让筛选页也可以滑动 
+                $(".runscreen").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
+                // 发布页的css样式
+                $(".personNum").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-20);
+                // 小手机的显示问题
+                if($(".personNum").outerHeight()<587){
+                    $(".personNum").outerHeight(587);
+                }
+                // 时间选择页
+                $(".timeheader").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-120);
+                // 小手机的显示问题
+                if($(".timeheader").outerHeight()<440){
+                    $(".timeheader").outerHeight(440);
+                }
+                // 车主注册页
+                $(".owner-register").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
+                // 审核页的样式
+                $(".to-examine").outerHeight($(document.body).outerHeight());
+                // 我的账单页
+                $("#cashMoneyPage").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
             }
         },location.search);
-        // 初始化时设置默认值 
-
-        $(".dqcsval").text($(".xcspanleft").text());
-        // 给滑动元素获取高度 
         
-        // 乘客页的高度 
-        $(".cylx").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-40);
-        // 车主页的高度 
-        // 这里容易出问题，最后在改改 
-        $(".vonpondclxc").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-60);
-        
-        
-        
-        // 解决一些页面内容太多无法滑动的问题 
-        $(".details").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
-        $("#searchxincheng").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
-        // 让筛选页也可以滑动 
-        $(".runscreen").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
-        // 发布页的css样式
-        $(".personNum").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-20);
-        // 小手机的显示问题
-        if($(".personNum").outerHeight()<587){
-            $(".personNum").outerHeight(587);
-        }
-        // 时间选择页
-        $(".timeheader").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-120);
-        // 小手机的显示问题
-        if($(".timeheader").outerHeight()<440){
-            $(".timeheader").outerHeight(440);
-        }
-        // 车主注册页
-        $(".owner-register").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
-        // 审核页的样式
-        $(".to-examine").outerHeight($(document.body).outerHeight());
-        // 我的账单页
-        $("#cashMoneyPage").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
         // 当 hash变化时切换显示
 // 给导航条绑定切换
     var globalVariable = {
@@ -122,11 +116,11 @@
             window.location.hash = "#examine";
         }else if(owneridentity.states===3){
             $(".to-examine").empty();
-            $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
+            $(".to-examine").append("<div class='to-examinets'>发送成功,请耐心等待审核....</div><img src='./font/fontjs/examine.gif'   class='to-examineimg'>");
             window.location.hash = "#examine";
         }else if(owneridentity.states===4){
             $(".to-examine").empty();
-            $(".to-examine").append("<div class='to-examinets'> 注册失败,请重新注册....</div><img src='./font/fontjs/weep.gif'   class='to-examineimg'><a href='#register' class='btn btn-success to-examineicon'>点击重新注册</a>");
+            $(".to-examine").append("<div class='to-examinets'> 注册失败,请重新注册....</div><img src='./font/fontjs/examine.gif'   class='to-examineimg'><a href='#register' class='btn btn-success to-examineicon'>点击重新注册</a>");
             window.location.hash = "#examine";
         }
     })
@@ -836,9 +830,7 @@
         })
         // 页面刷新和跳转时也调用这个路由
             hashChange();
-//  调用本地定位函数，定位很慢。
-            sfclocation();
-            
+
     })
     // 函数 
         function hvownermyrun(){
@@ -1143,40 +1135,69 @@
         dLicenseFront:0,    // 驾驶照正面数据
         dLicenseBack:0,     // 驾驶照反面数据
         second:0,
-        filechange:function(val,file,xrdiv){  // 变化事件
-            if(val==="#idCardFront"){
-                carregister.turnbase(carregister.idCardFront,file,xrdiv,0);
-            }else if(val==="#idCardBack"){
-                carregister.turnbase(carregister.idCardBack,file,xrdiv,1);
-            }else if(val==="#dLicenseFront"){
-                carregister.turnbase(carregister.dLicenseFront,file,xrdiv,2);
-            }else if(val==="#dLicenseBack"){
-                carregister.turnbase(carregister.dLicenseBack,file,xrdiv,3);
+        filechange:function(val,imgval,thisval){  // 变化事件
+            // 存储 转换的 base64值的地方 
+            var imgbase64 = 0;
+            // 压缩比率，乘以 1000 的结果
+            var compressionRatio = 1;
+
+            var fileSize = thisval;
+            
+            showLodding("请稍等,上传中...");
+           
+            if ( fileSize.size/1024 > 1250 ){
+                showMessage1btn("图片体积不要大于1M,请重新上传!","",0);
+                $(val).val("");
+                return false;
             }
-        },
-        printing:function(judgeval,val,xrdiv){  // 把judgeval放到图片上
-            if(val === 1){
-                console.log("压缩前", judgeval.length / 1024);
-            }else if(val===2){
-                console.log("压缩后", judgeval.length / 1024);
-                document.getElementById(xrdiv).src = judgeval;
+             // 222673   218
+             // Math.round((125/(222673/10240))*10)/100 ;   0.57
+            if(fileSize.size/1024 >= 125){
+                compressionRatio =  Math.round(125/(fileSize.size/10240)*10)/100 ;
             }
-        },
-        turnbase:function(judgeval,file,xrdiv,zhival){    // 照片转base64
-            var judgeval = judgeval;
-            var image = '';
-            if(!file.files || !file.files[0]){
-                return;
+
+             // 压缩率最大 两个小数位
+
+            if ( compressionRatio < 0.1 ){
+                compressionRatio = 0.1;
             }
-            var reader = new FileReader();
-            reader.onload = function(evt){
-                image = evt.target.result;
-                judgeval = image;
-                console.log(carregister.printing(judgeval,1));
-                //使用压缩
-                carregister.dealImage(judgeval,800,carregister.printing,xrdiv,zhival);
-            }
-            reader.readAsDataURL(file.files[0]);       
+
+            console.log("压缩比率",compressionRatio);
+
+            lrz(fileSize, [{ width: 200  },{quality:compressionRatio}])
+            .then(function (rst) {
+              
+                imgbase64 = rst.base64;
+                $(imgval).attr("src",imgbase64);
+                if (val == '#idCardFront'){
+                    carregister.idCardFront  = imgbase64;
+                }else if (val == '#idCardBack'){
+                    carregister.idCardBack  = imgbase64;
+                }else if ( val =='#dLicenseFront' ){
+                    carregister.dLicenseFront  = imgbase64;
+                }else if ( val =='#dLicenseBack' ){
+                    carregister.dLicenseBack = imgbase64;
+                }
+
+                /* 加载成功，取消提示按钮 */
+                clearDialog();
+
+                // 初始化
+                imgbase64 = 0;
+            })
+            .catch(function (err) {
+                // 处理失败会执行
+                showMessage1btn("上传失败,请重新上传!","",0);
+                $(val).val("");
+
+                 /* 加载成功，取消提示按钮 */
+                 clearDialog();
+
+            })
+            .always(function () {
+                // 不管是成功失败，都会执行
+            });
+            
         },
         photoajax:function(){   // 向后台发送
             if( carregister === 1){
@@ -1193,11 +1214,11 @@
             }else if(carregister.dLicenseBack===0){
                 tips="请上传驾驶照反面照";
             }
-            if(tips!==""){
+            if(tips != ""){
                 showMessage1btn(tips,"",0);
                 return false;
             }
-            console.log()
+            showLodding("请稍等,上传中...");
             $.ajax({
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerCertification/saveMadeOwnerCertification.asp",
                 data:{
@@ -1216,9 +1237,18 @@
                         
                         // 成功了,跳转到提醒页面
                         $(".to-examine").empty();
-                        $(".to-examine").append("<div class='to-examinets'>发送成功,正在审核....</div><img src='./font/fontjs/danger.gif'   class='to-examineimg'>");
-                        window.location.hash = "#examine";
+                        $(".to-examine").append("<div class='to-examinets'>发送成功,正在审核....</div><img src='./font/fontjs/examine.gif'   class='to-examineimg'>");
+                        
+                        showMessage1btn("上传成功,等待处理中..","",0);
 
+                        window.location.hash = "#examine";
+                        /* 加载成功，取消提示按钮 */
+                        clearDialog();
+                        // 初始化
+                        carregister.idCardFront = 0;
+                        carregister.idCardBack = 0;
+                        carregister.dLicenseFront = 0;
+                        carregister.dLicenseBack = 0;
                         owneridentity.states = 2;
                         carregister.second = 0;
                     }
@@ -1227,51 +1257,6 @@
                     showMessage1btn("发生错误,请重试","",0);
                 }
             })
-        },
-        dealImage:function(judgeval,w,callback,xrdiv,zhival) {   // 压缩方法
-            var judgeval =judgeval;
-			var newImage = new Image();
-			var quality = 1;    //压缩系数0-1之间
-			newImage.src = judgeval;
-			newImage.setAttribute("crossOrigin", 'Anonymous');	//url为外域时需要
-			var imgWidth, imgHeight;
-			newImage.onload = function () {
-				imgWidth = this.width;
-				imgHeight = this.height;
-				var canvas = document.createElement("canvas");
-				var ctx = canvas.getContext("2d");
-				if (Math.max(imgWidth, imgHeight) > w) {
-					if (imgWidth > imgHeight) {
-						canvas.width = w;
-						canvas.height = w * imgHeight / imgWidth;
-					} else {
-						canvas.height = w;
-						canvas.width = w * imgWidth / imgHeight;
-					}
-				} else {
-					canvas.width = imgWidth;
-					canvas.height = imgHeight;
-					quality = 1;
-				}
-				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
-				var judgeval = canvas.toDataURL("image/png", quality); //压缩语句
-				// 如想确保图片压缩到自己想要的尺寸,如要求在50-150kb之间，请加以下语句，quality初始值根据情况自定
-				while (judgeval.length / 1024 > 500) {
-					quality -= 0.01;
-					judgeval = canvas.toDataURL("image/png", quality);
-                }
-                if(zhival===0){
-                    carregister.idCardFront = judgeval;
-                }else if(zhival===1){
-                    carregister.idCardBack = judgeval;
-                }else if(zhival===2){
-                    carregister.dLicenseFront = judgeval;
-                }else if(zhival===3){
-                    carregister.dLicenseBack = judgeval;
-                }
-				callback(judgeval,2,xrdiv);//必须通过回调函数返回，否则无法及时拿到该值
-			}
         }
     }
 // 判断有无车住身份模块
@@ -1324,8 +1309,8 @@
             $(".pnum-rdnum").text("请选择...");
         }
     }
-// 定位功能模块
-    function sfclocation(){
+// 定位功能模块 定位模块 定位功能
+   
         // 定位功能  
         AMap.plugin('AMap.Geolocation', function() {
            var geolocation = new AMap.Geolocation({
@@ -1392,7 +1377,6 @@
            showMessage1btn("定位失败,请刷新在试","",0);
            gaode.errordata = data;
        } 
-   }
 // 金额页函数模块
    var tramount = {
        amont:0,  // 设置一个默认的金额
@@ -2721,7 +2705,7 @@
             $("#pdetail-refund").hide();
             $("#details-passengershow").show();
 
-            var val = paymentpageval.result.obj.froViewPayments[indexes];
+            var val =  paymentpageval.result.obj.froViewPayments.find((value, index, arr) => {  if(value.id == indexes){return value}});
             // 赋值
             // 支付数据
             if (val.payPrice == null || val.payPrice == undefined) {
@@ -2832,7 +2816,7 @@
         }else  if(bijiao === "Driver") {
             $("#details-passengershow").hide();
             $("#pdetail-refund").show();
-            var valtwo = owenerCash.cashResult.obj.froReceipts[indexes];
+            var valtwo =   owenerCash.cashResult.obj.froReceipts.find((value, index, arr) => {  if(value.id == indexes){return value}});
             // 结果
             var stateResult = "";
             //-2 待退款；-1:取消；0：下单；1：完成；2：待付款
