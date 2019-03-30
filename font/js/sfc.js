@@ -1144,20 +1144,15 @@
             var fileSize = thisval;
             
             showLodding("请稍等,上传中...");
-           
-            if ( fileSize.size/1024 > 1250 ){
-                showMessage1btn("图片体积不要大于1M,请重新上传!","",0);
-                $(val).val("");
-                return false;
-            }
-             // 222673   218
+            
+             // 222673   218    1048576
              // Math.round((125/(222673/10240))*10)/100 ;   0.57
-            if(fileSize.size/1024 >= 125){
+            if(fileSize.size/1024 >= 256 ){
                 compressionRatio =  Math.round(125/(fileSize.size/10240)*10)/100 ;
             }
 
              // 压缩率最大 两个小数位
-
+            // localResizeIMG
             if ( compressionRatio < 0.1 ){
                 compressionRatio = 0.1;
             }
@@ -1197,7 +1192,6 @@
             .always(function () {
                 // 不管是成功失败，都会执行
             });
-            
         },
         photoajax:function(){   // 向后台发送
             if( carregister === 1){
@@ -1244,6 +1238,8 @@
                         window.location.hash = "#examine";
                         /* 加载成功，取消提示按钮 */
                         clearDialog();
+                        // 上传成功初始化
+                        
                         // 初始化
                         carregister.idCardFront = 0;
                         carregister.idCardBack = 0;
@@ -1254,6 +1250,9 @@
                     }
                 },
                 error:function(data){
+                    /* 加载成功，取消提示按钮 */
+                    clearDialog();
+
                     showMessage1btn("发生错误,请重试","",0);
                 }
             })

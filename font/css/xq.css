@@ -41,7 +41,7 @@
   border-top: 1px solid #f2f2f2;
 }
 .showsjdata .showmoredata .cfdsdm .cfdsdmspan {
-  width: 25%;
+  width:32%;
   display: inline-block;
   text-indent: 10px;
   height: 50px;
@@ -49,9 +49,8 @@
   float:left;
 }
 .showsjdata .showmoredata .cfdsdm .cfdsdmdiv {
-  width: 48%;
+  width: 50%;
   display: inline-block;
-  text-indent: 10px;
   height: 50px;
   line-height: 50px;
   overflow: hidden;
@@ -64,7 +63,7 @@
   border-bottom: 1px solid #f2f2f2;
 }
 .showsjdata .showmoredata .mddsdm .mdddsdmspan {
-  width: 25%;
+  width:32%;
   display: inline-block;
   height: 50px;
   line-height: 50px;
@@ -72,9 +71,8 @@
   float: left;
 }
 .showsjdata .showmoredata .mddsdm .mddsdmdiv {
-  width: 48%;
+  width: 50%;
   display: inline-block;
-  text-indent: 10px;
   height: 50px;
   line-height: 50px;
   overflow: hidden;
@@ -86,7 +84,7 @@
   width: 100%;
 }
 .showsjdata .showmoredata .cftimesdm .cftimesdms {
-  width: 25%;
+  width:32%;
   display: inline-block;
   text-indent: 10px;
   height: 40px;
@@ -94,9 +92,8 @@
   float: left;
 }
 .showsjdata .showmoredata .cftimesdm .cftimesdmd {
-  width: 72%;
+  width: 68%;
   display: inline-block;
-  text-indent: 10px;
   height: 40px;
   line-height: 40px;
   float: left;
@@ -105,7 +102,7 @@
   width: 100%;
 }
 .showsjdata .showmoredata .ddcfdsdm .cfdsdms {
-  width: 25%;
+  width:32%;
   display: inline-block;
   height: 40px;
   line-height: 40px;
@@ -113,9 +110,8 @@
   float: left;
 }
 .showsjdata .showmoredata .ddcfdsdm .cfdsdmd {
-  width: 72%;
+  width: 68%;
   display: inline-block;
-  text-indent: 10px;
   height: 40px;
   line-height: 40px;
   float: left;
@@ -134,8 +130,9 @@
   width: 100%;
 }
 .showsjdata .srselect .changzleft {
-  width: 72%;
+  width: 68%;
   display: inline-block;
+  float:left;
 }
 .showsjdata .srselect .fanhuisyj {
   width: 22%;
@@ -148,7 +145,7 @@
   width: 100%;
 }
 .sdstatus .sdstatuss {
-  width: 25%;
+  width:32%;
   display: inline-block;
   text-indent: 10px;
   height: 40px;
@@ -156,9 +153,8 @@
   float: left;
 }
 .sdstatus .sdstatusd {
-  width: 72%;
+  width: 68%;
   display: inline-block;
-  text-indent: 10px;
   height: 40px;
   line-height: 40px;
   float: left;
@@ -169,15 +165,14 @@
     height: 40px;
   }
   .cfcity .cfcitysp, .mdcity .mdcitysp{
-    width: 25%;
+    width:32%;
     display: inline-block;
     text-indent: 10px;
     float: left;
   }
   .cfcity  .cfcitydv, .mdcity .mdcitydv{
-    width: 72%;
+    width: 68%;
     display: inline-block;
-    text-indent: 10px;
     float: left;
   }
   .sfval{
@@ -186,24 +181,24 @@
     height: 40px;
   }
   .sfval  .sfvalspan{
-    width: 25%;
+    width: 32%;
     display: inline-block;
     text-indent: 10px;
     float: left;
   }
   .sfval .sfvaldiv{
-    width: 72%;
+    width: 68%;
     display: inline-block;
-    text-indent: 10px;
     float: left;
-    }
+  }
     /* 按钮的处理 */
   .cfdsdmdivbt,.mddsdmdivbt{
     display: inline-block;
-    width: 22%;
+    width: 18%;
     float: right;
-    margin-right: 14px;
-    margin-top: 8px;
+    line-height: 50px;
+    font-size: 22px;
+    text-align: center;
   }
   /* 按钮提示 css样式 */
 .mydiv {
@@ -243,15 +238,14 @@
   height: 40px;
 }
 .by-car .by-carnum{
-  width: 25%;
+  width:32%;
   display: inline-block;
   text-indent: 10px;
   float: left;
 }
 .by-car .by-carpersondv{
-  width: 72%;
+  width: 68%;
   display: inline-block;
-  text-indent: 10px;
   float: left;
 }
 /* 金额*/
@@ -261,15 +255,14 @@
   height: 40px;
 }
 .reference-price .reference-priceicon{
-  width: 25%;
+  width:32%;
   display: inline-block;
   text-indent: 10px;
   float: left;
 }
 .reference-price  .reference-pricejo{
-  width: 72%;
+  width: 68%;
   display: inline-block;
-  text-indent: 10px;
   float: left;
 }
 

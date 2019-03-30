@@ -58,13 +58,13 @@
                <div class="cfdsdm clearfix">
                     <span class="cfdsdmspan">出发地:</span>
                     <div class="cfdsdmdiv"></div>
-                    <button class="cfdsdmdivbt btn btn-success">查看位置</button>
+                    <span class="cfdsdmdivbt glyphicon glyphicon-map-marker" style="color:#449d44;"></span>
                </div>
                <!-- 目的地 -->
                <div class="mddsdm clearfix">
                     <span class="mdddsdmspan">目的地:</span>
                     <div class="mddsdmdiv "></div>
-                    <button class="mddsdmdivbt btn btn-primary ">查看位置</button>
+                    <span class="mddsdmdivbt glyphicon glyphicon-map-marker" style="color:#337ab7;"></span>
                </div>
                <!-- 出发时间 -->
                <div class="cftimesdm clearfix">
@@ -84,9 +84,13 @@
                     <div class="mdcitysp">目的城市:</div>
                     <div class="mdcitydv"></div>
                </div>
-               <div  class="sfval clearfix">
-                    <span class="sfvalspan">手机号:</span>
-                    <div class="sfvaldiv"></div>
+               <div  class="sfval clearfix" id="sfvaldiv-fbdiv" style="display: none;">
+                    <span class="sfvalspan">接单人手机号:</span>
+                    <div id="sfvaldiv-fb" class="sfvaldiv"></div>
+                </div>
+                <div  class="sfval clearfix" id="sfvaldiv-jddiv" style="display: none;">
+                    <span class="sfvalspan">发布人手机号:</span>
+                    <div id="sfvaldiv-jd" class="sfvaldiv "></div>
                 </div>
                 <div class="by-car clearfix">
                     <span class="by-carnum">乘车人数:</span>
