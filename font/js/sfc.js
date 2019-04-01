@@ -1135,6 +1135,12 @@
         dLicenseFront:0,    // 驾驶照正面数据
         dLicenseBack:0,     // 驾驶照反面数据
         second:0,
+        photoData:{
+            size:0,  // 大小
+            width:0, // 宽度
+            height:0, // 高度
+            rst:0,    // 压缩显示的数据
+        },
         filechange:function(val,imgval,thisval){  // 变化事件
             // 存储 转换的 base64值的地方 
             var imgbase64 = 0;
@@ -1174,6 +1180,7 @@
                     carregister.dLicenseBack = imgbase64;
                 }
 
+                carregister.photoData.rst = rst;
                 /* 加载成功，取消提示按钮 */
                 clearDialog();
 
@@ -1184,10 +1191,8 @@
                 // 处理失败会执行
                 showMessage1btn("上传失败,请重新上传!","",0);
                 $(val).val("");
-
                  /* 加载成功，取消提示按钮 */
                  clearDialog();
-
             })
             .always(function () {
                 // 不管是成功失败，都会执行
@@ -1222,10 +1227,14 @@
                     dLicenseFront:carregister.dLicenseFront,
                     dLicenseBack:carregister.dLicenseBack
                 },
+                //processData: false,
+                //contentType: false,
+                dataType:"json",
+                timeout:5000,
                 type:"post",
                 success:function(data){
-                    console.log("提交图片的数据",data);
-                    if(data.result===1){
+                    showMessage1btn("成功"+data,"",0);
+                    if(data.result==1){
                         // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册审核失败，跳转出重新注册页面
                         owneridentity.states = 3 ;
                         
@@ -1252,8 +1261,13 @@
                 error:function(data){
                     /* 加载成功，取消提示按钮 */
                     clearDialog();
-
                     showMessage1btn("发生错误,请重试","",0);
+                },
+                complete:function(XMLHttpRequest,status){ //请求完成后最终执行参数
+                    clearDialog();
+            　　　　if(status=='timeout'){//超时,status还有success,error等值的情况
+                　　　　　 showMessage1btn("超时,请重试","",0);
+            　　　　}
                 }
             })
         }
@@ -2704,7 +2718,7 @@
             $("#pdetail-refund").hide();
             $("#details-passengershow").show();
 
-            var val =  paymentpageval.result.obj.froViewPayments.find((value, index, arr) => {  if(value.id == indexes){return value}});
+            var val =  paymentpageval.result.obj.froViewPayments.find(function(value, index, arr){  if(value.id == indexes){return value}});
             // 赋值
             // 支付数据
             if (val.payPrice == null || val.payPrice == undefined) {
@@ -2815,7 +2829,7 @@
         }else  if(bijiao === "Driver") {
             $("#details-passengershow").hide();
             $("#pdetail-refund").show();
-            var valtwo =   owenerCash.cashResult.obj.froReceipts.find((value, index, arr) => {  if(value.id == indexes){return value}});
+            var valtwo =   owenerCash.cashResult.obj.froReceipts.find(function (value, index, arr){  if(value.id == indexes){return value}});
             // 结果
             var stateResult = "";
             //-2 待退款；-1:取消；0：下单；1：完成；2：待付款
