@@ -187,7 +187,7 @@
     float: left;
   }
   .sfval .sfvaldiv{
-    width: 68%;
+    width: 50%;
     display: inline-block;
     float: left;
   }
@@ -346,4 +346,12 @@
   #person-number  .personnb-right #person-reduce{
     background: #31cdd5;
   }
-  
+  /* 电话icon */
+  .sfvaldiv-divicon{
+    display: inline-block;
+    text-align: center;
+    font-size: 19px;
+    float: left;
+    line-height: 40px;
+    width: 7%;
+  }

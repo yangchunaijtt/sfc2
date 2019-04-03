@@ -24,8 +24,8 @@ $(function(){
     /* 点击时  地图上添加一个maker点 并且聚焦 */
     parseFloat()
    $(".cfdsdmdiv").bind("touch click",function(){
-       var result =  {P:parseFloat(nowusermsg.requestData.dLat),R:parseFloat(nowusermsg.requestData.dLng),lat:parseFloat(nowusermsg.requestData.dLat),lng:parseFloat(nowusermsg.requestData.dLng)};
-       autocfdiv(result);
+       var result =  {P:parseFloat(nowusermsg.requestData.aLat),R:parseFloat(nowusermsg.requestData.aLng),lat:parseFloat(nowusermsg.requestData.aLat),lng:parseFloat(nowusermsg.requestData.aLng)};
+        autocfdiv(result);
    })  
    $(".mddsdmdiv").bind("touch click",function(){
         var result =  {P:parseFloat(nowusermsg.requestData.aLat),R:parseFloat(nowusermsg.requestData.aLng),lat:parseFloat(nowusermsg.requestData.aLat),lng:parseFloat(nowusermsg.requestData.aLng)};
@@ -93,7 +93,7 @@ $(function(){
             nowusermsg.clickPerson = "own";  // 自己点击自己
         }
         // 开始向后台发送获取数据
-        ajaxhair(nowusermsg.id,nowusermsg.uid);
+        ajaxhair(nowusermsg.id,nowusermsg.myuid);
     }
 /* 发送ajax的数据 */
     function ajaxhair(id,uid){
@@ -473,7 +473,8 @@ $(function(){
                                         showMessage1btn("支付报名成功,请联系车主","",0);
 
                                         // 成功了要把电话显示出来   
-                                        $("#sfvaldiv-fb").text(nowusermsg.requestData.userInfo.trim());
+                                        $("#sfvaldiv-fb").text(nowusermsg.requestData.userInfo);
+                                        $("#sfvaldiv-fb").attr("href","tel:"+nowusermsg.requestData.userInfo);
                                         // 成功后初始化
                                         nowusermsg.personNumber  = 0 ;
                                         $("#person-jtnumber").text(nowusermsg.personNumber);
@@ -547,18 +548,22 @@ $(function(){
                 if ( sj.userInfo.mobile!= null &&  sj.userInfo.mobile != undefined ){
                     $("#sfvaldiv-jddiv").show();
                     $("#sfvaldiv-jd").text(sj.userInfo.mobile);
+                    $("#sfvaldiv-jd").attr("href","tel:"+sj.userInfo.mobile);
                 }
             }else {
                 $("#sfvaldiv-jddiv").hide();
+                $("#sfvaldiv-jd").attr("href","");
             }
             
             if (typeof(sj)=='undefined'?false:(typeof(sj.receiptMob)=='undefined'?false:true) ){
                 if ( sj.receiptMob!= null &&  sj.receiptMob != undefined ){
                     $("#sfvaldiv-fbdiv").show();
                     $("#sfvaldiv-fb").text(sj.receiptMob);
+                    $("#sfvaldiv-fb").attr("href","tel:"+sj.receiptMob);
                 }
             }else {
                 $("#sfvaldiv-fbdiv").hide();
+                $("#sfvaldiv-fbdiv").attr("href","");
             }
             
             /* 订单结果 */
@@ -588,7 +593,7 @@ $(function(){
                 type:"post",
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
                 data:{
-                  uid:nowusermsg.uid,
+                  uid:nowusermsg.myuid,
                   id:nowusermsg.id,
                   source:'KBT'
                 },
@@ -631,7 +636,7 @@ $(function(){
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFRROPayments.asp",
                 type:"post",
                 data:{
-                    uid:nowusermsg.uid,
+                    uid:nowusermsg.myuid,
                     id:nowusermsg.id
                 },
                 success:function(data){

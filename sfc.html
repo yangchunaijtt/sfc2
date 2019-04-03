@@ -80,10 +80,28 @@
                 </a>
             </div>
             <div class="chd">
-                    <sapn class="glyphicon glyphicon-map-marker cylx-icon"></sapn>
-                    <span class="circle">
-                        已发布行程
-                    </span>
+                <div class="chd-left clearfix">
+                        <sapn class="glyphicon glyphicon-map-marker cylx-icon"></sapn>
+                        <span class="circle">
+                            已发布行程
+                        </span>
+                </div>
+                <div class="chd-right clearfix">
+                    <span class="chd-rightscreen">筛选</span>
+                    <span class="chd-righticon glyphicon glyphicon-triangle-bottom"></span>
+                </div>
+                <div class="chd-screen clearfix"   style="display: none;">
+                    <div class="chd-screentime clearfix">
+                        <span>发布时间:</span>
+                        <span>日内</span>
+                        <span></span>
+                        <span>本周内</span>
+                        <span></span>
+                        <span>本月内</span>
+                        <span></span>
+                        <span>全部</span>
+                    </div>
+                </div>
             </div>
             <!-- 常用路线 -->
             <div class="cylx clearfix">
@@ -115,11 +133,20 @@
                 </a>
             </div>
             <div class="top clearfix"> 
-                    <span class="iconfont icon-xingcheng top-icon"></span>
-                    <span class="deng">
-                        已发布行程
-                    </span>
+                <div class="top-left clearfix">
+                        <span class="iconfont icon-xingcheng top-icon"></span>
+                        <span class="deng">
+                            已发布行程
+                        </span>
                 </div>
+                <div class="top-right clearfix">
+                    <span class="top-rightscreen">筛选</span>
+                    <span class="top-righticon glyphicon glyphicon-triangle-bottom"></span>
+                </div>
+                <div class="top-screen clearfix" style="display: none;">
+                    
+                </div>
+            </div>
             <div class="vonpondclxc clearfix">
                 <div id="vownperNode"  class="clearfix">
                     <!-- 复用添加地方 -->
@@ -302,19 +329,19 @@
                                 <!-- 不需要室内城际了 -->
                             </div>
                     </div>
-                    <div class="chufadi-body clearfix"  style="margin-top:20px;" >
+                    <div class="chufadi-body clearfix"  style="margin-top:20px;" id="chufadi-div">
                         <span class="chufadi-dicon"></span>
-                        <div class="chufadi-city" id="chufadi-cfcity">常州市</div>
+                        <div class="chufadi-city" id="chufadi-cfcity">始发地</div>
                         <div class="chufadi-xicon"></div>
-                        <div id="chufadi" class="chufadi-cfd">
+                        <div  class="chufadi-cfd"  id="chufadi">
                             从哪儿出发?
                         </div>
                     </div>
-                    <div class="chufadi-body clearfix" >
+                    <div class="chufadi-body clearfix" id="address-div" >
                         <span class="chufadi-dicon" style="background:#444b63;"></span>
-                        <div class="chufadi-city" id="address-mdcity">常州市</div>
+                        <div class="chufadi-city" id="address-mdcity">目的地</div>
                         <div class="chufadi-xicon"></div>
-                        <div id='address' class="chufadi-cfd">
+                        <div  class="chufadi-cfd"  id='address' >
                             想要去哪儿?
                         </div>
                     </div>
@@ -452,14 +479,14 @@
                 <div class="clearfix changzhou-cf">
                     <span class="changzhou-cficon"></span>
                     <span class="chzh-onecity" id="cgz-cfcity"></span>
-                    <span class="glyphicon glyphicon-minus chzh-onetp"></span>
+                    <span class="changzhou-cftwoicon glyphicon glyphicon-triangle-bottom"></span>
                     <input class="chzh-onecfd form-control" placeholder="从哪儿出发？"  id="cgz-cfd">
                     <span class="glyphicon glyphicon-remove chzh-onezh"  id="cgz-cfdelete"></span>
                 </div>
                 <div class="clearfix changzhou-md">
                     <span class="changzhou-cficon changzhou-mdicon"></span>
-                    <span class="chzh-onecity changzhou-mdcity" id="cgz-mdcity"></span>
-                    <span class="glyphicon glyphicon-minus chzh-onetp changzhou-mdtp"></span>
+                    <span class="changzhou-zhiicon chzh-onecity changzhou-mdcity" id="cgz-mdcity"></span>
+                    <span class="changzhou-cftwoicon glyphicon glyphicon-triangle-bottom" style="color:#444b63;"></span>
                     <input class="chzh-onecfd changzhou-mdmdd form-control" placeholder="想要去哪儿？" id="cgz-mdd">
                     <span class="glyphicon glyphicon-remove chzh-onezh changzhou-mdzh" id="cgz-mddelete"></span>
                 </div>

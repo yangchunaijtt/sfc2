@@ -22,6 +22,8 @@
             if(null == nowusermsg.uid || "" == nowusermsg.uid) {
                 register("//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
             } else {
+                // 定位
+                sfc_amapdw();
                 // initData(nowusermsg.uid); //加载页面数据
                 getPassenger();
                 getVowner();
@@ -75,6 +77,7 @@
                 $(".to-examine").outerHeight($(document.body).outerHeight());
                 // 我的账单页
                 $("#cashMoneyPage").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
+                
             }
         },location.search);
         
@@ -150,11 +153,11 @@
         //绑定时间函数 
         setTimeWheel();
         //这里的问题 
-        $("#chufadi").bind("touch click",function(){
+        $("#chufadi-div").bind("touch click",function(){
             inchufadi();
         })
         //这里的问题 
-        $("#address").bind("touch click",function(){
+        $("#address-div").bind("touch click",function(){
             inaddress();
         })
         $(".dqcsval").text(cityselectval.nowcity);
@@ -1230,7 +1233,7 @@
                 //processData: false,
                 //contentType: false,
                 dataType:"json",
-                timeout:5000,
+                timeout:10000,
                 type:"post",
                 success:function(data){
                     showMessage1btn("成功"+data,"",0);
@@ -1325,32 +1328,34 @@
 // 定位功能模块 定位模块 定位功能
    
         // 定位功能  
+    function sfc_amapdw(){
         AMap.plugin('AMap.Geolocation', function() {
-           var geolocation = new AMap.Geolocation({
-               enableHighAccuracy: false, //是否使用高精度定位，默认:true
-               timeout: 10000,          //超过10秒后停止定位，默认：5s
-               buttonPosition:'RB',     //定位按钮的停靠位置
-               buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-               zoomToAccuracy: true  //定位成功后是否自动调整地图视野到定位点
-           });
-           map.addControl(geolocation);
-           geolocation.getCurrentPosition(function(status,result){
-               if(status=='complete'){
-                   onComplete(result)
-                   //定位时绑定到出发地的函数的值上 
-                   //fabuxiaoxi.cfddata = result; 
-               }else{
-                   onError(result);
-               }
-           });
-       });
+            var geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true, //是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：5s
+                buttonPosition:'RB',     //定位按钮的停靠位置
+                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true  //定位成功后是否自动调整地图视野到定位点
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition(function(status,result){
+                if(status=='complete'){
+                    onComplete(result)
+                    //定位时绑定到出发地的函数的值上 
+                    //fabuxiaoxi.cfddata = result; 
+                }else{
+                    onError(result);
+                }
+            });
+        });
+    }
+        
            //  定位功能函数 
        function onComplete(data) {
            // 定位得到数据，设置
            gaode.successdata = data;
             console.log("定位成功",data);
 
-           
            // 存储数据
            fabuxiaoxi.dwsj = data; 
             // 定位地址名
@@ -1438,21 +1443,20 @@
             console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
             $(".mileage-price").text(fabuxiaoxi.routeMileage);
         // 钱数简单计算下
-            if(fabuxiaoxi.amoney===0){
-                var routelc = fabuxiaoxi.routeMileage;
-                var carmoney = 15;
-                if(routelc <= 5){
-                    carmoney = 15;
-                }else if(routelc>5 && routelc <=30){
-                    carmoney = 15 + (routelc-5)*1;
-                }else if(routelc>30 && routelc <=150){
-                    carmoney = 15 + 25 + (routelc-30)*0.5;
-                }else if(routelc>150){
-                    carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
-                }
-                fabuxiaoxi.amoney = carmoney.toFixed(1);
-                $(".completed-pprice").text(fabuxiaoxi.amoney);
+            // 钱啥时候都计算一下
+            var routelc = fabuxiaoxi.routeMileage;
+            var carmoney = 15;
+            if(routelc <= 5){
+                carmoney = 15;
+            }else if(routelc>5 && routelc <=30){
+                carmoney = 15 + (routelc-5)*1;
+            }else if(routelc>30 && routelc <=150){
+                carmoney = 15 + 25 + (routelc-30)*0.5;
+            }else if(routelc>150){
+                carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
             }
+            fabuxiaoxi.amoney = carmoney.toFixed(1);
+            $(".completed-pprice").text(fabuxiaoxi.amoney);
         },
         clear:function(){   //清空操作
             fabuxiaoxi.cfdcity = "";
@@ -1654,7 +1658,6 @@
     // 切换路由的方法
     function hashChange(hashzhi){
         var locationHash = window.location.hash;
-        console.log("路由值",locationHash);
          // 处理一下参数
         // #details?a=3
         var val1 = locationHash.split("?");
@@ -2446,13 +2449,15 @@
                 }else if(dLng ==="" || dLng===undefined || dLat===""||dLat===undefined){
                     successdattsxx= "不能直接选择市名为出发地";
                 }
-            }else if(mdata.name.trim()==="" ||mdata.name.trim()===undefined || mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
+            }
+            if(mdata.name.trim()==="" ||mdata.name.trim()===undefined || mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
                 if(mdata.name.trim()==="" ||mdata.name.trim()===undefined){
                     successdattsxx= "目的地出错,请重新选择目的地";
                 }else if(mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
                     successdattsxx= "不能直接选择市名为目的地";
                 }
-            }else if(fabuxiaoxi.mdtime===""||fabuxiaoxi.mdtime===undefined){
+            }
+            if(fabuxiaoxi.mdtime===""||fabuxiaoxi.mdtime===undefined){
                 successdattsxx= "您忘了选期望到达时间了";
             }else if(fabuxiaoxi.cftime===""||fabuxiaoxi.cftime===undefined){
                 successdattsxx= "您忘了选出发时间了";
@@ -2526,19 +2531,28 @@
                                     // div 里的值赋为空
                                     $("#address").text("");
                                     $("#cgz-mdd").val("");
+                                    $("#cgz-cfd").val("");
                                     // 乘客发布时,支付成功的同时向后台发送数据
-                                    showMessage1btn("发布成功,如需退款，请提前24小时取消订单","",0);
+                                    showMessage1btn("发布成功,如需退款，请提前24小时取消订单","returnSfcPage()",0);
                                     // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
-                                    window.location.href = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
                         }else if( pushType === "Driver" ){
                              // 用完时间要初始化,完成了在初始化。
                             // 用完要把用过的值初始化 
+                            // 用完时间要初始化,完成了在初始化。
                             fabuxiaoxi.mddcity = "";    // 置空 
                             fabuxiaoxi.cfddata = "";    // 置空 
                             fabuxiaoxi.mmddata = "";    // 置空 
                             settleAccounts.rendertimes = 0 ;
+                            paymentModular.oldarcity = "";
+                            paymentModular.olddpcity = "" ;
+                            paymentModular.oldartime = "";
+                            paymentModular.olddptime = "";
+                            // div 里的值赋为空
+                            $("#address").text("");
+                            $("#cgz-mdd").val("");
+                            $("#cgz-cfd").val("");
                             // 数据成功后，在重新请求下页面,刷新数据，把刚刚取到的数据放在页面上给用户观看。
-                            window.location.href = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html";   
+                            showMessage1btn("发布成功,如需退款，请提前24小时取消订单","returnSfcPage()",0);
                         }
                     }
                 },
@@ -2557,7 +2571,10 @@
             })
         }
     }
-
+// 返回页面
+    function returnSfcPage(){
+        window.location.href = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html"; 
+    }
 // 支付页逻辑的实现 
     // 存储获取到的支付页的信息，供支付详情页掉欧阳 
  var paymentpageval = {

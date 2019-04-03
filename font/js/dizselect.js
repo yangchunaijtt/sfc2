@@ -491,6 +491,7 @@
     // 时间选择所需要的数据 
     function setTimeWheel(){            
         var dd = new Date();
+        dd.setMinutes(Math.round(dd.getMinutes()/10)*10);
         var currYear = dd.getFullYear();  
         var opt={};
         //opt.datetime = { preset : 'datetime', minDate: new Date(2012,3,10,9,22), maxDate: new Date(2014,7,30,15,44), stepMinute: 5  };
@@ -505,12 +506,13 @@
             dateFormat: 'yyyy-mm-dd',
             startYear:currYear, //开始年份
             endYear:currYear + 1, //结束年份
-            stepMinute: 1,  // More info about stepMinute: //docs.mobiscroll.com/2-16-1/datetime#!opt-stepMinute
+            stepMinute: 10,  // More info about stepMinute: //docs.mobiscroll.com/2-16-1/datetime#!opt-stepMinute
             onSelect: function (valueText, inst) {  
                 var sday = inst.getDate();  
                 var today = new Array('周日','周一','周二','周三','周四','周五','周六'); 
                 //获取当前日期
                 var tmpNow = new Date();
+                tmpNow.setMinutes(Math.round(dd.getMinutes()/10)*10);
                 tmpNow.setDate(tmpNow.getDate()+1);//获取AddDayCount天后的日期
                                     
                 var dateArray = inst.getArrayVal();
@@ -547,8 +549,17 @@
                 $(this).attr("data-val",valueText);
                 
                 var optSDateTime_tmp = $.extend(opt['sdatetime'], opt['sdtdefault_0']);
-                $("#dt-a-0").mobiscroll().datetime(optSDateTime_tmp);
-                $("#dt-c-1").mobiscroll().datetime(optSDateTime_tmp);
+                
+                
+                if ( this.id =="dt-c-1"){
+                    opt.sdatetime = {minDate:tmpNow,maxDate: new Date(($("#dt-c-1").attr("data-val")).replace(/-/g,"/"))};
+                    optSDateTime_tmp = $.extend(opt['sdatetime'], opt['sdtdefault_0']);
+                    $("#dt-a-0").mobiscroll().datetime(optSDateTime_tmp);
+                }else if ( this.id =="dt-a-0" ){
+                    opt.sdatetime = {minDate:new Date(($("#dt-a-0").attr("data-val")).replace(/-/g,"/"))};
+                    optSDateTime_tmp = $.extend(opt['sdatetime'], opt['sdtdefault_0']);
+                    $("#dt-c-1").mobiscroll().datetime(optSDateTime_tmp);
+                } 
             }  
         };
         var optSDateTime_0 = $.extend(opt['sdatetime'], opt['sdtdefault_0']);

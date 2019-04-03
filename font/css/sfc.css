@@ -134,15 +134,44 @@
   width: 100%;
 }
 .chd {
-  margin: 8px 6px;
   vertical-align: top;
+  height: 38px;
+  line-height: 38px;
+  position: relative;
+}
+.chd .chd-left{
+  float:left;
+}
+.chd .chd-right{
+  float:right;
+  margin-right: 16px;
+  color: #4680ea;
 }
 .chd .cylx-icon {
   font-size: 18px;
   color: #e39f7a;
   display: inline-block;
   margin-left: 10px;
+  float: left;
+  margin-top: 9px;
 }
+/* 筛选的样式设置 */
+.chd .chd-right .chd-rightscreen{
+  font-size:16px;
+}
+.chd .chd-screen{
+  position: absolute;
+  top:38px;
+  background: #fff;
+  width:100%;
+  right:0;
+  z-index: 180;
+}
+.chd .chd-screen{
+  
+}
+
+
 .chd .circle {
   display: inline-block;
   text-indent: 16px;
@@ -287,14 +316,30 @@
   margin: 6px 6px;
 }
 .vowner  .top {
-  margin: 10px 6px;
-  vertical-align: top;
+    vertical-align: top;
+    height: 38px;
+    line-height: 38px;
 }
+/* 车主下的筛选 */
+.vowner  .top .top-left{
+  float:left;
+}
+.vowner  .top .top-right {
+  float: right;
+  margin-right: 16px;
+  color: #4680ea;
+}
+.vowner  .top .top-right .top-rightscreen{
+  font-size:16px;
+}
+
 .vowner  .top .top-icon {
   margin-left: 10px;
-  font-size: 27px;
+  font-size: 25px;
   color: #f0935a;
   line-height: 22px;
+  float: left;
+  margin-top:7px;
 }
 .vowner  .top .deng {
   margin-left: 12px;
@@ -1068,10 +1113,12 @@ body {
 /* 乘客页 */
 .cylx {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 /* 车主页 */
 .vonpondclxc {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 
@@ -1079,10 +1126,12 @@ body {
 /* 地图页发布消息地方 */
 .details {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 /* 选择城市页 */
 #searchxincheng {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 /* 乘客筛选页面样式 */
 .runpasgscreen,
@@ -1277,6 +1326,7 @@ body {
 }
 .runscreen{
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .runsccfcs{
   height:170px;
@@ -1500,7 +1550,6 @@ body {
     text-indent: 10px;
     font-size: 16px;
     height: 36px;
-    margin-left: 10px;
   }
   .changzhou-city  .chzh-onezh{
     display: inline-block;
@@ -1672,7 +1721,7 @@ body {
     display: inline-block;
     border-radius: 12px;
     float: left;
-    margin-top: 27px;
+    margin-top: 25px;
   } 
   .chufadi-total .chufadi-body .chufadi-city{
     display: inline-block;
@@ -1753,9 +1802,10 @@ body {
   }
   .completed .completed-price  .completed-pprice{
     display: inline-block;
-    width:96px;
-    font-size: 38px;
+    width: 96px;
+    font-size: 22px;
     text-align: center;
+    font-weight: bold;
   }
   .completed   .completed-makepmt{
     clear: both;
@@ -1795,8 +1845,9 @@ body {
 .mileage .mileage-price{
   display: inline-block;
   width: 96px;
-  font-size: 38px;
   text-align: center;
+  font-size: 22px;
+  font-weight: bold;
 }
 .mileage .mileage-righticon{
   width: 18px;
@@ -1826,7 +1877,7 @@ body {
     margin-top: 10px;
   }
   .tramount .tramount-center .tramount-lefticon{
-    width: 30%;
+    width: 28%;
     text-align: center;
     font-size: 20px;
     display: inline-block;
@@ -1838,7 +1889,7 @@ body {
     display: inline-block;
   }
   .tramount   .tramount-center  .tramount-righticon{
-    width: 30%;
+    width: 28%;
     text-align: center;
     font-size: 20px;
     display: inline-block;
@@ -1855,6 +1906,7 @@ body {
     text-align: center;
     font-size: 16px;
     height: 58px;
+    float:left;
   }
   .tramount  .tramount-ftinput{
     width: 70%;
@@ -1863,6 +1915,7 @@ body {
     font-size: 16px;
     height: 36px;
     margin-left: 10px;
+    float: left;
   }
   .tramount   .tramount-confirm{
     clear: both;
@@ -1895,6 +1948,7 @@ body {
     background:#fff;
     border-top:1px solid #f2f2f2;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .owneregister-idbt{
     text-align: center;
@@ -2089,6 +2143,7 @@ body {
   #cashMoneyPage{
     width: 100%;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     background: #fff;
     border-top: 1px solid #f2f2f2;
   }
@@ -2593,11 +2648,13 @@ body {
 /* 无限滚动的问题 */
 .runvowner .runvownerNodedclxc{
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
 }
 /* 全部行程车主页 */
 .runpassenger .runpassengerNodedivdclxc{
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
 }
 .paymentzy{
@@ -2606,10 +2663,12 @@ body {
 /* 支付页滑动效果 */
 .paymentzy  .phdiconfyqdiv{
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   width:100%;
 }
 #cashMoneyPage .cashm-footerdiv{
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   width:100%;
 }
 /* 时间选择的页面 */
@@ -2618,4 +2677,12 @@ body {
   font-size: 20px;
   color: #5f5f5f;
   margin-left: 20px;
+}
+/* icon */
+.changzhou-cftwoicon{
+  width: 6%;
+  text-align: center;
+  color: #ffb857;
+  display: inline-block;
+  font-size: 14px;
 }
