@@ -138,6 +138,8 @@
   height: 38px;
   line-height: 38px;
   position: relative;
+  background: #fff;
+  border-top: 1px solid #f2f2f2;
 }
 .chd .chd-left{
   float:left;
@@ -157,7 +159,7 @@
 }
 /* 筛选的样式设置 */
 .chd .chd-right .chd-rightscreen{
-  font-size:16px;
+  font-size:15px;
 }
 .chd .chd-screen{
   position: absolute;
@@ -319,10 +321,16 @@
     vertical-align: top;
     height: 38px;
     line-height: 38px;
+    background: #fff;
+    border-top: 1px solid #f2f2f2;
+    position: relative;
 }
 /* 车主下的筛选 */
 .vowner  .top .top-left{
   float:left;
+}
+.vowner  .top .top-left .top-icon{
+  margin-top:7px;
 }
 .vowner  .top .top-right {
   float: right;
@@ -330,7 +338,14 @@
   color: #4680ea;
 }
 .vowner  .top .top-right .top-rightscreen{
-  font-size:16px;
+  font-size:15px;
+}
+/* 筛选的设置 */
+.vowner  .top  .top-screen{
+  position: absolute;
+  top:38px;
+  width:100%;
+  right:0;
 }
 
 .vowner  .top .top-icon {
