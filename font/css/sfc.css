@@ -163,20 +163,17 @@
 }
 .chd .chd-screen{
   position: absolute;
-  top:38px;
+  top: 38px;
+  width: 100%;
+  right: 0;
   background: #fff;
-  width:100%;
-  right:0;
   z-index: 180;
+  border-bottom: 1px solid #f2f2f2;
 }
-.chd .chd-screen{
-  
-}
-
-
 .chd .circle {
   display: inline-block;
   text-indent: 16px;
+  float: left;
 }
 /* 内容部分 */
 .cylx .cylx-cy {
@@ -270,7 +267,6 @@
   width: 80%;
   height: 30px;
   display: inline-block;
-  margin-bottom: 15px;
 }
 .center .vowner .select .departure {
   height: 58px;
@@ -343,9 +339,12 @@
 /* 筛选的设置 */
 .vowner  .top  .top-screen{
   position: absolute;
-  top:38px;
-  width:100%;
-  right:0;
+  top: 38px;
+  width: 100%;
+  right: 0;
+  background: #fff;
+  z-index: 180;
+  border-bottom: 1px solid #f2f2f2;
 }
 
 .vowner  .top .top-icon {
@@ -359,6 +358,8 @@
 .vowner  .top .deng {
   margin-left: 12px;
   line-height: 25px;
+  float: left;
+  margin-top: 7px;
 }
 .vowner .vonpondclxc .circle {
   background: #fff;
@@ -834,7 +835,10 @@ input[type=date] {
   width: 100%;
   background: #fff;
   border-radius: 30px 30px 0px 0px;
-  margin-top: 100px;
+  margin-top: 80px;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
 }
 .searchtime .timeheader .timexz {
   text-indent: 20px;
@@ -941,6 +945,7 @@ input[type=date] {
   height: 40px;
   border-bottom: 1px solid #f0f0f0;
   border-top: 1px solid #f2f2f2;
+  position: relative;
 }
 .paymentzy .phdicon .ptbicon {
   text-align: center;
@@ -1230,10 +1235,7 @@ body {
   text-indent: 22px;
   border-bottom: 1px solid #f2f2f2;
 }
-.run .runscreen .runsccfcs input,.run .runscreen .runscrqdvtddcs input{
-  padding: 20px;
-  margin: 20px;
-}
+
 .run .runscreen .runscrqdvtddcs span.runscrqdvtddcsone {
   display: block;
   width: 100%;
@@ -1343,12 +1345,8 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
-.runsccfcs{
-  height:170px;
-}
-.runscrqdvtddcs{
-  height:170px;
-}
+
+
 .runsddcsone{
   position: relative;
 }
@@ -1532,6 +1530,7 @@ body {
     background: #fff;
     border-top: 1px solid #f2f2f2;
     padding-top: 10px;
+    padding-bottom: 10px;
   }
   .changzhou-city .changzhou-cf{
     height: 58px;
@@ -1546,13 +1545,20 @@ body {
     background: #ffb857;
     display: inline-block;
     border-radius: 12px;
+    float: left;
+    margin-top: 24px;
   }
   .changzhou-city  .chzh-onecity{
     display: inline-block;
     width: 18%;
     text-align: center;
     font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     height: 58px;
+    float: left;
+
   }
   .changzhou-city  .chzh-onetp{
     font-size: 11px;
@@ -2700,4 +2706,252 @@ body {
   color: #ffb857;
   display: inline-block;
   font-size: 14px;
+  float: left;
+  margin-top: 22px;
+}
+/* 乘客页筛选的设置 */
+.chd .chd-screen .chd-screentime,.top .top-screen .top-screentime{
+    margin-left: 10px;
+    margin-right: 18px;
+    line-height: 36px;
+}
+.chd .chd-screen  .chd-screentime .chd-screentime-left,.top .top-screen  .top-screentime .top-screentime-left{
+    width: 22%;
+    float: left;
+    text-align: left;
+}
+.chd .chd-screen  .chd-screentime .chd-screentime-div,.top .top-screen  .top-screentime .top-screentime-div{
+    width: 19%;
+    float: left;
+    text-align: center;
+}
+.chd .chd-screen  .chd-screentime .chd-screentime-xian,.top .top-screen  .top-screentime .top-screentime-xian{
+    width: 1px;
+    float: left;
+    background: #808080;
+    height: 20px;
+    margin-top: 8px;
+}
+
+.chd .chd-screen .chd-screencity,.top .top-screen .top-screencity{
+    margin-left: 10px;
+    margin-right: 18px;
+    line-height: 36px;
+    border-top: 1px solid #f2f2f2;
+}
+.chd .chd-screen .chd-screencity .chd-screencity-left,.top .top-screen .top-screencity .top-screencity-left{
+      width: 22%;
+      float: left;
+      text-align: left;
+}
+.chd .chd-screen .chd-screencity .chd-screencity-xian,.top .top-screen .top-screencity .top-screencity-xian{
+    width: 1px;
+    float: left;
+    background: #808080;
+    height: 20px;
+    margin-top: 8px;
+    margin-left:4px;
+}
+.chd .chd-screen .chd-screencity .chd-screencity-input,.top .top-screen .top-screencity .top-screencity-input{
+      width: 58%;
+      float: left;
+      margin-bottom: 0px;
+      margin-top: 3px;
+}
+.chd .chd-screen .chd-screencity .chd-screencity-whole,.top .top-screen .top-screencity .top-screencity-whole{
+      float: right;
+      width: 16%;
+      text-align: center;
+}
+
+.chd .chd-screen .chd-screen-complete,.top .top-screen .top-screen-complete{
+  text-align: center;
+  font-size: 16px;
+  color: #fff;
+  background: #1567e2;
+  line-height: 34px;
+}
+
+.top .top-screen .top-screenstate,.chd .chd-screen .chd-screenstate{
+  margin-left: 10px;
+  margin-right: 18px;
+  line-height: 40px;
+  border-top: 1px solid #f2f2f2;
+}
+.top .top-screen .top-screenstate .top-screenstate-left,.chd .chd-screen .chd-screenstate .chd-screenstate-left{
+  width: 22%;
+  float: left;
+  text-align: left;
+}
+.top .top-screen .top-screenstate .top-screenstate-div,.chd .chd-screen .chd-screenstate .chd-screenstate-div{
+  width: 15.2%;
+  float: left;
+  text-align: center;
+}
+.top .top-screen .top-screenstate .top-screenstate-xian,.chd .chd-screen .chd-screenstate .chd-screenstate-xian{
+  width: 1px;
+  float: left;
+  background: #808080;
+  height: 20px;
+  margin-top: 10px;
+}
+/*账单页筛选 */
+.phdicon-right{
+  float:right;
+  margin-right:26px;
+  color: #4680ea;
+  line-height: 40px;
+}
+.phdicon-right-screen{
+  float: left;
+  font-size: 15px;
+}
+.phdicon-right .phdicon-right-icon{
+  float: right;
+  margin-top: 13px;
+  margin-left: 4px;
+}
+.phdicon  .phdicon-join{
+    position: absolute;
+    top:40px;
+    right:0px;
+    width:100%;
+    background:#fff;
+    z-index:99;
+    border-bottom:1px solid #f2f2f2;
+    line-height: 38px;
+    padding: 0px 16px;
+}
+.phdicon  .phdicon-join .phdicon-join-left{
+    width: 22%;
+    float: left;
+    text-align: left;
+}
+.phdicon  .phdicon-join .phdicon-join-span{
+  width: 19%;
+  float: left;
+  text-align: center;
+}
+.phdicon  .phdicon-join .phdicon-join-line{
+  width: 1px;
+  float: left;
+  background: #808080;
+  height: 20px;
+  margin-top: 8px;
+}
+/* 筛选城市页 */
+.runscreen{
+
+}
+.runscreen .runsccfcs-dpcity{
+  position: relative;
+}
+.runscreen .runsccfcs-dpcity .runsccfcs-dpcity-icon{
+  position: absolute;
+  top: 0px;
+  left: 22px;
+  font-size: 14px;
+  color: #6d6d6b;
+  line-height: 50px;
+}
+.runscreen .runsccfcs-dpcity .runsccfcs-dpcity-span{
+  border: none;
+  width: 100%;
+  text-indent: 30px;
+  height: 50px;
+  line-height: 50px;
+}
+.runscreen .runsccfcs-dpcity .runsccfcs-dpcity-input{
+  border:none;
+  width:100%;
+  height:50px;
+  line-height: 50px;
+  text-indent: 30px;
+}
+/* 按钮 */
+#searchxincheng .changzhou-button{
+  margin: 15px auto;
+  width: 50%;
+  text-align: center;
+  height: 30px;
+  background: #da9857;
+  color: #fff;
+  font-size: 18px;
+  border-radius: 4px;
+  margin-bottom: 0px;
+  line-height: 30px;
+}
+
+/* 地图页的设置 */
+.city {
+  display: block;
+}
+.city .city-wrapper {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+}
+.city .city-wrapper .cities .title {
+  height: 28px;
+  padding-left: 16px;
+  line-height: 28px;
+  background-color: #f5f5f5;
+  font-family: Helvetica;
+  font-size: 1.2rem;
+  color: #878787;
+}
+.city .city-wrapper .cities .item {
+  height: 44px;
+  padding: 0 16px;
+  line-height: 44px;
+  font-size: 1.6rem;
+}
+.city .city-wrapper .cities .item .name {
+  display: block;
+  position: relative;
+}
+.city .city-wrapper .cities .item .name:before,
+.city .city-wrapper .cities .item .name:after {
+  display: block;
+  position: absolute;
+  border-top: 1px solid #e5e5e5;
+  left: 0;
+  width: 100%;
+  content: ' ';
+}
+.city .city-wrapper .cities .item .name:before {
+  display: none;
+  top: 0;
+}
+.city .city-wrapper .cities .item .name:after {
+  display: block;
+  bottom: 0;
+}
+.city .city-wrapper .cities .item:active {
+  background-color: #f0f0f0;
+}
+.city .city-wrapper .cities .item:last-child .name:after {
+  display: none;
+}
+.city .city-wrapper .shortcut {
+  position: absolute;
+  z-index: 30;
+  width: 40px;
+  right: 2px;
+  font-family: Helvetica;
+}
+.city .city-wrapper .shortcut .item {
+  height: 12px;
+  padding-top: 18px;
+  padding-left: 24px;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #fa8919;
+}
+@media only screen and (max-height: 600px) {
+  .city .city-wrapper .shortcut .item {
+      padding-top: 18px;
+  }
 }

@@ -292,10 +292,7 @@
                 $("#cgz-mdd").val(tipstwo[i].name);
                 $("#address").text(tipstwo[i].name);
             } 
-            if(FreeRide.btmisjump===1 && FreeRide.topisjump ===1 ){
-                // 都已完成，跳转到时间选择页。
-                window.location.hash = "#time";
-            }
+           
         }
 // 支付功能的实现 
      // 支付button的实现 
@@ -481,7 +478,7 @@
         hvownermyrun();
         $(".hvownermypay").css("color","#5bc0de");
 
-        paymentpage(nowusermsg.uid,"Passenger",1);
+        paymentpage(nowusermsg.uid,"Passenger",1,"");
         $("#mypayidname").text("我的支付");
         // 乘客隐藏掉那个
         $("#balanceid").hide();
@@ -710,13 +707,16 @@
             $(".vonpondclxc").animate({ scrollTop: 0 }, 10);  //返回顶部
         }
     }
+
+
+
 // 全部行程中 乘客页滑动效果 
      // 全部行程中 乘客页滑动效果runpassengerNode的滑动效果 
      var runpassengerval = {
         page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
         loadcount:3   // 页面展示的为第几页的数据 
     }
-    function hdrunpassenger(dateRange,arCity,dpCity){
+    function hdrunpassenger(dateRange,dpCity,arCity){
         dateRange = dateRange?dateRange:"";
         arCity = arCity?arCity:"";
         dpCity = dpCity?dpCity:"";
@@ -752,7 +752,7 @@
         page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
         loadcount:3  // 页面展示的为第几页的数据 
     }
-    function hdrunvowner(dateRange,arCity,dpCity){
+    function hdrunvowner(dateRange,dpCity,arCity){
         dateRange = dateRange?dateRange:"";
         arCity = arCity?arCity:"";
         dpCity = dpCity?dpCity:"";
@@ -846,12 +846,35 @@ function cashMoneyPageline(){
         }
 }
 
+// 我的支付页 和 我的账单页 无限滑动事件
+var payment_click = {
+    statusHide:function(){
+        $(".phdiconfyqdiv-load-status").find("p").hide();	
+    },
+    lastShow:function(){
+        this.statusHide();
+        $(".phdiconfyqdiv-load-status>.infinite-scroll-last").show();
+    },
+    errShow:function(){
+        this.statusHide();
+        $(".phdiconfyqdiv-load-status>.infinite-scroll-error").show();
+    },
+    driverScreen:function(){
+        // 点击后销毁滑动效果
+        drivelinfie_click.statusHide();	//重置状态栏
+        $('.phdiconfyq').infiniteScroll('destroy'); //销毁滚动加载
+        $('.phdiconfyq').off( 'load.infiniteScroll',hdpaymentzy_cliDiv); //注销滑动监听
+
+        $(".phdiconfyqdiv").animate({ scrollTop: 0 }, 10);  //返回顶部
+    }
+}
 // 支付页 滑动获取数据效果 
 // 车主页 我的订单 数据的无限滚动
     var paymentzyval = {
             page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
             loadcount:3,   // 页面展示的为第几页的数据 
             sf:"",          // 身份
+            bijiao:""
         }
 
         function hdpaymentzy(valsf){
@@ -866,6 +889,7 @@ function cashMoneyPageline(){
                 wuxian(valzhi,"Driver");
             }
             function wuxian (val,bijiao) { 
+                paymentzyval.bijiao = bijiao;
                 var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
                     path: function(){
                         // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
@@ -878,44 +902,48 @@ function cashMoneyPageline(){
                     append:".aqkpayment",
                     history: false,
                     elementScroll:".phdiconfyqdiv",
+                    status:".phdiconfyqdiv-load-status",
                     scrollThreshold:50,
                     responseType:"json",
                     debug:false
                 });
-                $runpassengerval.on( 'load.infiniteScroll', function( event, response ) {
-                    var data = response;
-                    // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
-                                                    // 10     2         
-                    // 开始处理结果 
-                    // 赋值最大页数 
-                    paymentzyval.page = data.page;
-                        if (bijiao =="Passenger"){
-                            console.log("乘客支付信息表",data);
-                            paymentpageval.result = data ;
-                           if(data.result>0){
-                                for( var i = 0 ;i<data.obj.froViewPayments.length;i++){
-                                    paymentpageval.chisu++;
-                                    $(".phdiconfyq").append(sfcsj.paymentpage);
-                                // 处理支付页面的数据 
-                                    paymentpcl(i,data,2);
-                                }
-                           }
-                        }else if (bijiao =="Driver"){
-                            console.log("车主接单信息",data);
-                            
-                            owenerCash.cashResult = data;
-                            if(data.result>0){
-                                for(var jj = 0 ;jj<data.obj.froReceipts.length;jj++){
-                                    $(".phdiconfyq").append(sfcsj.ownerpaymentpage);
-                                // 处理支付页面的数据 
-                                    paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
-                                }
-                            }
-                        }
-                })
+               
+                $runpassengerval.on( 'load.infiniteScroll', hdpaymentzy_cliDiv);
             }
         }
 
+        function hdpaymentzy_cliDiv(event,response){
+                  
+            var data = response;
+            // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
+                if (paymentzyval.bijiao =="Passenger"){
+
+                    paymentzyval.page = data.page;
+
+                    console.log("乘客支付信息表",data);
+                    paymentpageval.result = data ;
+                    if(data.result>0){
+                        for( var i = 0 ;i<data.obj.froViewPayments.length;i++){
+                            paymentpageval.chisu++;
+                            $(".phdiconfyq").append(sfcsj.paymentpage);
+                        // 处理支付页面的数据 
+                            paymentpcl(i,data,2);
+                        }
+                    }
+                }else if (paymentzyval.bijiao =="Driver"){
+                    console.log("车主接单信息",data);
+
+                    paymentzyval.page = data.page;
+                    owenerCash.cashResult = data;
+                    if(data.result>0){
+                        for(var jj = 0 ;jj<data.obj.froReceipts.length;jj++){
+                            $(".phdiconfyq").append(sfcsj.ownerpaymentpage);
+                        // 处理支付页面的数据 
+                            paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
+                        }
+                    }
+                }
+        }
 
 // 筛选判断的逻辑 
     var runscreenv = {
@@ -1171,7 +1199,7 @@ function cashMoneyPageline(){
         // 点击确定时，取值发送ajax，调用渲染页面函数 
         $(".runscjwfbsxdd").bind("touch click",function(){
             runscreenv.winhash = window.location.hash;
-            if(runscreenv.time==="" && runscreenv.cfd ==="" && runscreenv.mdd===""){
+            if(runscreenv.time==="" && $("#runsccfcs-arinput").val().trim() ==="" && $("#runsccfcs-dpinput").val().trim()===""){
                 getqbVowner();
                 getqbPassenger();
                 if(runscreenv.winhash==="#run?passgeran"){
@@ -1200,8 +1228,9 @@ function cashMoneyPageline(){
                            viewType:"all",
                            pageSize:8,         // 首页的数量
                            dateRange:runscreenv.time,      
-                           arCity:runscreenv.mdd.trim(),      // 到达城市 
-                           dpCity:runscreenv.cfd.trim()      // 出发城市 
+                           arCity:$("#runsccfcs-arinput").val().trim(),      // 到达城市 
+                           dpCity:$("#runsccfcs-dpinput").val().trim(),      // 出发城市 
+                           state:3
                        },
                         success: function (data) {
                             //点击完成，重新设置
@@ -1209,22 +1238,18 @@ function cashMoneyPageline(){
                             runscjwfbsxddcsh();
                             if (data.result>0){
                                 qbxcvalsj.passenger = data;
-                                // setPassenger() 处理 乘客端数据的函数
-                                // 先清空，在添加 
                                  console.log("成功取到数据",data);
                                 // 成功取到数据后，要清空runscreenv，防止下次再用值不对 
-                                
-                                
                                 setqbPassenger(data);
-                                // 点击选择乘客数据
-                                
-                                // 点击选择车主数据
-                                runpassengerval.page = data.page;
-
-                                
-                                
-                                if(data.page === 1){
+                                if (data.page>1){
+                                    // 赋值
+                                    runpassengerval.page = data.page;
+                                    //绑定查看车主页无限滚事件
+                                    hdrunpassenger(runscreenv.time,$("#runsccfcs-dpinput").val().trim(),$("#runsccfcs-arinput").val().trim());
+                                }else if(data.page === 1){
                                     passerlinfie_click.lastShow();
+                                }else {
+                                    drivelinfie_click.errShow();
                                 }
                             }else {
                                 passerlinfie_click.errShow();
@@ -1243,9 +1268,10 @@ function cashMoneyPageline(){
                            uid:nowusermsg.uid,  // id号   默认为空就是取全部的数据
                            viewType:"all",
                            dateRange:runscreenv.time.trim(),      
-                           arCity:runscreenv.mdd.trim(),      // 到达城市 
-                           dpCity:runscreenv.cfd.trim(),    // 出发城市 
+                           arCity:$("#runsccfcs-arinput").val().trim(),      // 到达城市 
+                           dpCity:$("#runsccfcs-dpinput").val().trim(),    // 出发城市 
                            pageSize:8,      // 首页取数据
+                           state:3
                        },
                         success: function (data) {
                               //点击完成，重新设置
@@ -1255,17 +1281,17 @@ function cashMoneyPageline(){
                                 qbxcvalsj.vowner = data;
                                 // 成功取到数据后，要清空runscreenv，防止下次再用值不对 
                                 console.log("成功取到数据",data);
-                               
-                               
                                 setqbVowneraa(data);
-
-                                // 点击选择车主数据
-                                runvownerval.page = data.page;
-
-                                if(data.page === 1){
+                                if (data.page>1){
+                                    // 赋值
+                                    runvownerval.page = data.page;
+                                    //绑定查看车主页无限滚事件
+                                    hdrunvowner(runscreenv.time.trim(),$("#runsccfcs-dpinput").val().trim(),$("#runsccfcs-arinput").val().trim());
+                                }else if(data.page === 1){
                                     drivelinfie_click.lastShow();
+                                }else {
+                                    drivelinfie_click.errShow();
                                 }
-                                
                             }else {
                                 drivelinfie_click.errShow();
                             }
