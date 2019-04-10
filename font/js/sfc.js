@@ -25,8 +25,8 @@
                 // 定位
                 sfc_amapdw();
                 // initData(nowusermsg.uid); //加载页面数据
-                getPassenger("","","",3);
-                getVowner("","","",3);
+                getPassenger("","","",0);
+                getVowner("","","",0);
                 hactive();
                 formcontrol();
                 getqbVowner();
@@ -77,12 +77,19 @@
                 $(".to-examine").outerHeight($(document.body).outerHeight());
                 // 我的账单页
                 $("#cashMoneyPage").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
-                
+
+                paymentBinding.phdiconDivNew();
+                // 点击时车主时 调用渲染函数
+                owenerCash.owerPage(1,"");
+                // 点击我的支付时，调用的函数
+                paymentpage(nowusermsg.uid,"Passenger",1,"");
                 // 筛选绑定的事件
                 screen.newPage();
                 paymentBinding.newPage();
+                paymentBinding.passnewPage();
+
                 runsccfcs.newPage();
-                city_class.newPage();
+                
             }
         },location.search);
         
@@ -299,6 +306,13 @@
                 xzlichuli(textval);
             }
             
+        })
+    // 筛选页删除按钮
+        $("#runsccfcs-arremove").bind("touch click",function(){
+            $("#runsccfcs-arinput").val("");
+        })
+        $("#runsccfcs-dpremove").bind("touch click",function(){
+            $("#runsccfcs-dpinput").val("");
         })
     // 点击取消，页面跳为地图页面 
         $(".xcqx").bind("touch click",function(){
@@ -595,7 +609,7 @@
         // input输入时
         $(".pnum-ftinput").on('input',function(){
             var val = parseInt($(".pnum-ftinput").val());
-            if( val === NaN || val === "" || val === undefined){
+            if( NaN == val  || val === "" ||  undefined == val ){
                 var valone = 0 ;
                 $(".pnum-ctnumber").text(valone);
                 $(".pnum-ftinput").val(0)
@@ -842,7 +856,7 @@
         $("#cashMoneyPage-return").bind("touch click",function(){
             window.location.hash = "#run?passger";
         })
-
+    
         
     // 提现页的事件
         // 全部提现
@@ -853,11 +867,11 @@
         // 确定提现
         $(".paytan-qbtixian").bind("touch click",function(){
             var tell =  "";
-            if( $(".paytan-txinput").val() ==="" || $(".paytan-txinput").val() ===undefined){
+            if( $(".paytan-txinput").val() ==="" || undefined == $(".paytan-txinput").val() ){
                 tell = "提现金额不能为空";
-            }else if ($("#paytan-txname").val() ==="" || $("#paytan-txname").val() ===undefined) {
+            }else if ($("#paytan-txname").val() ==="" ||  undefined == $("#paytan-txname").val() ) {
                 tell = "真实姓名不能为空";
-            }else if ($("#paytan-txzh").val() ==="" || $("#paytan-txzh").val() ===undefined) {
+            }else if ($("#paytan-txzh").val() ==="" || undefined ==  $("#paytan-txzh").val() ) {
                 tell = "支付宝账号不能为空";
             }
             if (tell !=="") {
@@ -872,46 +886,9 @@
         $(".paytan-remove").bind("touch click",function(){
             $(".paytan").slideToggle();
         })
-        // 路由点击的问题
-        $(".hvownermypay").bind("touch click",function(){
-            // 大的颜色变化
-            hashlycolorsz();
-            $(".hpassenger").css("color", "#e39f7a");
-            // 颜色的变化
-            hvownermyrun();
-            $(".hvownermypay").css("color","#5bc0de");
 
-            paymentpage(nowusermsg.uid,"Passenger",1,"");
-            paymentBinding.phdiconDivNew();
-            $("#phdicon-injection-qb").css('color',"#4040e8");
-            $("#phdiconfyqdiv-loadone").text("没有更多接单了");
-            $("#phdiconfyqdiv-loadtwo").text("没有找到接单哦！去其他地方逛逛吧！");
-            $("#mypayidname").text("我的支付");
-            // 乘客隐藏掉那个
-            $("#balanceid").hide();
-            
-        })
-        $(".hrucarpay").bind("touch click",function(){
-            // 车主大的颜色变化
-            hashlycolorsz();
-            $(".hrun").css("color","#e39f7a");
-            // 颜色变化
-            hvownermyrun();
-            $(".hrucarpay").css("color","#5bc0de");
-            // 点击时车主时 调用渲染函数
-            owenerCash.owerPage(1,"");
-            paymentBinding.phdiconDivNew();
-            $("#phdicon-injection-qb").css('color',"#4040e8");
-            $("#mypayidname").text("我的接单");
-            $("#phdiconfyqdiv-loadone").text("没有更多接单了");
-            $("#phdiconfyqdiv-loadtwo").text("没有找到接单哦！去其他地方逛逛吧！");
-            // 车主就显示
-            $("#balanceid").show();
-            
-        })
         // 页面刷新和跳转时也调用这个路由
             hashChange();
-
     })
     // 函数 
         function hvownermyrun(){
@@ -1055,6 +1032,8 @@
                             $("#cashm-footer").append(sfcsj.cashMoneyPage);
                             balanceMycash.setMoneyRecord(i,casgdata[i]);
                         }
+                        // 账单页无限滑动
+                        
                         if(valzhi == 1){
                             // 点击选择车主数据
                             cashMoneyPage.page = data.page;
@@ -1066,7 +1045,7 @@
                             if(data.page > 1 ){
                                 // 账单页无限滑动
                                 cashMoneyPage.page = data.page;
-                                cashMoneyPageline();
+                                cashMoneyPageline(typeval,dateRangeval);
                             }else {
                                 cashMange_click.lastShow();
                             }
@@ -1193,16 +1172,17 @@
                             paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
                         }
                         if(valzhi == 1 ){
+                            // 车主要处理接单数据
+                            
                             if(data.page>1){
-                                // 车主要处理接单数据
                                 paymentzyval.page = data.page;
-                                hdpaymentzy("Driver");
+                                hdpaymentzy("Driver",dateRange);
                             }else {
                                 payment_click.lastShow();
                             }
                         }
                    }else {
-                    payment_click.errShow();
+                     payment_click.errShow();
                    }
                 },  
                 error:function(data){
@@ -1376,7 +1356,7 @@
                         owneridentity.states  = 4; 
                     }else if(data.result=== 1 && data.status=== 0){
                         owneridentity.states = 2 ;
-                    }else if(data.result=== -1 && data.status===null ){
+                    }else if(data.result=== -1 && null  == data.status){
                         owneridentity.states = 0; 
                     }
                 },
@@ -1443,11 +1423,11 @@
            fabuxiaoxi.dwsj = data; 
             // 定位地址名
             var locationval = "";
-            if( data.addressComponent.township=== "" || data.addressComponent.township === undefined ){
+            if( null ==  data.addressComponent.township ||   undefined == data.addressComponent.township  ){
                 locationval =  data.addressComponent.street + data.addressComponent.streetNumber;
-            }else if( data.addressComponent.street === "" || data.addressComponent.street  === undefined ){
+            }else if( null ==  data.addressComponent.street  || data.addressComponent.street === "" ||  undefined == data.addressComponent.street   ){
                 locationval = data.addressComponent.township  + data.addressComponent.streetNumber;
-            }else if( data.addressComponent.streetNumber=== "" || data.addressComponent.streetNumber === undefined ){
+            }else if( null == data.addressComponent.streetNumber || data.addressComponent.streetNumber=== "" ||   undefined == data.addressComponent.streetNumber ){
                 locationval = data.addressComponent.township + data.addressComponent.street ;
             }else {
                 locationval = data.addressComponent.township + data.addressComponent.street + data.addressComponent.streetNumber;
@@ -1521,24 +1501,37 @@
             var p2 = [mdata.location.lng,mdata.location.lat];
             var dis = AMap.GeometryUtil.distanceOfLine([p1,p2]);
             // 返回结果为米
-            console.log("一共多少米",dis);
+           
             fabuxiaoxi.routeMileage = (dis/1000).toFixed(1);
             console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
             $(".mileage-price").text(fabuxiaoxi.routeMileage);
         // 钱数简单计算下
             // 钱啥时候都计算一下
-            var routelc = fabuxiaoxi.routeMileage;
-            var carmoney = 15;
-            if(routelc <= 5){
-                carmoney = 15;
-            }else if(routelc>5 && routelc <=30){
-                carmoney = 15 + (routelc-5)*1;
-            }else if(routelc>30 && routelc <=150){
-                carmoney = 15 + 25 + (routelc-30)*0.5;
-            }else if(routelc>150){
-                carmoney = 15 + 25 + 60 + (routelc -150)*0.4;
+            var pay_route = 1;
+            var qs_money =  4;
+            var routelc =parseFloat(fabuxiaoxi.routeMileage) ;
+            if  ( fabuxiaoxi.cfdcity == fabuxiaoxi.mddcity) {
+                if (fabuxiaoxi.personNum <3 ){
+                    pay_route = 1 ;
+                    qs_money =  4;
+                }else {
+                    qs_money =  4.8;
+                    pay_route = 1.2;
+                }
+            } else {
+                qs_money =   15 ;
+                if ( routelc >5 && routelc <=30) {
+                    pay_route = 1;
+                
+                }else if ( routelc >30 &&  routelc <= 150) {
+                    pay_route = 0.5;
+                }else {
+                    pay_route = 0.4;
+                }
+            
             }
-            fabuxiaoxi.amoney = carmoney.toFixed(1);
+            fabuxiaoxi.amoney = fabuxiaoxi.personNum*(qs_money + routelc*pay_route);
+            
             $(".completed-pprice").text(fabuxiaoxi.amoney);
         },
         clear:function(){   //清空操作
@@ -1551,6 +1544,15 @@
             fabuxiaoxi.mdtime = "";
             fabuxiaoxi.personNum = 0;
             fabuxiaoxi.amoney = 0;
+            // 页面元素初始化
+            $("#cgz-cfd").val("");
+            $("#cgz-mdd").val("");
+            $("#dt-a-0").empty();
+            $("#dt-c-1").empty();
+            $(".pnum-ctnumber").text(0);
+            $(".pnum-ftinput").val("");
+            personnum.clear();
+
             $("#completed-seaddress").text("请选择地址");
             $("#completed-number").text("请选择人数");
             $(".completed-pprice").text("0.0");
@@ -1662,11 +1664,11 @@
         // 车主数据的 div 
         vownerDiv:"<a href='#showdata' id='avownerDiv'   target='_parent'  class='clearfix'><div class='circle clearfix' id='vownerDiv'><div class='left vownerleft clearfix'><div class='time'><span class='data' id='vdata'></span><div class='rq'><span class='hours' id='vdhours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='vdcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='vdf'></div></div></div><div class='right clearfix'><span class='ricon left glyphicon glyphicon-menu-right'></span></div><div class='cydstate clearfix'><span class='cydstates'>订单情况:</span><div class='cydstated' id='cirstatedzt'></div></div></div> </a>",
         // 全部行程中乘客 
-        runpassengerDiv:"<div class='circle clearfix' id='runpassengerDiv'><a href='javascript:;' id='arunpassengerDiv'  target='_parent' class='arunpassengerDivclass clearfix'><div class='left runpassengerleft  clearfix'><div class='time'><span class='data' id='rpsgdata'></span><div class='rq'><span class='hours' id='rpsghours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rpsgcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rpsgdf'></div><div class='runpassengerDivuid' style='display:none' id='idrunpassengerDivuid'></div> </div></div></a><div class='right clearfix'><button  class='ricon left btn btn-success ' id='paymentbutton'>查看</button></div></div>",
+        runpassengerDiv:"<div class='circle clearfix' id='runpassengerDiv'><a href='javascript:;' id='arunpassengerDiv'  target='_parent' class='arunpassengerDivclass clearfix'><div class='left runpassengerleft  clearfix'><div class='time'><span class='data' id='rpsgdata'></span><div class='rq'><span class='hours' id='rpsghours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rpsgcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rpsgdf'></div><div class='runpassengerDivuid' style='display:none' id='idrunpassengerDivuid'></div> </div></div></a><div class='right clearfix'><button  class='ricon left btn btn-success' id='paymentbutton'>查看</button></div></div>",
         //全部行程中车主
-        runvownerDiv:"<div class='circle clearfix' id='runvownerDiv'><a href='#ownshowdata' id='arunvownerDiv'   target='_parent'  class='arunvownerDivclass clearfix'><div class='left runvownerleft  clearfix' ><div class='time'><span class='data' id='rvdata'>14号</span><div class='rq'><span class='hours' id='rvdhours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rvdcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rvdf'></div></div></div><input type='submit' class='ricon left btn btn-primary ' value='查看' style='margin-top:22px;'></div></a></div>",
+        runvownerDiv:"<div class='circle clearfix' id='runvownerDiv'><a href='#ownshowdata' id='arunvownerDiv'   target='_parent'  class='arunvownerDivclass clearfix'><div class='left runvownerleft  clearfix' ><div class='time'><span class='data' id='rvdata'>14号</span><div class='rq'><span class='hours' id='rvdhours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rvdcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rvdf'></div></div></div><input type='submit' class='ricon left btn btn-success ' value='查看' style='margin-top:22px;'></div></a></div>",
         // 支付页的模板 
-        paymentpage:'<a href="#payment" class="aqkpayment clearfix" id="pmaqkpayment"><div id="myorder-od" class="tjorder clearfix"><div class="tjorder-hd clearfix"> <div class="tjorder-hdleft clearfix"><span class="tjorder-hdlefticon iconfont iconkeche"></span><span id="myorder-oddistance"  class="tjorder-hdleftnr">市内</span></div><p id="myorder-odstatus" class="tjorder-hdright">出票成功</p></div><div  class="tjorder-ct clearfix"><span  id="myorder-oddpcity" class="tjorder-ctleft"></span><span class="tjorder-ctcenter">-</span><span  id="myorder-odarcity"  class="tjorder-ctright"></span></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">出发时间:</span><span id="myorder-oddptime" class="tjorder-datelefttime"></span></div><div class="tjorder-dateright clearfix"><span class="tjorder-daterighticon">&yen;</span><span id="myorder-odprice" class="tjorder-daterightmoney"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">添加时间:</span><span id="myorder-odartime" class="tjorder-datelefttime"></span></div></div><div id="myorder-odbutton" class="tjorder-button clearfix"></div></div></a>',
+        paymentpage:'<a href="#payment" class="pass-aqkpayment clearfix" id="pmaqkpayment"><div id="myorder-od" class="tjorder clearfix"><div class="tjorder-hd clearfix"> <div class="tjorder-hdleft clearfix"><span class="tjorder-hdlefticon iconfont iconkeche"></span><span id="myorder-oddistance"  class="tjorder-hdleftnr">市内</span></div><p id="myorder-odstatus" class="tjorder-hdright">出票成功</p></div><div  class="tjorder-ct clearfix"><span  id="myorder-oddpcity" class="tjorder-ctleft"></span><span class="tjorder-ctcenter">-</span><span  id="myorder-odarcity"  class="tjorder-ctright"></span></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">出发时间:</span><span id="myorder-oddptime" class="tjorder-datelefttime"></span></div><div class="tjorder-dateright clearfix"><span class="tjorder-daterighticon">&yen;</span><span id="myorder-odprice" class="tjorder-daterightmoney"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">添加时间:</span><span id="myorder-odartime" class="tjorder-datelefttime"></span></div></div><div id="myorder-odbutton" class="tjorder-button clearfix"></div></div></a>',
         // 车主接单页模板
         ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>出发时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>始发地:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
         // 账单页数据
@@ -1737,6 +1739,8 @@
         $(".to-examine").hide();
         $("#cashMoneyPage").hide();
         $(".city").hide();
+        $(".paymentzy").hide();
+        $(".pass-paymentzy").hide();
         // 点击了，先隐藏，在进行效果展示 
     }
     // 切换路由的方法
@@ -1922,7 +1926,7 @@
                 hashcreate();
                 if(val1[1]==="passger"){
                     // 支付页 
-                    $(".phdiconfyqdiv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-40);
+                    $(".pass-phdiconfyqdiv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-40);
                     // 大的颜色变化
                     hashlycolorsz();
                     $(".hpassenger").css("color", "#e39f7a");
@@ -1930,15 +1934,9 @@
                     hvownermyrun();
                     $(".hvownermypay").css("color","#5bc0de");
 
-                    paymentpage(nowusermsg.uid,"Passenger",1,"");
-                    paymentBinding.phdiconDivNew();
-                    $("#phdicon-injection-qb").css('color',"#4040e8");
-                    $("#phdiconfyqdiv-loadone").text("没有更多接单了");
-                    $("#phdiconfyqdiv-loadtwo").text("没有找到接单哦！去其他地方逛逛吧！");
-                    $("#mypayidname").text("我的支付");
-                    // 乘客隐藏掉那个
-                    $("#balanceid").hide();
-
+                    $("#pass-phdicon-injection-qb").css('color',"#4040e8");
+                    $(".pass-paymentzy").show();
+                    $(".pass-paymentzy").show();
                 }else if(val1[1]==="diver"){
                     // 我的订单页
                     $(".phdiconfyqdiv").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-188);
@@ -1948,18 +1946,10 @@
                     // 颜色变化
                     hvownermyrun();
                     $(".hrucarpay").css("color","#5bc0de");
-                    // 点击时车主时 调用渲染函数
-                    owenerCash.owerPage(1,"");
-                    paymentBinding.phdiconDivNew();
                     $("#phdicon-injection-qb").css('color',"#4040e8");
-                    $("#mypayidname").text("我的接单");
-                    $("#phdiconfyqdiv-loadone").text("没有更多接单了");
-                    $("#phdiconfyqdiv-loadtwo").text("没有找到接单哦！去其他地方逛逛吧！");
-                    // 车主就显示
-                    $("#balanceid").show();
-                   
+                    $(".paymentzy").show();
                 }
-                $(".paymentzy").show();
+                
             }else if(val1[0]=="#payment"){
                 // 处理支付详情页 
                 passengercli();
@@ -1977,6 +1967,7 @@
             }else if (val1[0]==="#city" || locationHash === "#city" ) {
                 hashcreate();
                 $(".city").show();
+                city_class.newPage();
             }
         }
     }
@@ -2031,10 +2022,11 @@
                     // 获取成功，但是数据暂时为空 
                     // 处理 乘客端数据的函数
                     setPassenger(data);
+                     // 获取到Uid后，乘客页添加滑动效果 
+                     
                     if ( data.page > 1 ){
-                            // 获取到Uid后，乘客页添加滑动效果 
-                        passengerNodeval.page = data.page;
-                        hdpassengerNode();
+                        passengerNodeval.page = data.page;  
+                        hdpassengerNode(dateRange,dpCity,arCity,state);
                     }else{
                         hdpassengerNode_click.lastShow();
                     }
@@ -2063,15 +2055,16 @@
             },
             success: function (data) {
                 $("#vownperNode").empty();
+                // 我的行程车主绑定的滑动效果
+                
                 if ( data.result > 0 ) {
                     sfcsj.vowner = data ;
                     // 获取成功，但是数据暂时为空 
                     // setVowner() 处理车主端的数据 
                     setVowner(data);
                     if (data.page>1 ){
-                        // 我的行程车主绑定的滑动效果
                         vownperNodeval.page = data.page;
-                        hdvownperNode();
+                        hdvownperNode(dateRange,dpCity,arCity,state);
                     }else {
                         hdvownperNode_click.lastShow();
                     }
@@ -2105,6 +2098,7 @@
             success: function (data) {
                 if ( data.result > 0 ){
                     qbxcvalsj.passenger = data;
+                    
                     $("#runpassengerNode").empty();
                     //  乘客端数据的函数
                     setqbPassenger(data);
@@ -2161,13 +2155,14 @@
                
                if (data.result > 0 ){
                     qbxcvalsj.vowner = data;
+                    
                     // 获取成功，但是数据暂时为空 
                     $("#runvownerNode").empty();
                     // 处理 乘客端数据的函数
                     setqbVowneraa(data);
                     if (data.page>1){
                         // 赋值
-                        runvownerval.page = data.page;
+                    runvownerval.page = data.page;
                         //绑定查看车主页无限滚事件
                         hdrunvowner("","","");
                     }else {
@@ -2241,23 +2236,23 @@
             $(".psgdestination").attr("class",psgdestination);
             // 乘客页状态的判断显示 
                 if(passengerData[i].state === -1){
-                    $("#cydstatedzt").text("失效");
+                    $("#cydstatedzt").text("已失效");
                     var cydstatedzt = "cydstatedzt"+i;
                     $("#cydstatedzt").attr("id",cydstatedzt);
                 }else if(passengerData[i].state === 0){
-                    $("#cydstatedzt").text("发布");
+                    $("#cydstatedzt").text("已发布");
                     var cydstatedzt = "cydstatedzt"+i;
                     $("#cydstatedzt").attr("id",cydstatedzt);
                     var cydstatedztcl = "#"+cydstatedzt;
                     $(cydstatedztcl).css('color',"#5cb85c");
                 }else  if(passengerData[i].state === 1){
-                    $("#cydstatedzt").text("完成");
+                    $("#cydstatedzt").text("已支付");
                     var cydstatedzt = "cydstatedzt"+i;
                     $("#cydstatedzt").attr("id",cydstatedzt);
                     var cydstatedztcl = "#"+cydstatedzt;
                     $(cydstatedztcl).css('color',"#f0ad4e");
                 }else if(passengerData[i].state === 2) {
-                    $("#cydstatedzt").text("已被接单");
+                    $("#cydstatedzt").text("已接单");
                     var cydstatedzt = "cydstatedzt"+i;
                     $("#cydstatedzt").attr("id",cydstatedzt);
                     var cydstatedztcl = "#"+cydstatedzt;
@@ -2345,17 +2340,17 @@
             // 车主页状态的操作 
                //  #cirstatedzt 
                 if(vownerData[i].state === -1){
-                    $("#cirstatedzt").text("失效");
+                    $("#cirstatedzt").text("已失效");
                     var cirstatedzt = "cirstatedzt"+i;
                     $("#cirstatedzt").attr("id",cirstatedzt);
                 }else if(vownerData[i].state === 0){
-                    $("#cirstatedzt").text("发布");
+                    $("#cirstatedzt").text("已发布");
                     var cirstatedzt = "cirstatedzt"+i;
                     $("#cirstatedzt").attr("id",cirstatedzt);
                     var cirstatedztcl = "#"+cirstatedzt;
                     $(cirstatedztcl).css('color',"#5cb85c");
                 }else  if(vownerData[i].state === 1){
-                    $("#cirstatedzt").text("完成");
+                    $("#cirstatedzt").text("已支付");
                     var cirstatedzt = "cirstatedzt"+i;
                     $("#cirstatedzt").attr("id",cirstatedzt);
                     var cirstatedztcl = "#"+cirstatedzt;
@@ -2549,27 +2544,27 @@
             var successdattsxx = "";
             if(nowusermsg.uid ===""){
                 successdattsxx = "账号登录异常,请返回重登";
-            }else if(pushType ===""||pushType === undefined){
+            }else if( null ==pushType || pushType ===""||   undefined == pushType){
                 successdattsxx="状态出错,请重新开始";
-            }else if(departure.trim()==="" || departure===undefined || dLng ==="" || dLng===undefined || dLat===""||dLat===undefined){
-                if(departure.trim()==="" || departure===undefined){
+            }else if(departure.trim()==="" || null == departure  || null == dLng || null == dLat || dLng ==="" || dLat===""){
+                if( undefined == departure ||departure.trim()==="" ){
                     successdattsxx= "出发地出错,请重新选择出发地";
-                }else if(dLng ==="" || dLng===undefined || dLat===""||dLat===undefined){
+                }else if( undefined  == dLng || undefined ==  dLat || dLng ==="" ||  dLat===""){
                     successdattsxx= "不能直接选择市名为出发地";
                 }
             }
-            if(mdata.name.trim()==="" ||mdata.name.trim()===undefined || mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
-                if(mdata.name.trim()==="" ||mdata.name.trim()===undefined){
+            if( undefined ==  mdata.name.trim() || undefined == mdata.location.lng  || undefined == mdata.location.lat|| mdata.name.trim()==="" || mdata.location.lng ==="" ||  mdata.location.lat===""){
+                if(  undefined  == mdata.name.trim()|| mdata.name.trim()==="" ){
                     successdattsxx= "目的地出错,请重新选择目的地";
-                }else if(mdata.location.lng ==="" || mdata.location.lng===undefined || mdata.location.lat===""||mdata.location.lat===undefined){
+                }else if( undefined ==  mdata.location.lng || undefined == mdata.location.lat || mdata.location.lng ==="" ||  mdata.location.lat===""){
                     successdattsxx= "不能直接选择市名为目的地";
                 }
             }
-            if(fabuxiaoxi.mdtime===""||fabuxiaoxi.mdtime===undefined){
+            if( undefined == fabuxiaoxi.mdtime  || fabuxiaoxi.mdtime===""){
                 successdattsxx= "您忘了选期望到达时间了";
-            }else if(fabuxiaoxi.cftime===""||fabuxiaoxi.cftime===undefined){
+            }else if( undefined == fabuxiaoxi.cftime || fabuxiaoxi.cftime===""){
                 successdattsxx= "您忘了选出发时间了";
-            }else if(fabuxiaoxi.personNum==="" || fabuxiaoxi.personNum ===undefined){
+            }else if(undefined ==  fabuxiaoxi.personNum || fabuxiaoxi.personNum==="" ){
                 successdattsxx= "您忘了选人数了";
             }
             if(successdattsxx!==""){
@@ -2687,6 +2682,7 @@
     // 存储获取到的支付页的信息，供支付详情页掉欧阳 
  var paymentpageval = {
         result:{},  // 数据 
+
         chisu:0,    // 计算用户支付了几次 
         type:"passger"  // 请求类型
     }
@@ -2706,24 +2702,25 @@
              
                 console.log("乘客支付信息表",data);
                 paymentpageval.result = data ;
-                $(".phdiconfyq").empty();
+                $(".pass-phdiconfyq").empty();
                if(data.result>0){
                     for( var i = 0 ;i<data.obj.froViewPayments.length;i++){
                         paymentpageval.chisu++;
-                        $(".phdiconfyq").append(sfcsj.paymentpage);
+                        $(".pass-phdiconfyq").append(sfcsj.paymentpage);
                     // 处理支付页面的数据 
                         paymentpcl(i,data,2);
                     }
+                   
                     if(valzhi == 1){
                         if (data.page > 1){
-                            paymentzyval.page = data.page;
-                            hdpaymentzy("Passenger");
+                            pass_paymentzyval.page = data.page;
+                            pass_hdpaymentzy("Passenger",dateRange);
                         }else {
-                            payment_click.lastShow();
+                            pass_payment_click.lastShow();
                         }
                     }
                }else {
-                    payment_click.errShow();
+                    pass_payment_click.errShow();
                }
             },
             error:function(data){
@@ -2734,7 +2731,7 @@
     // 支付成功处理的页面的数据 
     //    <a href="#payment" class="aqkpayment clearfix" id="pmaqkpayment">  
     function paymentpcl(i,data,val){
-        if( val === "" || val === null || val === undefined || val ===2){
+        if(   null  == val ||  undefined  == val || val ===2 ||  val === "" ){
             // 乘客支付的数据
             var sj = data.obj.froViewPayments[i];
             i = data.obj.froViewPayments[i].id;
@@ -2781,7 +2778,7 @@
             }else if (sj.payState == -1){
                 odstatus= "已取消";
                 odbutton = '<span class="tjorder-myorderts">如需用车,请重新下单!</span>';
-                if (sj.price == null || undefined) {
+                if ( null  == sj.price || undefined == sj.price ) {
                     odprice= "已取消";
                 }else {
                     odprice = sj.price;
@@ -2847,10 +2844,19 @@
             $("#pdetail-refund").hide();
             $("#details-passengershow").show();
 
+            // 账单详情页绑定返回
+            $("#pdetailssyj-return").unbind("click");
+            $("#pdetailssyj-return").bind("click",function(){
+                pass_payment_click.driverScreen();
+                paymentBinding.phdiconDivNew();
+                // 点击我的支付时，调用的函数
+                paymentpage(nowusermsg.uid,"Passenger",1,"");
+                window.history.back(-1);
+            })
             var val =  paymentpageval.result.obj.froViewPayments.find(function(value, index, arr){  if(value.id == indexes){return value}});
             // 赋值
             // 支付数据
-            if (val.payPrice == null || val.payPrice == undefined) {
+            if ( null == val.payPrice  || undefined == val.payPrice  ) {
                 $("#details-price").hide();
             }else {
                 $("#details-priceje").text(val.payPrice+"(已支付金额)");
@@ -2859,7 +2865,7 @@
             }
             
             //退款信息
-            if (val.refundPrice==null || val.refundPrice== undefined ){
+            if ( null == val.refundPrice ||  undefined == val.refundPrice ){
                 $("#details-refund").hide();
             }else {
                 $("#details-refund").show();
@@ -2890,20 +2896,62 @@
             if ( nowusermsg.uid == val.puid && val.pushType =='Driver' ){
                     $("#details-paymoney").empty();
             }else {
-                if(val.payState === 1){
-                    jg ="已支付";
-                    $("#details-passengerState").text(jg);
-
-                    // 已支付则显示
-                    $("#details-oddNumber").show();
-                    if(Date.parse(new Date()) < (Date.parse(val.dpTime)+86400000)){
+                if ( Date.parse(new Date()) > (Date.parse(val.dpTime)+86400000)) {
+                    // 失效了  车主失效没有按钮
+                    $("#details-paymoney").empty();
+                    $("#details-paymoney").append('<div class="details-paymontext">已失效</div>');
+                }else {
+                    if(val.payState === 1){
+                    
+                        jg ="已支付";
+                        $("#details-passengerState").text(jg);
+    
+                        // 已支付则显示
+                        $("#details-oddNumber").show();
+                        if(Date.parse(new Date()) < (Date.parse(val.dpTime)+86400000)){
+                            if (val.pushType == "Passenger") {
+                                // 没过规定时间  有取消和立即支付按钮
+                                $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao" style="margin:6px auto;display:block;">取消订单</span></div>');
+                                // 取消操作
+                                $("#details-payquxiao").bind("touch click",function(){
+                                    qxsfcxinxi(nowusermsg.uid,val.id,"已支付");
+                                })
+                                var details_payquxiao = "details-payquxiao"+1;
+                                $("#details-payquxiao").attr("id",details_payquxiao);
+                            }else {
+                                // 没过规定时间  有取消和立即支付按钮
+                                $("#details-paymoney").append('<div class="details-paymontext">取消请到行程页</div>');
+                            }
+                            // 支付
+                            $("#details-paymaypay").bind("touch click",function(){
+                                paymentModule.payMoney(val.price,val.pnum);
+                            })
+                            var details_paymaypay = "details-paymaypay"+1;
+                            $("#details-paymaypay").attr("id",details_paymaypay);
+                        }else {
+                            // 过了规定时间
+                            $("#details-paymoney").append('<div class="details-paymontext">支付成功,等待上车</div>')
+                        }
+                    }else if (val.payState === -1){
+                        jg="已取消"
+                        $("#details-paymoney").append('<div class="details-paymontext">已取消</div>');
+                        $("#details-passengerState").text(jg);
+                    }else {
+                        jg = "未支付";
+                        $("#details-passengerState").text(jg);
+                        $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao">取消订单</span><span class="details-paymorebutton" id="details-paymaypay">立即支付</span></div>');
                         
-                        // 没过规定时间  有取消和立即支付按钮
-                        $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao" style="margin:6px auto;display:block;">取消订单</span></div>');
                         // 取消操作
-                        $("#details-payquxiao").bind("touch click",function(){
-                            qxsfcxinxi(val.puid,val.froid,"已支付");
-                        })
+                        if(Date.parse(new Date()) < (Date.parse(val.dpTime)+86400000)){
+                            $("#details-payquxiao").bind("touch click",function(){
+                                qxsfcxinxi(nowusermsg.uid,val.id,"未支付");
+                            })
+                        }else {
+                            jg="已取消";
+                            $("#details-paymoney").append('<div class="details-paymontext">已取消</div>');
+                            $("#details-passengerState").text(jg);
+                        }
+    
                         var details_payquxiao = "details-payquxiao"+1;
                         $("#details-payquxiao").attr("id",details_payquxiao);
                         
@@ -2913,32 +2961,9 @@
                         })
                         var details_paymaypay = "details-paymaypay"+1;
                         $("#details-paymaypay").attr("id",details_paymaypay);
-                    }else {
-                        // 过了规定时间
-                        $("#details-paymoney").append('<div class="details-paymontext">支付成功,等待上车</div>')
                     }
-                }else if (val.payState === -1){
-                    jg="已取消"
-                    $("#details-paymoney").append('<div class="details-paymontext">已取消</div>');
-                    $("#details-passengerState").text(jg);
-                }else {
-                    jg = "未支付";
-                    $("#details-passengerState").text(jg);
-                    $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao">取消订单</span><span class="details-paymorebutton" id="details-paymaypay">立即支付</span></div>');
-                    // 取消操作
-                    $("#details-payquxiao").bind("touch click",function(){
-                        qxsfcxinxi(val.puid,val.froid,"未支付");
-                    })
-                    var details_payquxiao = "details-payquxiao"+1;
-                    $("#details-payquxiao").attr("id",details_payquxiao);
-                    
-                    // 支付
-                    $("#details-paymaypay").bind("touch click",function(){
-                        paymentModule.payMoney(val.price,val.pnum);
-                    })
-                    var details_paymaypay = "details-paymaypay"+1;
-                    $("#details-paymaypay").attr("id",details_paymaypay);
                 }
+                
 
             }
                
@@ -2958,6 +2983,15 @@
         }else  if(bijiao === "Driver") {
             $("#details-passengershow").hide();
             $("#pdetail-refund").show();
+            // 账单详情页绑定返回
+            $("#pdetailssyj-return").unbind("click");
+            $("#pdetailssyj-return").bind("click",function(){
+                payment_click.driverScreen();
+                paymentBinding.phdiconDivNew();
+                // 点击时车主时 调用渲染函数
+                owenerCash.owerPage(1,"");
+                window.history.back(-1);
+            })
             var valtwo =   owenerCash.cashResult.obj.froReceipts.find(function (value, index, arr){  if(value.id == indexes){return value}});
             // 结果
             var stateResult = "";
@@ -3004,7 +3038,7 @@ function qxsfcxinxi(uid,id,sftuimonry){
 // 乘客身份在已付款时，点击取消，要退钱。
 function retreatMoney(uid,id){
     $.ajax({
-        url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFRROPayments.asp",
+        url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFROVPayments.asp",
         type:"post",
         data:{
             uid:uid,
@@ -3017,12 +3051,12 @@ function retreatMoney(uid,id){
                 $("#details-paymoney").empty();
                 showMessage1btn("该订单不存在,请联系客服","",0);
                     // 操作成功，显示提示
-                    $("#details-paymoney").text('<div class="details-paymontext">已取消发布,改订单未付钱</div>');
+                    $("#details-paymoney").append('<div class="details-paymontext">已取消发布,该订单未付钱</div>');
             }else {
                 $("#details-paymoney").empty();
                 showMessage1btn("取消成功,正在退款","",0);
                 // 操作成功，显示提示
-                $("#details-paymoney").text('<div class="details-paymontext">取消成功,正在退款</div>');
+                $("#details-paymoney").append('<div class="details-paymontext">取消成功,正在退款</div>');
             };
         },
         error:function(data){
@@ -3098,36 +3132,34 @@ var screen = {
             screen.pstate = -1 ;
             screen.chdStateNew();
             $("#chd-screenstate-sx").css('color',"#4040e8");
+            screen.passengerAjax();
         })
         $("#chd-screenstate-fb").bind("touch click",function(){
             screen.pstate = 0 ;
             screen.chdStateNew();
             $("#chd-screenstate-fb").css('color',"#4040e8");
+            screen.passengerAjax();
         })
         $("#chd-screenstate-wj").bind("touch click",function(){
             screen.pstate = 1 ;
             screen.chdStateNew();
             $("#chd-screenstate-wj").css('color',"#4040e8");
+            screen.passengerAjax();
         })
         $("#chd-screenstate-jd").bind("touch click",function(){
             screen.pstate = 2;
             screen.chdStateNew();
             $("#chd-screenstate-jd").css('color',"#4040e8");
+            screen.passengerAjax();
         })
         $("#chd-screenstate-qb").bind("touch click",function(){
             screen.pstate = 3;
             screen.chdStateNew();
             $("#chd-screenstate-qb").css('color',"#4040e8");
+            screen.passengerAjax();
         })
 
-        $("#chd-screen-whole").bind("touch click",function(){
-            screen.pdownIcon = 1;
-            // ajax
-            $("#chd-screen-downicon").attr("class","chd-righticon glyphicon glyphicon-triangle-bottom");
-            $("#chd-screen-div").slideUp();
-            getPassenger(screen.ptime,screen.pdpcity,screen.parcity,screen.pstate);
-            $(".cylx").animate({ scrollTop: 0 }, 10);  //返回顶部
-        })
+        
         // 车主页绑定事件
         $("#top-screen").bind("touch click",function(){
             screen.adownIcon ++ ;
@@ -3181,42 +3213,58 @@ var screen = {
             screen.astate = -1 ;
             screen.topStateNew();
             $("#top-screenstate-sx").css('color',"#4040e8");
+            screen.driverAjax();
+
         })
         $("#top-screenstate-fb").bind("touch click",function(){
             screen.astate = 0 ;
             screen.topStateNew();
             $("#top-screenstate-fb").css('color',"#4040e8");
+            screen.driverAjax();
         })
         $("#top-screenstate-wj").bind("touch click",function(){
             screen.astate = 1 ;
             screen.topStateNew();
             $("#top-screenstate-wj").css('color',"#4040e8");
+            screen.driverAjax();
         })
         $("#top-screenstate-jd").bind("touch click",function(){
             screen.astate = 2;
             screen.topStateNew();
             $("#top-screenstate-jd").css('color',"#4040e8");
+            screen.driverAjax();
         })
         $("#top-screenstate-qb").bind("touch click",function(){
             screen.astate = 3;
             screen.topStateNew();
+            
             $("#top-screenstate-qb").css('color',"#4040e8");
+            screen.driverAjax();
         })
         
-        $("#top-screen-whole").bind("touch click",function(){
-            screen.adownIcon = 1;
-            // ajax
-            $("#top-screen-downicon").attr("class","top-righticon glyphicon glyphicon-triangle-bottom");
-            $("#top-screen-div").slideUp();
-            getVowner(screen.atime,screen.adpcity,screen.aarcity,screen.astate);
-            $(".vonpondclxc").animate({ scrollTop: 0 }, 10);  //返回顶部
-        })
+        
     },
     chdTimeNew:function(){
         $("#chd-screen-today").css('color',"#555");
         $("#chd-screen-week").css('color',"#555");
         $("#chd-screen-month").css('color',"#555");
         $("#chd-screen-time-whole").css('color',"#555");
+    },
+    passengerAjax:function(){
+        screen.pdownIcon = 1;
+        // ajax
+        $("#chd-screen-downicon").attr("class","chd-righticon glyphicon glyphicon-triangle-bottom");
+        $("#chd-screen-div").slideUp();
+        getPassenger(screen.ptime,screen.pdpcity,screen.parcity,screen.pstate);
+        $(".cylx").animate({ scrollTop: 0 }, 10);  //返回顶部
+    },
+    driverAjax:function(){
+        screen.adownIcon = 1;
+        // ajax
+        $("#top-screen-downicon").attr("class","top-righticon glyphicon glyphicon-triangle-bottom");
+        $("#top-screen-div").slideUp();
+        getVowner(screen.atime,screen.adpcity,screen.aarcity,screen.astate);
+        $(".vonpondclxc").animate({ scrollTop: 0 }, 10);  //返回顶部
     },
     topTimeNew:function(){
         $("#top-screen-today").css('color',"#555");
@@ -3243,6 +3291,7 @@ var screen = {
 var paymentBinding = {
     iconCliack:1,
     val:"",
+    passval:"",
     passger:"",
     driver:"",
     newPage:function(){
@@ -3280,25 +3329,62 @@ var paymentBinding = {
         paymentBinding.val = valdata;
         $("#phdicon-injection-divicon").attr("class","phdicon-right-icon glyphicon glyphicon-triangle-bottom");
         $("#phdicon-injection").slideUp();
-        var hashVal = window.location.hash;
-        if ( hashVal == "#ddxq?passger" ) {
-            
-            paymentBinding.passger = valdata;
-            payment_click.driverScreen();
-            paymentpage(nowusermsg.uid,"Passenger",1,paymentBinding.passger);
-        }else if ( hashVal == "#ddxq?diver" ){
-           
-            paymentBinding.driver = valdata;
-            payment_click.driverScreen();
-            owenerCash.owerPage(1,paymentBinding.driver);
-        }
+        paymentBinding.driver = valdata;
+        payment_click.driverScreen();
+        owenerCash.owerPage(1,paymentBinding.driver);
+        
     },
     phdiconDivNew:function(){
         $("#phdicon-injection-today").css("color","#555");
         $("#phdicon-injection-week").css("color","#555");
         $("#phdicon-injection-month").css("color","#555");
         $("#phdicon-injection-qb").css("color","#555");
-    }
+    },
+    passnewPage:function(){
+        $("#pass-phdicon-injection-div").bind("touch click",function(){
+            paymentBinding.iconCliack ++;
+            $("#pass-phdicon-injection").slideToggle();
+            if ( paymentBinding.iconCliack %2 == 0 ){
+                $("#pass-phdicon-injection-divicon").attr("class","phdicon-right-icon glyphicon glyphicon-triangle-top");
+            }else {
+                $("#pass-phdicon-injection-divicon").attr("class","phdicon-right-icon glyphicon glyphicon-triangle-bottom");
+            }
+        })
+        $("#pass-phdicon-injection-today").bind("touch click",function(){
+                paymentBinding.passphdiconDivNew();
+            $("#pass-phdicon-injection-today").css('color',"#4040e8");
+            paymentBinding.passpayAjAX("today");
+        })
+        $("#pass-phdicon-injection-week").bind("touch click",function(){
+            paymentBinding.passphdiconDivNew();
+            $("#pass-phdicon-injection-week").css('color',"#4040e8");
+            paymentBinding.passpayAjAX("weekday");
+        })
+        $("#pass-phdicon-injection-month").bind("touch click",function(){
+                paymentBinding.passphdiconDivNew();
+            $("#pass-phdicon-injection-month").css('color',"#4040e8");
+            paymentBinding.passpayAjAX("month");
+        })
+        $("#pass-phdicon-injection-qb").bind("touch click",function(){
+            paymentBinding.passphdiconDivNew();
+            $("#pass-phdicon-injection-qb").css('color',"#4040e8");
+            paymentBinding.passpayAjAX("");
+        })
+    },
+    passphdiconDivNew:function(){
+        $("#pass-phdicon-injection-today").css("color","#555");
+        $("#pass-phdicon-injection-week").css("color","#555");
+        $("#pass-phdicon-injection-month").css("color","#555");
+        $("#pass-phdicon-injection-qb").css("color","#555");
+    },
+    passpayAjAX:function(valdata){
+        paymentBinding.passval = valdata;
+        $("#pass-phdicon-injection-divicon").attr("class","phdicon-right-icon glyphicon glyphicon-triangle-bottom");
+        $("#pass-phdicon-injection").slideUp();
+        paymentBinding.passger = valdata;
+        pass_payment_click.driverScreen();
+        paymentpage(nowusermsg.uid,"Passenger",1,paymentBinding.passger);
+    },
 }
 
 
@@ -3320,6 +3406,7 @@ var runsccfcs = {
 }
 
 // 城市选择页
+
 var city_class = {
     clickHash:"#sxxwz",
     click_button:"dp",
@@ -5428,4 +5515,8 @@ var cityData = [
 		]
 	}
 ];
+
+
+
+
 

@@ -130,7 +130,7 @@
 
     // 进入input时chufadi  出发地时 进入可以自动选择的页面 
     function inchufadi(){
-        if( $("#cgz-mdcity").text() === "" || $("#cgz-mdcity").text() === undefined  ){
+        if( undefined == $("#cgz-mdcity").text()  || $("#cgz-mdcity").text() === ""   ){
             $("#cgz-mdcity").text("常州市");
         }else if(FreeRide.freeMode ==="incity" && fabuxiaoxi.dwsj===""){
             $("#cgz-cfcity").text("常州市");
@@ -146,9 +146,9 @@
     }
      // 进入input时address  目的地时 进入可以自动选择的页面 
      function inaddress(){
-        if ($("#cgz-cfcity").text() == "" || $("#cgz-cfcity").text() == undefined) {
+        if (  undefined == $("#cgz-cfcity").text()  || $("#cgz-cfcity").text() == ""  ) {
             $("#cgz-cfcity").text("常州市");
-        }else if ($("#cgz-mdcity").text() == "" || $("#cgz-mdcity").text() == undefined){
+        }else if ( undefined ==   $("#cgz-mdcity").text()  || $("#cgz-mdcity").text() == "" ){
             $("#cgz-mdcity").text("常州市");
         }
         $("#inxcbody").val("常州市");
@@ -410,7 +410,7 @@
                         }
                         console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
                     BC.click({
-                        "instant_channel" : paymentbttsj.instant_channel,
+                        // "instant_channel" : paymentbttsj.instant_channel,
                         "debug" : false,
                         "need_ali_guide" : true,
                         "use_app" : true,
@@ -427,9 +427,12 @@
                             //showMessage1btn(JSON.stringify(res),"",0);
                             switch(res.err_msg){
                                 case "get_brand_wcpay_request:ok":
+                                    paymentBinding.phdiconDivNew();
+                                    // 点击我的支付时，调用的函数
+                                    paymentpage(nowusermsg.uid,"Passenger",1,"");
+                                    showMessage1btn("支付成功！","hash_topddxq()",0);
                                     break;
                                 case "get_brand_wcpay_request:fail":
-                                    showMessage1btn("系统出错，请联系我们！","BackPayment()",0);
                                     paymentModular.oldarcity = "";
                                     paymentModular.olddpcity = "" ;
                                     paymentModular.oldartime = "";
@@ -437,9 +440,13 @@
                                     // div 里的值赋为空
                                     $("#address").text("");
                                     $("#cgz-mdd").val("");
+                                    paymentBinding.phdiconDivNew();
+                                    // 点击我的支付时，调用的函数
+                                    paymentpage(nowusermsg.uid,"Passenger",1,"");
+                                    showMessage1btn("系统出错，请联系我们！","hash_topddxq()",0);
                                     break;
                                 case "get_brand_wcpay_request:cancel":
-                                    showMessage1btn("已取消支付！","BackPayment()",0);
+                                    
                                     paymentModular.oldarcity = "";
                                     paymentModular.olddpcity = "" ;
                                     paymentModular.oldartime = "";
@@ -447,15 +454,21 @@
                                     // div 里的值赋为空
                                     $("#address").text("");
                                     $("#cgz-mdd").val("");
+                                    showMessage1btn("已取消支付！","hash_topddxq()",0);
                                     break;
                                 }
                             }
                             });
                             BC.err = function(err) {
+                                paymentBinding.phdiconDivNew();
+                                // 点击我的支付时，调用的函数
+                                paymentpage(nowusermsg.uid,"Passenger",1,"");
                                 //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
-                                showMessage1btn(err.ERROR,"",0);
+                                showMessage1btn(err.ERROR,"hash_topddxq()",0);
+                               
                             }
                         }else{
+                           
                             showMessage1btn("后台参数错误！","",0);
                         }                                           
                             // 删除dialog
@@ -463,27 +476,21 @@
                         },"json")
             },
             error:function(data){
-                showMessage1btn("支付失败,刷新在试","",0);
+                showMessage1btn("支付失败,刷新在试","hash_topddxq()",0);
             }
         })
        
         }
     }
-    
-    function BackPayment(){
-        // 大的颜色变化
-        hashlycolorsz();
-        $(".hpassenger").css("color", "#e39f7a");
-        // 颜色的变化
-        hvownermyrun();
-        $(".hvownermypay").css("color","#5bc0de");
-
+// 跳转到#ddq?passenger
+    function hash_topddxq(){
+      
+        paymentBinding.phdiconDivNew();
+        // 点击我的支付时，调用的函数
         paymentpage(nowusermsg.uid,"Passenger",1,"");
-        $("#mypayidname").text("我的支付");
-        // 乘客隐藏掉那个
-        $("#balanceid").hide();
         window.location.hash = "#ddxq?passger";
     }
+
 // 时间页面的组件 
     // 时间选择所需要的数据 
     function setTimeWheel(){            
@@ -605,14 +612,14 @@
         page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
         loadcount:3  // 页面展示的为第几页的数据 
     }
-    function hdpassengerNode(){
+    function hdpassengerNode(dateRange,dpCity,arCity,state){
         var useruid =  nowusermsg.uid;
         var $passenger = $('#passengerNode').infiniteScroll({     //#content是包含所有图或块的容器
             path: function(){
                 // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
                 // 这里判断有问题 
                 if( this.pageIndex <=  passengerNodeval.page -1 ){
-                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Passenger"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity="+"&pageSize=8";
+                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Passenger"+"&uid="+useruid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"+"&state="+state;
                 }
             },
             append:".cylx-cy",
@@ -661,13 +668,13 @@
         page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
         loadcount:3   // 页面展示的为第几页的数据 
     }
-    function hdvownperNode(){
+    function hdvownperNode(dateRange,dpCity,arCity,state){
         var useruid =  nowusermsg.uid;
         var $vownper = $('#vownperNode').infiniteScroll({     //#content是包含所有图或块的容器
             path: function(){
                 if(  this.pageIndex <=  vownperNodeval.page -1 ){
                     // 获取全部时间的行程，失效页没有关系 
-                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Driver"+"&uid="+useruid+"&dateRange="+"&dpCity="+"&arCity="+"&pageSize=8";
+                    return "//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/queryPageMadeFROrders_get.asp?cur="+(this.pageIndex+1)+"&viewType=self"+"&pushType=Driver"+"&uid="+useruid+"&dateRange="+dateRange+"&dpCity="+dpCity+"&arCity="+arCity+"&pageSize=8"+"&state="+state;
                 }
             },
             append:"#vownerDiv",
@@ -795,7 +802,7 @@ var cashMoneyPage = {
     loadcount:3  // 页面展示的为第几页的数据 
 }
 
-function cashMoneyPageline(){
+function cashMoneyPageline(typeval,dateRangeval){
     var useruid =  nowusermsg.uid;
     var $runpassengerval = $('#cashm-footer').infiniteScroll({     //#content是包含所有图或块的容器
         path: function(){
@@ -803,7 +810,7 @@ function cashMoneyPageline(){
             // 数据量很小情况下  报错了 
             if( this.pageIndex <= cashMoneyPage.page ){
                 // 获取全部时间的行程，失效页没有关系 
-                return "//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&dateRange="+"&type=";
+                return "//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs_get.asp?cur="+(this.pageIndex+1)+"&uid="+useruid+"&dateRange="+dateRangeval+"&type="+typeval;
             }
         },
         append:".cashm-center",
@@ -868,7 +875,8 @@ var payment_click = {
         $(".phdiconfyqdiv").animate({ scrollTop: 0 }, 10);  //返回顶部
     }
 }
-// 支付页 滑动获取数据效果 
+
+
 // 车主页 我的订单 数据的无限滚动
     var paymentzyval = {
             page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
@@ -877,17 +885,14 @@ var payment_click = {
             bijiao:""
         }
 
-        function hdpaymentzy(valsf){
+        function hdpaymentzy(valsf,dateRange){
             paymentzyval.sf = valsf;
             var valzhi = "" ;
             var useruid = parseInt(nowusermsg.uid);
-            if( valsf==="Passenger" ){
-                valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments_get.asp?"+"utype=Passenger"+"&uid="+useruid+"&dateRange="+"&pageSize=8";
-                wuxian(valzhi,"Passenger");
-            }else if( valsf==="Driver" ){
-                valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?"+"uid="+useruid+"&utype=Driver&dateRange="+"&pageSize=8";
-                wuxian(valzhi,"Driver");
-            }
+           
+            valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROReceipts/queryPageMadeFROReceipts_get.asp?"+"uid="+useruid+"&utype=Driver&dateRange="+dateRange+"&pageSize=8";
+            wuxian(valzhi,"Driver");
+
             function wuxian (val,bijiao) { 
                 paymentzyval.bijiao = bijiao;
                 var $runpassengerval = $('.phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
@@ -913,37 +918,97 @@ var payment_click = {
         }
 
         function hdpaymentzy_cliDiv(event,response){
-                  
             var data = response;
             // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
-                if (paymentzyval.bijiao =="Passenger"){
-
-                    paymentzyval.page = data.page;
-
-                    console.log("乘客支付信息表",data);
-                    paymentpageval.result = data ;
-                    if(data.result>0){
-                        for( var i = 0 ;i<data.obj.froViewPayments.length;i++){
-                            paymentpageval.chisu++;
-                            $(".phdiconfyq").append(sfcsj.paymentpage);
-                        // 处理支付页面的数据 
-                            paymentpcl(i,data,2);
-                        }
-                    }
-                }else if (paymentzyval.bijiao =="Driver"){
-                    console.log("车主接单信息",data);
-
-                    paymentzyval.page = data.page;
-                    owenerCash.cashResult = data;
-                    if(data.result>0){
-                        for(var jj = 0 ;jj<data.obj.froReceipts.length;jj++){
-                            $(".phdiconfyq").append(sfcsj.ownerpaymentpage);
-                        // 处理支付页面的数据 
-                            paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
-                        }
-                    }
+            console.log("车主接单信息",data);
+            paymentzyval.page = data.page;
+            owenerCash.cashResult.obj.froReceipts = owenerCash.cashResult.obj.froReceipts.concat(data.obj.froReceipts);
+            if(data.result>0){
+                for(var jj = 0 ;jj<data.obj.froReceipts.length;jj++){
+                    $(".phdiconfyq").append(sfcsj.ownerpaymentpage);
+                // 处理支付页面的数据 
+                    paymentpcl(jj,data,0); // 0 是处理车主的数据渲染问题
                 }
+            }
         }
+
+// 支付页 滑动获取数据效果 
+    var pass_paymentzyval = {
+        page:2,    // 当前页，用于向页面发送请求的页码参数 第一次发送的为2 
+        loadcount:3,   // 页面展示的为第几页的数据 
+        sf:"",          // 身份
+        bijiao:""
+    }
+
+    function pass_hdpaymentzy(valsf,dateRange){
+       pass_paymentzyval.sf = valsf;
+        var valzhi = "" ;
+        var useruid = parseInt(nowusermsg.uid);
+        valzhi = "//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/queryPageMadeFROVPayments_get.asp?"+"utype=Passenger"+"&uid="+useruid+"&dateRange="+dateRange+"&pageSize=8";
+        wuxian(valzhi,"Passenger");
+        function wuxian (val,bijiao) { 
+           pass_paymentzyval.bijiao = bijiao;
+            var $runpassengerval = $('.pass-phdiconfyq').infiniteScroll({     //#content是包含所有图或块的容器
+                path: function(){
+                    // 如果用户滑动时，当前页面展示的数据页码小于等于后台的数据页码 
+                    // 数据量很小情况下  报错了 
+                    if( this.pageIndex <=pass_paymentzyval.page - 1){
+                        // 获取全部时间的行程，失效页没有关系 
+                        return  val+"&cur="+(this.pageIndex+1);
+                    }
+                },
+                append:".pass-aqkpayment",
+                history: false,
+                elementScroll:".pass-phdiconfyqdiv",
+                status:".pass-phdiconfyqdiv-load-status",
+                scrollThreshold:50,
+                responseType:"json",
+                debug:false
+            });
+           
+            $runpassengerval.on( 'load.infiniteScroll',pass_hdpaymentzy_cliDiv);
+        }
+    }
+
+    function pass_hdpaymentzy_cliDiv(event,response){
+              
+        var data = response;
+        // 获取成功后，要把页面加1，方便用户在滑动，在触发获取函数
+               pass_paymentzyval.page = data.page;
+                console.log("乘客支付信息表",data);
+                
+                paymentpageval.result.obj.froViewPayments = paymentpageval.result.obj.froViewPayments.concat(data.obj.froViewPayments);
+                if(data.result>0){
+                    for( var i = 0 ;i<data.obj.froViewPayments.length;i++){
+                        $(".pass-phdiconfyq").append(sfcsj.paymentpage);
+                    // 处理支付页面的数据 
+                        paymentpcl(i,data,2);
+                    }
+            }
+    }
+
+    // 我的支付页 和 我的账单页 无限滑动事件
+var pass_payment_click = {
+    statusHide:function(){
+        $(".pass-phdiconfyqdiv-load-status").find("p").hide();	
+    },
+    lastShow:function(){
+        this.statusHide();
+        $(".pass-phdiconfyqdiv-load-status>.infinite-scroll-last").show();
+    },
+    errShow:function(){
+        this.statusHide();
+        $(".pass-phdiconfyqdiv-load-status>.infinite-scroll-error").show();
+    },
+    driverScreen:function(){
+        // 点击后销毁滑动效果
+        drivelinfie_click.statusHide();	//重置状态栏
+        $('.pass-phdiconfyq').infiniteScroll('destroy'); //销毁滚动加载
+        $('.pass-phdiconfyq').off( 'load.infiniteScroll',hdpaymentzy_cliDiv); //注销滑动监听
+
+        $(".pass-phdiconfyqdiv").animate({ scrollTop: 0 }, 10);  //返回顶部
+    }
+}
 
 // 筛选判断的逻辑 
     var runscreenv = {
@@ -1241,9 +1306,10 @@ var payment_click = {
                                  console.log("成功取到数据",data);
                                 // 成功取到数据后，要清空runscreenv，防止下次再用值不对 
                                 setqbPassenger(data);
+                                 
                                 if (data.page>1){
-                                    // 赋值
-                                    runpassengerval.page = data.page;
+                                   // 赋值
+                                 runpassengerval.page = data.page;
                                     //绑定查看车主页无限滚事件
                                     hdrunpassenger(runscreenv.time,$("#runsccfcs-dpinput").val().trim(),$("#runsccfcs-arinput").val().trim());
                                 }else if(data.page === 1){
@@ -1282,9 +1348,10 @@ var payment_click = {
                                 // 成功取到数据后，要清空runscreenv，防止下次再用值不对 
                                 console.log("成功取到数据",data);
                                 setqbVowneraa(data);
+                                
                                 if (data.page>1){
                                     // 赋值
-                                    runvownerval.page = data.page;
+                                runvownerval.page = data.page;
                                     //绑定查看车主页无限滚事件
                                     hdrunvowner(runscreenv.time.trim(),$("#runsccfcs-dpinput").val().trim(),$("#runsccfcs-arinput").val().trim());
                                 }else if(data.page === 1){

@@ -106,13 +106,13 @@
                         <span class="chd-screenstate-left">订单状态:</span>
                         <span class="chd-screenstate-div" id="chd-screenstate-sx">已失效</span>
                         <span class="chd-screenstate-xian"></span>
-                        <span class="chd-screenstate-div" id="chd-screenstate-fb">已发布</span>
+                        <span class="chd-screenstate-div" style="color:#4040e8;" id="chd-screenstate-fb">已发布</span>
                         <span class="chd-screenstate-xian"></span>
-                        <span class="chd-screenstate-div" id="chd-screenstate-wj">已完结</span>
+                        <span class="chd-screenstate-div" id="chd-screenstate-wj">已支付</span>
                         <span class="chd-screenstate-xian"></span>
                         <span class="chd-screenstate-div"  id="chd-screenstate-jd">被接单</span>
                         <span class="chd-screenstate-xian"></span>
-                        <span class="chd-screenstate-div" style="color:#4040e8;"  id="chd-screenstate-qb">全部</span>
+                        <span class="chd-screenstate-div"   id="chd-screenstate-qb">全部</span>
                     </div>
                     <!-- <div class="chd-screencity clearfix">
                         <span class="chd-screencity-left">出发城市:</span>
@@ -126,9 +126,7 @@
                         <span class="chd-screencity-xian"></span>
                         <span class="chd-screencity-whole" id="chd-arcity-whole"  style="color:#4040e8;">全部</span>
                     </div> -->
-                    <div class="chd-screen-complete" id="chd-screen-whole">
-                        完成
-                    </div>
+                   
                 </div>
             </div>
             <!-- 常用路线 -->
@@ -187,13 +185,13 @@
                             <span class="top-screenstate-left">订单状态:</span>
                             <span class="top-screenstate-div" id="top-screenstate-sx">已失效</span>
                             <span class="top-screenstate-xian"></span>
-                            <span class="top-screenstate-div" id="top-screenstate-fb">已发布</span>
+                            <span class="top-screenstate-div" id="top-screenstate-fb" style="color:#4040e8;">已发布</span>
                             <span class="top-screenstate-xian"></span>
-                            <span class="top-screenstate-div" id="top-screenstate-wj">已完结</span>
+                            <span class="top-screenstate-div" id="top-screenstate-wj">已支付</span>
                             <span class="top-screenstate-xian"></span>
                             <span class="top-screenstate-div"  id="top-screenstate-jd">已接单</span>
                             <span class="top-screenstate-xian"></span>
-                            <span class="top-screenstate-div" style="color:#4040e8;"  id="top-screenstate-qb">全部</span>
+                            <span class="top-screenstate-div"   id="top-screenstate-qb">全部</span>
                     </div>
                     <!-- <div class="top-screencity clearfix">
                         <span class="top-screencity-left">出发城市:</span>
@@ -207,9 +205,7 @@
                         <span class="top-screencity-xian"></span>
                         <span class="top-screencity-whole" id="top-arcity-whole" style="color:#4040e8;">全部</span>
                     </div> -->
-                    <div class="top-screen-complete" id="top-screen-whole">
-                        完成
-                    </div>
+                   
                 </div>
             </div>
             <div class="vonpondclxc clearfix">
@@ -236,7 +232,7 @@
                 </div>
                 <div class="runscrqfw clearfix">
                     <span class="runscrqss">
-                        选择数据日期范围
+                        选择发布日期范围
                     </span>
                     <div class="runscrqdv clearfix">
                         <span class="runscrqdvo">
@@ -255,8 +251,9 @@
                         出发城市(可选填)
                     </span>
                     <div class="runsccfcs-dpcity clearfix">
-                        <i class="runsccfcs-dpcity-icon glyphicon glyphicon-search"></i>
+                        <i class="runsccfcs-dpcity-icon glyphicon glyphicon-search"></i> 
                         <input type="text" placeholder="请选择出发城市" class="form-control runsccfcs-dpcity-input"  id="runsccfcs-dpinput">
+                        <span class="runsccfcs-dpremove glyphicon glyphicon-remove" id="runsccfcs-dpremove"></span>
                     </div>
                     <!-- <div class="runsccfcdva clearfix">
                         <input type="text" class="form-control rscfcdaipt" placeholder="请填写以市为结尾的数据"
@@ -290,6 +287,7 @@
                     <div class="runsccfcs-dpcity clearfix">
                         <i class="runsccfcs-dpcity-icon glyphicon glyphicon-search"></i>
                         <input type="text" placeholder="请选择目的城市" class="form-control runsccfcs-dpcity-input"  id="runsccfcs-arinput">
+                        <span class="runsccfcs-dpremove glyphicon glyphicon-remove" id="runsccfcs-arremove"></span>
                     </div>
                     <!-- <div  class="runsddcsone clearfix">
                         <input type="text" class="form-control rsdcsoipt" placeholder="请填写以市为结尾的数据"
@@ -692,10 +690,10 @@
                 </div>
             </div>
         </div>
-        <!-- 支付主页 -->
+        <!-- 支付主页 车主我的订单的数据 -->
         <div class="paymentzy clearfix" style="display:none">
             <!-- 头部提现的头部按钮 -->
-            <div class="balance clearfix" id="balanceid" style="display:none;">
+            <div class="balance clearfix" id="balanceid">
                 <div class="balance-wallet  clearfix">
                     <span class="balance-wspan glyphicon glyphicon-chevron-left" id="balace-return"></span>
                     <div class="balance-wdiv">
@@ -737,7 +735,7 @@
                 <div class="clearfix" style="float:left;width:50%;">
                     <span class="ptbicon  iconfont icon-zhifu1"></span>
                     <div class="mypay" id="mypayidname">
-                        
+                        我的接单
                     </div>
                 </div>
                 <div class="phdicon-right clearfix" id="phdicon-injection-div"> 
@@ -762,8 +760,8 @@
                 </div>
                 <div class="phdiconfyqdiv-load-status">
                     <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
-                    <p class="infinite-scroll-last jzxsjgaa" style="display:none"  id="phdiconfyqdiv-loadone"></p>
-                    <p class="infinite-scroll-error jzxsjgaa" style="display:none" id="phdiconfyqdiv-loadtwo"></p>
+                    <p class="infinite-scroll-last jzxsjgaa" style="display:none">没有更多接单了</p>
+                    <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有找到接单哦！去其他地方逛逛吧！</p>
                 </div>
             </div>
             <div class="paytan clearfix" style="display:none;">
@@ -789,9 +787,9 @@
             <div class="pdetailsfh clearfix">
                 <span class="pdetailsfhicon glyphicon glyphicon-shopping-cart"></span>
                 <span class="pdetailszdxq">账单详情</span>
-                <a href="#ddxq" class="pdetailssyj">
+                <span href="#ddxq" class="pdetailssyj" id="pdetailssyj-return">
                     <span>返回</span>
-                </a>
+                </span>
             </div>
             <div class="pdetailsbody" >
                
@@ -934,6 +932,43 @@
                </div>
             </div>
         </div>
+        </div>
+        <!-- 支付主页 乘客 我的支付的页面数据-->
+        <div class="pass-paymentzy clearfix" style="display:none">
+            <!-- 我的支付订单详情 -->
+            <div class="pass-phdicon clearfix">
+                <div class="clearfix" style="float:left;width:50%;">
+                    <span class="pass-ptbicon  iconfont icon-zhifu1"></span>
+                    <div class="pass-mypay" id="pass-mypayidname">
+                        我的支付
+                    </div>
+                </div>
+                <div class="pass-phdicon-right clearfix" id="pass-phdicon-injection-div"> 
+                    <span class="pass-phdicon-right-screen">筛选</span>
+                    <span class="pass-phdicon-right-icon glyphicon glyphicon-triangle-bottom" id="pass-phdicon-injection-divicon"></span>
+                </div>
+                <div class="pass-phdicon-join clearfix"  id="pass-phdicon-injection" style="display: none;">
+                    <span class="pass-phdicon-join-left">选择时间:</span>
+                    <span class="pass-phdicon-join-span" id="pass-phdicon-injection-today">日内</span>
+                    <span class="pass-phdicon-join-line"></span>
+                    <span class="pass-phdicon-join-span" id="pass-phdicon-injection-week">一周内</span>
+                    <span class="pass-phdicon-join-line"></span>
+                    <span class="pass-phdicon-join-span" id="pass-phdicon-injection-month">一月内</span>
+                    <span class="pass-phdicon-join-line"></span>
+                    <span class="pass-phdicon-join-span" style="color:#4040e8;" id="pass-phdicon-injection-qb">全部</span>
+                </div>
+            </div>
+            <!-- 复用区 -->
+            <div class="pass-phdiconfyqdiv clearfix">
+                <div class="pass-phdiconfyq clearfix">
+    
+                </div>
+                <div class="pass-phdiconfyqdiv-load-status">
+                    <p class="infinite-scroll-request jzxsjgaa"  style="display:none">稍等...</p>
+                    <p class="infinite-scroll-last jzxsjgaa" style="display:none">没有更多支付单了</p>
+                    <p class="infinite-scroll-error jzxsjgaa" style="display:none">没有找到支付单哦！去其他地方逛逛吧！</p>
+                </div>
+            </div>
         </div>
         <!-- 车主注册页 -->
         <div class="owner-register clearfix" style="display:none;">

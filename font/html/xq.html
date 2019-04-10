@@ -50,6 +50,10 @@
                         <span id="person-reduce" class="person-button">-</span>
                     </div>
                 </div>
+                <div class="enrolment clearfix" id="enrolment" style="display: none;">
+                    <span class="enrolment-left">可报名人数:</span>
+                    <span  class="enrolment-right" id="enrolment-div"></span>
+                </div>
                 <div class="sdstatus clearfix">
                     <span class="sdstatuss">订单结果:</span>
                     <div class="sdstatusd"></div>
@@ -100,8 +104,12 @@
                 </div>
                 <!-- 参考价地方 -->
                 <div class="reference-price clearfix">
-                    <div class="reference-priceicon">参考价(元):</div>
+                    <div class="reference-priceicon">参考总价:</div>
                     <div class="reference-pricejo"></div>
+                </div>
+                <div class="reference-oneprice clearfix"  id ="reference-oneprice">
+                    <div class="reference-oneprice-left">参考单价:</div>
+                    <div class="reference-oneprice-right"  id ="reference-oneprice-num"></div>
                 </div>
                <!-- 发送始发地经纬度的input  name="chufadijwd" -->
                <input id='lnglat' type="text" style="display:none" name="chufadijwd">
