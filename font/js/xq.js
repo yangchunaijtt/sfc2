@@ -122,15 +122,14 @@ $(function(){
                 
                 if( data.obj.pushType === "Passenger" ){    // 乘客身份
                     // 金额
-                    $(".reference-pricejo").text(nowusermsg.requestData.price+"(元)");
-                    $("#reference-oneprice-num").text((nowusermsg.requestData.price/nowusermsg.requestData.personNum).toFixed(2)+"(元/人)");
+                    $(".reference-pricejo").text(nowusermsg.requestData.price+"元");
+                    $("#reference-oneprice-num").text((nowusermsg.requestData.price/nowusermsg.requestData.personNum).toFixed(0)+"元/人");
                     
                     trips.passerResult();
                 }else if(  data.obj.pushType === "Driver" ){    // 车主身份逻辑的
                     // 金额
-                    $(".reference-pricejo").text((nowusermsg.requestData.price*nowusermsg.requestData.personNum).toFixed(2)+"(元)");
-                  
-                    $("#reference-oneprice-num").text(nowusermsg.requestData.price+"(元/人)");
+                    $(".reference-pricejo").text((nowusermsg.requestData.price*nowusermsg.requestData.personNum).toFixed(0)+"元");
+                    $("#reference-oneprice-num").text(nowusermsg.requestData.price+"元/人");
                     trips.driverResult();
                 }
                 
@@ -145,10 +144,24 @@ $(function(){
                 /* 加载失败，取消提示按钮 */
                 clearDialog();
                 /* 弹出提示信息 */
-                showMessage1btn("网络故障,刷新在试","",0);
+                if ( null == data.msg ) {
+                    showMessage1btn("网络故障,刷新在试","",0);
+                }else {
+                    showMessage1btn(data.msg,"",0);
+                }
+                
             }
         })
     }   
+// 返回的判断
+    function fanhuisyj_class(){
+        var hash = window.history.length;
+        if ( hash == 1  || hash == 0 ){
+            window.location.href = "//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html#passenger";
+        }else {
+            window.history.back(-1);
+        }
+    }
 // 行程支付功能的模块
     var trips =  {
         state:0,   // 单子的状态，默认为0，
@@ -209,11 +222,19 @@ $(function(){
                             }else if ( data.state === 1 ){   // 已完成
                                 $(".sdstatusd").text("抱歉,单子已完成");
                                 $("#tmpbutton").empty();
-                                            
                                 
                             }else if( data.state === 2 ){   // 已被接单
-                                $(".sdstatusd").text("抱歉,单子已被接");
-                                $("#tmpbutton").empty();
+                                if ( nowusermsg.requestData.receiptMob == nowusermsg.phone && nowusermsg.requestData.userInfo.id != parseInt(nowusermsg.myuid)  ) {
+                                    $(".sdstatusd").text("接单成功");
+                                    $("#tmpbutton").empty();
+                                    $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">接单成功,请您电联乘客</div>');
+                                    
+                                }else {
+                                    showMessage1btn("该订单无法查看，确认返回","to_sfc_page()",0);
+                                    $(".sdstatusd").text("抱歉,单子已被接");
+                                    $("#tmpbutton").empty();
+                                }
+                                
                             }
                         }
                     }else if( nowusermsg.clickPerson  === "oneself"  ){   // 车主的我的订单里只有提醒话，其他什么都没有。
@@ -230,7 +251,6 @@ $(function(){
                         }
                     }  
             }
-             
         },
         driverResult:function(){
             
@@ -315,6 +335,10 @@ $(function(){
               
         },
     }
+// 返回上一页，主页
+    function to_sfc_page(){
+        window.location.href = "http://qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/sfc.html#passenger";
+    }
 // 向后台请求人数，接单
     function Receipt(val){
         if(val === 0){ // 车主接乘客的单(接单)
@@ -360,21 +384,26 @@ $(function(){
                 },
                 success:function(data){
                     console.log("报名成功",data);
-                    if( data.result === -1 ){
-                        showMessage1btn("获取用户失败,请重新打开页面","",0);
-                    }else{
-                        showMessage1btn("接单成功,请联系乘客","",0);
+                    showMessage1btn(data.msg,"",0);
+                    if( data.result > -1 ){
                         $("#tmpbutton").empty();
-                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">接单成功,请您电联乘客</div>');
-                        $(".sdstatusd").text("接单成功");
                     }
                 },
                 error:function(data){
-                    showMessage1btn("接单失败,请重试","",0);
+                    if ( null == data.msg ) {
+                        showMessage1btn("接单失败,请重试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    
                 }
             })
             
         }
+    }
+// 刷新当前页面
+    function onload_page(){
+        window.location.reload();
     }
 // 初始化时获取人数
     function newPage_receiptAjax(){
@@ -637,22 +666,17 @@ $(function(){
                   source:'KBT'
                 },
                 success:function(data){
-                    if(data.result===-1){
-                        /* 操作失败,请重新刷新 */
-                        showMessage1btn("操作失败,请重新刷新","",0);
-                    }else if(data.result===1 ){
+                    showMessage1btn(data.msg,"",0);
+                    if(data.result===1 ){
                         if( val == 0 ){   // 乘客看自己对车主的订单发起的取消订单
                             retreatMoney();
                         }else {
                             // 取消订单时，，如果是乘客身份要发起退款
                              if( nowusermsg.requestData.pushType === "Passenger" ){
                                 $("#tmpbutton").empty();
-                                showMessage1btn("已取消发布","",0);
-                                // 操作成功，显示提示
-                                $(".sdstatusd").text("失效了");
+                                $(".sdstatusd").text("已失效");
                             }else if( nowusermsg.requestData.pushType === "Driver" ){
                                 $("#tmpbutton").empty();
-                                showMessage1btn("已取消发布","",0);
                                 // 操作成功，显示提示
                                 $(".sdstatusd").text("失效了");
                             }
@@ -660,7 +684,12 @@ $(function(){
                     }
                 },
                 error:function(data){
-                    showMessage1btn("网络出错,刷新在试","",0);
+                    if ( null == data.msg ){
+                        showMessage1btn("网络出错,刷新在试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                   
                 }
             })
         }else if(nowusermsg.state===-1){
@@ -680,21 +709,26 @@ $(function(){
                 },
                 success:function(data){
                     console.log("取消支付数据",data);
+                    showMessage1btn(data.msg,"",0);
                     if( data.result === -1 ){
                         $("#tmpbutton").empty();
-                        showMessage1btn("该订单不存在,请联系客服","",0);
+                       
                             // 操作成功，显示提示
                         $(".sdstatusd").text("已取消发布,改订单未付钱");
                     }else {
                         $("#tmpbutton").empty();
-                        showMessage1btn("取消成功,正在退款","",0);
                             // 操作成功，显示提示
                         $(".sdstatusd").text("取消成功");
                     };
                 },
                 error:function(data){
                     console.log("取消支付失败",data);
-                    showMessage1btn("取消支付失败,请联系客服","",0);
+                    if ( null == data.msg) {
+                        showMessage1btn("取消支付失败,请联系客服","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    
                 }
             })
         } 

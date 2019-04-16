@@ -836,16 +836,8 @@ function cashMoneyPageline(typeval,dateRangeval){
         cashmoneyfunction.type = "";
         cashmoneyfunction.dateRange = "";
         if(data.result>0){
-            $("#cashMoneyPage-nosj").hide();
-            $(".cashmongy-header").show();
-            $("#cashm-footer").show();
-            balanceMycash.cashMoneyPageData = data.obj.uCashs;
-            var casgdata = balanceMycash.cashMoneyPageData;
-            $("#cashm-footer").empty();
-            for(var i = 0; i<casgdata.length;i++){
-                $("#cashm-footer").append(sfcsj.cashMoneyPage);
-                balanceMycash.setMoneyRecord(i,casgdata[i]);
-            }
+            showLodding("请稍等，加载中...");
+            balanceMycash.newPage(data);
         }else { // 小于等于0
             $("#cashMoneyPage-nosj").show();
             $(".cashmongy-header").hide();

@@ -1642,7 +1642,6 @@ body {
     width: 88%;
     margin: 30px 5%;
     margin-right: 7%;
-    border: 1px solid #ffc35f;
     border-radius: 10px;
     margin-bottom: 10px;
   }
@@ -2354,7 +2353,7 @@ body {
     top: 12%;
     border: 1px solid #c6c6c6;
     background: #f6f6f6;
-    z-index: 999;
+    z-index: 170;
     border-radius: 6px;
     left: 10%;
     right: 10%;
@@ -2370,9 +2369,8 @@ body {
   }
   .paymentzy .paytan .paytan-div .paytan-txspan{
     color: #337ab7;
-    text-align: center;
     line-height: 38px;
-    text-indent: 7px;
+    text-indent: 8px;
     display: inline-block;
     width: 30%;
   }
@@ -2382,7 +2380,7 @@ body {
   }
   .paymentzy .paytan .paytan-div .paytan-txqb{
     display: inline-block;
-    width: 23%;
+    width: 25%;
     height: 30px;
     margin: 0 auto;
     line-height: 30px;
@@ -2394,15 +2392,17 @@ body {
   }
   .paymentzy .paytan .paytan-div .paytan-name{
     color: #337ab7;
-    text-align: center;
     line-height: 38px;
-    text-indent: 7px;
+    text-indent: 8px;
     display: inline-block;
-    width: 46%;
+    width: 48%;
+    float: left;
   }
   .paymentzy .paytan .paytan-div .paytan-nameinput{
-    width: 50%;
+    width: 51%;
+    float: left;
     display: inline-block;
+    margin-top: 4px;
   }
   .paymentzy .paytan  .paytan-qbtixian{
     width: 33%;
@@ -2519,12 +2519,10 @@ body {
       color: #0043ff;
   }
   
-.details-footer .details-ftdadiv .details-ftright .details-ftrtbottom {
 
-  }
 .details-footer .details-ftdadiv .details-ftright .details-ftrtbottom .details-ftrtbttop{
       float: left;
-      width: 60%;
+      width: 50%;
       display: inline-block;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -2533,10 +2531,13 @@ body {
   }
 .details-footer .details-ftdadiv .details-ftright .details-ftrtbottom .details-ftrtbtcity{
       float: left;
-      width: 40%;
+      width: 50%;
       display: inline-block;
       text-align: center;
       text-indent: 0px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
   }
 
 /* 提交的样式设计 */
@@ -2939,8 +2940,8 @@ body {
 .city .city-wrapper .shortcut {
   position: absolute;
   z-index: 30;
-  width: 40px;
-  right: 2px;
+  width: 60px;
+  right: 0px;
   font-family: Helvetica;
 }
 .city .city-wrapper .shortcut .item {
@@ -2967,4 +2968,119 @@ body {
 /* 显示 */
 #bc-pay-wrap{
   z-index:180;
+}
+
+/* 当前城市 */
+.city .city-wrapper .city-wrapper-nowcity{
+  padding: 0 16px;
+  line-height: 44px;
+  font-size: 15px;
+  border-top: 1px solid #f2f2f2;
+}
+.city .city-wrapper .city-wrapper-nowcity .city-wrapper-left{
+  float: left;
+  width: 26%;
+}
+.city .city-wrapper .city-wrapper-nowcity .city-wrapper-right{
+  float:left;
+}
+
+
+/* 新的账单也的设置 */
+.bill .bill-top{
+  height: 52px;
+  padding: 0px 30px;
+  background: #f2f2f2;
+  border-bottom: 1px solid #d2d2d2;
+}
+/* 提现的头部样式 */
+.bill .bill-top .bill-top-time{
+  height: 26px;
+  line-height: 26px;
+  font-size: 16px;
+  color: #272727;
+}
+.cash-div{
+    padding: 0px 30px;
+    font-size: 16px;
+    line-height: 36px;
+    height: 36px;
+    background: #f2f2f2;
+}
+.cash-div .bill-top-ul .bill-top-li{
+  float: left;
+  margin-right: 10px;
+}
+.cash-div  .bill-top-ul .bill-top-li span{
+  color: #676767;
+}
+/* 循环添加的地方 */
+.bill-center-total-div{
+  padding: 0px 30px;
+}
+.bill-center-total-div .bill-center{
+  height: 60px;
+  line-height: 60px;
+  border-bottom: 1px solid #f2f2f2;
+}
+.bill-center-total-div .bill-center .bill-center-icon{
+  float: left;
+  width: 20%;
+  height: 100%;
+  text-align: left;
+  font-size: 26px;
+}
+
+.bill-center-total-div .bill-center .bill-center-div{
+  width: 60%;
+  float: left;
+}
+/* 左边 */
+.bill-center-total-div .bill-center .bill-center-div .bill-center-div-left{
+  line-height: 30px;
+  width: 110px;
+}
+.bill-center-total-div .bill-center .bill-center-div .bill-center-div-left .bill-center-p-top{
+  font-size: 15px;
+  color: #383838;
+  line-height: 36px;
+}
+.bill-center-total-div .bill-center .bill-center-div .bill-center-div-left  .bill-center-p-bt{ 
+  line-height: 24px;
+}
+
+.bill-center-total-div .bill-center .bill-center-div .bill-center-div-right{
+  line-height: 36px;
+}
+
+.bill-center-total-div .bill-center  .bill-center-money{
+  width: 20%;
+  float: right;
+  text-align: center;
+  color: #000;
+  height: 36px;
+  line-height: 36px;
+  font-size: 17px;
+}
+.bill-time{
+  padding: 0px 30px;
+    height: 40px;
+    line-height: 40px;
+    background: #29596b;
+    color: #fff;
+}
+.bill-time .bill-time-left{
+  font-size: 17px;
+}
+.bill-time .bill-time-right{
+  float: right;
+  width: 20%;
+  text-align: center;
+  font-size: 25px;
+}
+.bill-center-icon-bottom{
+  color: #1196dc;
+}
+.bill-center-icon-top{
+  color: #e1620c;
 }

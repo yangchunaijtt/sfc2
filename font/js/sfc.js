@@ -22,6 +22,8 @@
             if(null == nowusermsg.uid || "" == nowusermsg.uid) {
                 register("//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
             } else {
+                //  判断注册了没
+                owneridentity.ownerajax();
                 // 定位
                 sfc_amapdw();
                 // initData(nowusermsg.uid); //加载页面数据
@@ -31,21 +33,18 @@
                 formcontrol();
                 getqbVowner();
                 getqbPassenger();
-                //  判断注册了没
-                owneridentity.ownerajax();
                 // 默认获取车主提现的数据
                 balanceMycash.cashMoneyPage("","",0);
                 // 车主提现信息
                 balanceMycash.getMoneyRecord();
-
                 // 主页的高度
                 $(document.body).outerHeight($(window).outerHeight());      
                 // 高度设置的问题
                 // 全部行程页 车主页的高度 
-                $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
+                $(".runvownerNodedclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-50);
            
                 // 全部行程页 乘客页的高度 
-                $(".runpassengerNodedivdclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-80);
+                $(".runpassengerNodedivdclxc").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-50);
                 // 初始化时设置默认值 
                 $(".dqcsval").text($(".xcspanleft").text());
                 // 给滑动元素获取高度 
@@ -53,7 +52,7 @@
                 $(".cylx").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-40);
                 // 车主页的高度 
                 // 这里容易出问题，最后在改改 
-                $(".vonpondclxc").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-60);
+                $(".vonpondclxc").outerHeight($(document.body).outerHeight()-$(".passenger .select").outerHeight()-$(".header").outerHeight()-50);
                 // 解决一些页面内容太多无法滑动的问题 
                 $(".details").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
                 $("#searchxincheng").outerHeight($(document.body).outerHeight()-$(".header").outerHeight());
@@ -87,9 +86,7 @@
                 screen.newPage();
                 paymentBinding.newPage();
                 paymentBinding.passnewPage();
-
                 runsccfcs.newPage();
-                
             }
         },location.search);
         
@@ -116,7 +113,11 @@
         hashlycolorsz();
         $(".hrun").css("color","#e39f7a");
         if(owneridentity.states===0){
-            window.location.hash = "#register";
+            if ( owneridentity.isAjax) {
+                window.location.hash = "#register";
+            }else {
+                showLodding("请稍等，加载中...");
+            }
         }else if(owneridentity.states===1){
             hrunxuzval ++;
             if(hrunxuzval%2===0){
@@ -435,10 +436,16 @@
                 // 目的地所有信息 
                 var mdata = fabuxiaoxi.mmddata;
              
-                if((cfddata=="" || cfddata.location=="" || cfddata.location.lng =="") && (fabuxiaoxi.dwsj=="" || fabuxiaoxi.dwsj.position=="" || fabuxiaoxi.dwsj.position.lng =="")){
+                if(cfddata==""   && fabuxiaoxi.dwsj=="" ){
                     tishi = "请选择始发地";
-                }else if (mdata =="" ||  mdata.location =="" ||mdata.location.lng ===""){
+                }else if (mdata ==""   ){
                     tishi = "请选择目的地";
+                    
+                }else if ( ( null == cfddata.location || null == cfddata.location.lng ) && ( null ==  fabuxiaoxi.dwsj.position || null== fabuxiaoxi.dwsj.position.lng)) {
+                    tishi = "请重新选择始发地";
+                }
+                else if ( null ==   mdata.location  || null == mdata.location.lng){
+                    tishi = "请重新选择目的地";
                 }
                 
                 if (  tishi == ""){
@@ -452,11 +459,13 @@
         $("#cgz-cfcity").bind("touch click",function(){
             city_class.clickHash = window.location.hash;
             city_class.click_button = "dp";
+            $("#city-wrapper-nowcity").text($("#cgz-cfcity").text());
             window.location.hash = "#city";
         })
         $("#cgz-mdcity").bind("touch click",function(){
             city_class.clickHash = window.location.hash;
             city_class.click_button = "ar";
+            $("#city-wrapper-nowcity").text($("#cgz-mdcity").text());
             window.location.hash = "#city";
         })
         // 初始化
@@ -609,10 +618,10 @@
         // input输入时
         $(".pnum-ftinput").on('input',function(){
             var val = parseInt($(".pnum-ftinput").val());
-            if( NaN == val  || val === "" ||  undefined == val ){
-                var valone = 0 ;
+            var valone = "";
+            if( NaN == val  ||  "" == val ||  undefined == val ){
                 $(".pnum-ctnumber").text(valone);
-                $(".pnum-ftinput").val(0)
+                $(".pnum-ftinput").val(valone);
                 $(".pnum-rdnum").text(valone+"人乘车");
             }else {
                 personnum.personnumber = val;
@@ -704,10 +713,10 @@
         })
         // 减
         $(".tramount-righticon").bind("touch click",function(){
-            tramount.amont = (tramount.amont - 1).toFixed(1);
+            tramount.amont = parseFloat((tramount.amont - 1).toFixed(0)) ;
             // 我的计算金额会出现问题，最多让减到9元
-            if(tramount.amont<9){
-                showMessage1btn("不能低于9元,请重试","",0);
+            if(tramount.amont<6){
+                showMessage1btn("不能低于6元,请重试","",0);
                 tramount.amont = fabuxiaoxi.amoney;
                 $(".tramount-money").text(tramount.amont);
                 $(".tramount-ftinput").val(tramount.amont);
@@ -718,11 +727,17 @@
         })
         // 发布出去
         $(".confirm-cfmoney").bind("touch click",function(){
-            if(tramount.amont<9){
-                showMessage1btn("金额不能小于9元,请重试","",0);
+            if(tramount.amont<6){
+                showMessage1btn("金额不能小于6元,请重试","",0);
             }else {
-                fabuxiaoxi.amoney = tramount.amont;
-                $(".completed-pprice").text(fabuxiaoxi.amoney);
+                if ( locationqjval.val == "a=p" ) {
+                    fabuxiaoxi.amoney = tramount.amont*fabuxiaoxi.personNum;
+                    $(".completed-pprice").text(tramount.amont);
+                }else if ( locationqjval.val == "b=v") {
+                    fabuxiaoxi.amoney = tramount.amont;
+                    $(".completed-pprice").text(fabuxiaoxi.amoney);
+                }
+                settleAccounts.rendertimes = 10;
                 window.location.hash = "#details?settle";
             }
         })
@@ -917,7 +932,7 @@
 
     // 存储乘客和车主的路由值 
     var locationqjval = {
-        val:""   // 存储是车主还是乘客的路由值 
+        val:"a=p"   // 存储是车主还是乘客的路由值 
     }
     // 选择城市的初始化函数 
     var cityselectval = {
@@ -1003,8 +1018,17 @@
 //  全部提现的操作 
     var balanceMycash = {
         cashMoneyPageData:[],   // 我的账单页数据
+        all_bill_data:[],
+        now_bill_data:[],
+        other_bill_data:[],
+        cash_arr:[],
+        push_arr:[],
+        all_temp:'<div class="bill-time clearfix"><span class="bill-time-left" id="bill-time-month-one"></span><span class="bill-time-right iconfont iconshangcheng"></span></div><div class="bill clearfix"><div class="bill-center-total-div  clearfix" id="bill-cash-temp"><!-- 添加提现订单的地方 --></div></div><!-- 赚钱的地方 --><div class="bill clearfix"><div class="bill-center-total-div  clearfix" id="bill-push-temp"><!-- 添加赚钱订单的地方 --></div></div>',
+        tx_temp:'<!-- 添加提现订单的地方 --><div class="bill-center clearfix"><span class="bill-center-icon bill-center-icon-top iconfont icontixian"></span><div class="bill-center-div clearfix"><div class="bill-center-div-left left clearfix"><p class="bill-center-p-top" id="bill-cash-name">提现余额</p><p class="bill-center-p-bt" id="bill-cash-time"></p></div><span class="bill-center-div-right left" id="bill-cash-status"></span></div><div class="bill-center-money" id="bill-cash-money"></div></div>',     // 提现的模板
+        push_temp:' <!-- 添加赚钱订单的地方 --><div class="bill-center clearfix"><span class="bill-center-icon bill-center-icon-bottom iconfont iconshared"></span><div class="bill-center-div clearfix"><div class="bill-center-div-left left clearfix"><p class="bill-center-p-top" id="cill-push-name"></p><p class="bill-center-p-bt" id="cill-push-time"></p> </div><span class="bill-center-div-right left" id="cill-push-status"></span></div><div class="bill-center-money" id="cill-push-money"></div></div>', // 赚钱的模板
         moneydata:{},   // 钱数信息
         cashMoneyPage:function(typeval,dateRangeval,valzhi){ // 我的账单页的显示
+            showLodding("请稍等，加载中...");
             $.ajax({
                 type:"post",
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/queryPageMadeOwnerAllCashs.asp",
@@ -1015,6 +1039,9 @@
                    datePange:dateRangeval
                 },
                 success:function(data){
+                    balanceMycash.all_bill_data = [];
+                    // 账单页无限滑动
+                    // 渲染账单页
                     if ( valzhi ==1 ){
                         cashMange_click.driverScreen();
                     }
@@ -1022,19 +1049,10 @@
                     cashmoneyfunction.type = "";
                     cashmoneyfunction.dateRange = "";
                     if(data.result>0){
-                        $("#cashMoneyPage-nosj").hide();
-                        $(".cashmongy-header").show();
-                        $("#cashm-footer").show();
-                        balanceMycash.cashMoneyPageData = data.obj.uCashs;
-                        var casgdata = balanceMycash.cashMoneyPageData;
-                        $("#cashm-footer").empty();
-                        for(var i = 0; i<casgdata.length;i++){
-                            $("#cashm-footer").append(sfcsj.cashMoneyPage);
-                            balanceMycash.setMoneyRecord(i,casgdata[i]);
-                        }
-                        // 账单页无限滑动
+                        balanceMycash.newPage(data);
+                         // 账单页无限滑动
                         
-                        if(valzhi == 1){
+                         if(valzhi == 1){
                             // 点击选择车主数据
                             cashMoneyPage.page = data.page;
                             if(data.page === 1){
@@ -1058,9 +1076,15 @@
                             cashMange_click.errShow();
                         }
                     }
+
+                    /* 加载成功，取消提示按钮 */
+                    clearDialog();
                 },
                 error:function(data){
+                    balanceMycash.all_bill_data = [];
                     console.log("获取车主金额失败",data);
+                    /* 加载成功，取消提示按钮 */
+                    clearDialog();
                 }
             })
         },
@@ -1087,7 +1111,12 @@
                 },
                 error:function(data){
                     console.log("车组失败",data);
-                    showMessage1btn("网络出错,获取我的提现总额失败","",0);
+                    if ( null == data.msg ) {
+                        showMessage1btn("网络出错,稍后再试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    
                 }
             })
         },
@@ -1095,7 +1124,7 @@
             // price       	提现金额
             // cashAliRelName		提现账户对应真实姓名
             // cashAliAccount 		提现支付宝账户
-            var price = $(".paytan-txinput").val().trim();
+            var price =parseFloat($(".paytan-txinput").val().trim());
             var cashAliRelName = $("#paytan-txname").val().trim();
             var cashAliAccount = $("#paytan-txzh").val().trim();
             $.ajax({
@@ -1108,40 +1137,176 @@
                     cashAliAccount:cashAliAccount
                 },
                 success:function(data){
-                    console.log("提现成功",data);
-                    if(data.result > 0 ){
-                        showMessage1btn("发送成功,正在处理您的提现请求","",0);
-                        $(".paytan").slideToggle();
-                    }else {
-                        $(".paytan").slideToggle();
-                        showMessage1btn("网络出错,请重试","",0);
-                    }
-                    
+                    console.log("提现第一步成功",data);
+                    balanceMycash.cashMoneyBackstage(data.obj.cashNo);
                 },
                 error:function(data){
-                    console.log("提现失败",data);
-                    $(".paytan").slideToggle();
-                    showMessage1btn("服务器出现故障,正在通知管理人员","",0);
+                    if ( null == data.msg){
+                        showMessage1btn("网络出错,稍后再试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
                 }
             })
         },
-        setMoneyRecord:function(i,valdata){ // 添加车主提现记录
-            // 日期
-            $("#cashm-fttime").text(valdata.date);
-            var cashm_fttime = "cashm-fttime"+i;
-            $("#cashm-fttime").attr("id",cashm_fttime);
-            // 金额
-            $("#cashm-money").text(valdata.price);
-            var cashm_money = "cashm-money"+i;
-            $("#cashm-money").attr("id",cashm_money);
-            // 总金额
-            $("#cashm-nowmoney").text(valdata.total);
-            var cashm_nowmoney = "cashm-nowmoney"+i;
-            $("#cashm-nowmoney").attr("id",cashm_nowmoney);
-            // 已提金额
-            $("#cashm-cashmoney").text(valdata.cash);
-            var cashm_cashmoney = "cashm-cashmoney"+i;
-            $("#cashm-cashmoney").attr("id",cashm_cashmoney);
+        cashMoneyBackstage:function(val){
+            $.ajax({
+                type:"post",
+                data:{
+                    bizNo:val
+                },
+                success:function(data){
+                    console.log("提现数据",data)
+                    //1：提现成功；0：提现失败，可稍后对此单继续提现；-1：提现失败，无法对此单再次提现操作
+                    showMessage1btn(data.msg,"",0);
+                    $(".paytan").slideToggle();
+                    
+                },
+                error:function(data){
+                    if ( null == data.msg ) {
+                        showMessage1btn("网络出错,稍后再试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    $(".paytan").slideToggle();
+                }
+            })
+        },
+        newPage:function(data){
+            $("#cashMoneyPage-nosj").hide();
+            $(".cashmongy-header").show();
+            $("#cashm-footer").show();
+            
+            // 默认添加个 主模板
+            $("#cashm-footer").empty();
+            
+            balanceMycash.all_bill_data = balanceMycash.all_bill_data.concat(data.obj.uCashs);
+            // 比较的 年份 和 月份
+            var compare_year = new Date(balanceMycash.all_bill_data[0].date).getFullYear();
+            var compare_month =  new Date(balanceMycash.all_bill_data[0].date).getMonth();
+
+            // var aa = [0,1];
+            // var bb = [1,2];
+            // aa = aa.concat(bb);
+            var Receipt_num = 0; // 接单次数
+            var Push_num = 0 ; // 发布次数
+            var cash_num = 0; // 提现次数
+            for(var i = 0; i<balanceMycash.all_bill_data.length;i++){
+                // 主模板的添加
+                if ( i == 0 ) {
+                    $("#cashm-footer").append(balanceMycash.all_temp);
+                    // 最后在渲染
+                    balanceMycash.main_page(0,balanceMycash.all_bill_data[0]);
+                   
+                }else {
+                    if ( compare_year != new Date(balanceMycash.all_bill_data[i].date).getFullYear() ||  compare_month !=  new Date(balanceMycash.all_bill_data[i].date).getMonth() ) {
+                        // 两个添加的赋值，不一样则让他们无法添加,让前一个添加，无法添加
+                        $("#bill-push-temp").attr("id","bill-push-temp"+i);
+                        $("#bill-cash-temp").attr("id","bill-cash-temp"+i);
+                        $("#cashm-footer").append(balanceMycash.all_temp);
+                        // 最后在渲染
+                        balanceMycash.main_page(i,balanceMycash.all_bill_data[i]);
+                        
+                    } 
+                }
+                // 时间一样，则判断主模板来添加，并渲染 一次 负模板。
+                // 时间不一样，则添加主模板，在添加负模板。
+                // 下面内容的添加 (渲染具体的数据)
+                if ( balanceMycash.all_bill_data[i].type == "Push" || balanceMycash.all_bill_data[i].type == "Receipt") {
+                    var push_page_data = "";
+                    if (balanceMycash.all_bill_data[i].type == "Push"){
+                       push_page_data = "push";
+                       Push_num ++ ;
+                    }else {
+                       push_page_data = "receipt";
+                       Receipt_num ++ ;
+                    }
+                   
+                    $("#bill-push-temp").append(balanceMycash.push_temp);
+                    balanceMycash.push_page(push_page_data,i,balanceMycash.all_bill_data[i]);
+
+                }else if ( balanceMycash.all_bill_data[i].type == "Cash" ) {
+                    // 提现
+                    $("#bill-cash-temp").append(balanceMycash.tx_temp);
+                    balanceMycash.cash_page(i,balanceMycash.all_bill_data[i]);
+                    cash_num ++ ;
+                }
+               
+                compare_year  = new Date(balanceMycash.all_bill_data[i].date).getFullYear();
+                compare_month =  new Date(balanceMycash.all_bill_data[i].date).getMonth();
+                
+            }
+                
+            // 接单次数的渲染
+            $("#bill-receipt-num").text(Receipt_num);
+            // 发布次数
+            $("#bill-push-num").text(Push_num);
+            // 提现次数
+            $("#bill-cash-num").text(cash_num);
+
+            /* 加载成功，取消提示按钮 */
+            clearDialog();
+        },
+        push_page:function(pdval,i,val){
+            if ( pdval == "push") {
+                $("#cill-push-name").text("发布佣金");
+            }else {
+                $("#cill-push-name").text("接单佣金");
+            }
+            $("#cill-push-name").attr("id","cill-push-name"+i);
+
+            var cill_push_status_name = "";
+            if ( val.status == 0){
+                cill_push_status_name = "待提现";
+            } else if (val.status == 1 ) {
+                cill_push_status_name = "已提现";
+            } else if (val.status == -1 ) {
+                cill_push_status_name = "已失效";
+            }
+            $("#cill-push-status").text(cill_push_status_name);
+            $("#cill-push-status").attr("id","cill-push-status"+i);
+
+            var push_time = val.date.split("-")[1]+"-"+val.date.split("-")[2];
+            $("#cill-push-time").text(push_time);
+            $("#cill-push-time").attr("id","cill-push-time"+i);
+
+            $("#cill-push-money").text(val.price);
+            $("#cill-push-money").attr("id","cill-push-money"+i);
+        },
+        cash_page:function(i,val){
+            var status = "";
+            if (val.status == 0) {
+                status = "待提现";
+            }else if (val.status == 1) {
+                status = "已提现";
+            }else if (val.status == -1) {
+                status = "已失效";
+            }
+            $("#bill-cash-status").text(status);
+            $("#bill-cash-status").attr("id","bill-cash-status"+i);
+
+            var push_time =val.date.split("-")[1] +"-" + val.date.split("-")[2];
+            $("#bill-cash-time").text(push_time);
+            $("#bill-cash-time").attr("id","bill-cash-time"+i);
+
+            $("#bill-cash-money").text(val.price);
+            $("#bill-cash-money").attr("id","bill-cash-money"+i);
+        },
+        main_page:function(i,val){
+            // 时间
+            var val_time = new Date(val.date).getFullYear() +"-" + (new Date(val.date).getMonth()+1) ;
+            $("#bill-time-month-one").text(val_time);
+            $("#bill-time-month-two").text(val_time);
+            $("#bill-time-month-three").text(val_time);
+            var bill_time_month_one = "bill-time-month-one" +i;
+            $("#bill-time-month-one").attr("id",bill_time_month_one);
+
+            var bill_time_month_two = "bill-time-month-two" +i;
+            $("#bill-time-month-two").attr("id",bill_time_month_two);
+
+            var bill_time_month_three = "bill-time-month-three" +i;
+            $("#bill-time-month-three").attr("id",bill_time_month_three);
+            
         }
     }
 
@@ -1187,7 +1352,12 @@
                 },  
                 error:function(data){
                     console.log("车主接单获取失败",data);
-                    showMessage1btn("网络出错,获取我的订单失败","",0);
+                    if ( null == data.msg ){
+                        showMessage1btn("网络出错,获取我的订单失败","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    
                     $(".phdiconfyq").empty();
                 }
             })
@@ -1299,7 +1469,6 @@
                 timeout:10000,
                 type:"post",
                 success:function(data){
-                    showMessage1btn("成功"+data,"",0);
                     if(data.result==1){
                         // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册审核失败，跳转出重新注册页面
                         owneridentity.states = 3 ;
@@ -1308,7 +1477,7 @@
                         $(".to-examine").empty();
                         $(".to-examine").append("<div class='to-examinets'>发送成功,正在审核....</div><img src='./font/fontjs/examine.gif'   class='to-examineimg'>");
                         
-                        showMessage1btn("上传成功,等待处理中..","",0);
+                        showMessage1btn(data.msg,"",0);
 
                         window.location.hash = "#examine";
                         /* 加载成功，取消提示按钮 */
@@ -1327,7 +1496,12 @@
                 error:function(data){
                     /* 加载成功，取消提示按钮 */
                     clearDialog();
-                    showMessage1btn("发生错误,请重试","",0);
+                    if (null == data.msg) {
+                        showMessage1btn("发生错误,请重试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    
                 },
                 complete:function(XMLHttpRequest,status){ //请求完成后最终执行参数
                     clearDialog();
@@ -1341,6 +1515,7 @@
 // 判断有无车住身份模块
     var owneridentity = {
         states:0,    // 0代表没有车主身份,1代表有,2代表审核中。3代表刚刚注册成功，跳转到请稍等页面。4代表注册失败，跳转出重新注册页面
+        isAjax:false,
         ownerajax:function(){   // 页面一开始调用下,
             $.ajax({
                 url:"//qckj.czgdly.com/bus/MobileWeb/buyTicket/isCarOwner.asp",
@@ -1350,6 +1525,9 @@
                 },
                 success:function(data){
                     console.log("身份成功",data);
+                    owneridentity.isAjax = true;
+                    /* 加载成功，取消提示按钮 */
+                    clearDialog();
                     if(data.status===1 && data.result===1 ){
                         owneridentity.states = 1 ;
                     }else if(data.result=== 1 && data.status===-1 ){  // 审核未通过
@@ -1361,6 +1539,9 @@
                     }
                 },
                 error:function(data){
+                    owneridentity.isAjax = true;
+                    /* 加载成功，取消提示按钮 */
+                    clearDialog();
                     console.log("请求身份失败");
                     owneridentity.states = 0;
                 }
@@ -1371,7 +1552,7 @@
 // 选择人数页操作模块
     var personnum = {
         iconstates:1,
-        personnumber:0,   // 人数默认为0
+        personnumber:1,   // 人数默认为0
         // 清空操作
         updated:function(val){
             $(".pnum-rdnum").text(val+"人乘车");
@@ -1462,9 +1643,15 @@
    var tramount = {
        amont:0,  // 设置一个默认的金额
        rendering:function(){    // 页面初始化函数
-           $(".tramount-money").text(fabuxiaoxi.amoney);
-           $(".tramount-ftinput").val(fabuxiaoxi.amoney);
-           tramount.amont = fabuxiaoxi.amoney;
+            var unitPrice = 0 ;
+            if (   locationqjval.val == "a=p"){
+                unitPrice =  fabuxiaoxi.amoney/fabuxiaoxi.personNum ;
+            } else if ( locationqjval.val == "b=v" ) {
+                unitPrice = fabuxiaoxi.amoney;
+            }
+                $(".tramount-money").text(unitPrice);
+                $(".tramount-ftinput").val(unitPrice);
+            tramount.amont = unitPrice;
        }
    }
 // 结账页的操作函数
@@ -1502,13 +1689,14 @@
             var dis = AMap.GeometryUtil.distanceOfLine([p1,p2]);
             // 返回结果为米
            
-            fabuxiaoxi.routeMileage = (dis/1000).toFixed(1);
+            fabuxiaoxi.routeMileage =parseFloat((dis/1000).toFixed(1)) ;
             console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
             $(".mileage-price").text(fabuxiaoxi.routeMileage);
         // 钱数简单计算下
             // 钱啥时候都计算一下
             var pay_route = 1;
             var qs_money =  4;
+            
             var routelc =parseFloat(fabuxiaoxi.routeMileage) ;
             if  ( fabuxiaoxi.cfdcity == fabuxiaoxi.mddcity) {
                 if (fabuxiaoxi.personNum <3 ){
@@ -1530,9 +1718,17 @@
                 }
             
             }
-            fabuxiaoxi.amoney = fabuxiaoxi.personNum*(qs_money + routelc*pay_route);
-            
-            $(".completed-pprice").text(fabuxiaoxi.amoney);
+            if ( settleAccounts.rendertimes != 10 ){
+                if ( locationqjval.val == "a=p" ) {
+                    fabuxiaoxi.amoney = parseFloat(fabuxiaoxi.personNum*((qs_money + routelc*pay_route).toFixed(0)));
+                    $(".completed-pprice").text(fabuxiaoxi.amoney/fabuxiaoxi.personNum);
+                }else if ( locationqjval.val == "b=v") {
+                    fabuxiaoxi.amoney = parseFloat((qs_money + routelc*pay_route).toFixed(0));
+                    $(".completed-pprice").text(fabuxiaoxi.amoney);
+                }
+            }else {
+                $(".completed-pprice").text(fabuxiaoxi.amoney);
+            }
         },
         clear:function(){   //清空操作
             fabuxiaoxi.cfdcity = "";
@@ -1542,16 +1738,20 @@
             fabuxiaoxi.dwsj = "";
             fabuxiaoxi.cftime = "";
             fabuxiaoxi.mdtime = "";
-            fabuxiaoxi.personNum = 0;
+            fabuxiaoxi.personNum = 1;
             fabuxiaoxi.amoney = 0;
             // 页面元素初始化
             $("#cgz-cfd").val("");
             $("#cgz-mdd").val("");
-            $("#dt-a-0").empty();
-            $("#dt-c-1").empty();
+           
             $(".pnum-ctnumber").text(0);
             $(".pnum-ftinput").val("");
             personnum.clear();
+
+            fabuxiaoxi.cftime ="";
+            fabuxiaoxi.mdtime = "";
+            $('#dt-a-0').text("选择出发时间");
+            $('#dt-c-1').text("选择期望到达时间");
 
             $("#completed-seaddress").text("请选择地址");
             $("#completed-number").text("请选择人数");
@@ -1758,7 +1958,7 @@
         }else if(hashzhi=="#details?a=p" || hashzhi=="#details?b=v"){
             locationHash="#details";
             window.location.hash= hashzhi;
-            $("#address").text("想要去哪儿");
+            $("#address").text("想要去哪儿?");
         }else {
             if(val1[0]=="#passenger" || locationHash =="#passenger" ){
                 // 大的颜色变化
@@ -1845,7 +2045,7 @@
                 if(locationHash=="#details?a=p" || locationHash =="#details?b=v"){
                     $(".completed").hide();
                     $(".tramount").hide();
-                    $("#address").text("想要去哪儿");
+                    $("#address").text("想要去哪儿?");
                     $(".chufadi-total").show();
                 }else if(locationHash=="#details?settle"){
                     $(".chufadi-total").hide();
@@ -2582,6 +2782,8 @@
                 return false;
             }
 
+            showLodding("请稍等，上传中...");
+
             $.ajax({
                 type:"post",
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/saveMadeFROrders.asp",
@@ -2602,7 +2804,9 @@
                     price:parseFloat(fabuxiaoxi.amoney)     // 发布金额
                 },
                 success:function(data){
-                    
+                     /* 加载成功，取消提示按钮 */
+                    clearDialog();
+                    settleAccounts.rendertimes = 0;
                     if(data.result ===  -1 ){
                         if(successdattsxx===""){
                             successdattsxx = "发布出错,请刷新在试";
@@ -2660,6 +2864,9 @@
                     }
                 },
                 error:function(data){
+                    /* 加载成功，取消提示按钮 */
+                    clearDialog();
+                    settleAccounts.rendertimes = 0;
                     // 用完要把用过的值初始化 
                     fabuxiaoxi.mddcity = "";    // 置空 
                     fabuxiaoxi.cfddata = "";    // 置空 
@@ -2669,7 +2876,12 @@
                     paymentModular.olddpcity = "" ;
                     paymentModular.oldartime = "";
                     paymentModular.olddptime = "";
-                    showMessage1btn("网络出错,请刷新在试!","",0);
+                    if (null == data.msg ) {
+                        showMessage1btn("网络出错,请重试","",0);
+                    }else {
+                        showMessage1btn(data.msg,"",0);
+                    }
+                    
                 }
             })
         }
@@ -3049,19 +3261,24 @@ function retreatMoney(uid,id){
             console.log("取消支付数据",data);
             if( data.result === -1 ){
                 $("#details-paymoney").empty();
-                showMessage1btn("该订单不存在,请联系客服","",0);
+                showMessage1btn(data.msg,"",0);
                     // 操作成功，显示提示
                     $("#details-paymoney").append('<div class="details-paymontext">已取消发布,该订单未付钱</div>');
             }else {
                 $("#details-paymoney").empty();
-                showMessage1btn("取消成功,正在退款","",0);
+                showMessage1btn(data.msg,"",0);
                 // 操作成功，显示提示
                 $("#details-paymoney").append('<div class="details-paymontext">取消成功,正在退款</div>');
             };
         },
         error:function(data){
             console.log("退款失败",data);
-            showMessage1btn("退款失败,请联系客服","",0);
+            if ( null == data.msg ) {
+                showMessage1btn("退款失败,请联系客服","",0);
+            }else {
+                showMessage1btn(data.msg,"",0);
+            }
+           
         }
     })
 } 
@@ -3395,11 +3612,13 @@ var runsccfcs = {
         $("#runsccfcs-dpinput").bind("focus",function(){
             city_class.clickHash = window.location.hash;
             city_class.click_button = "dp";
+            $("#city-wrapper-nowcity").text($("#runsccfcs-dpinput").val());
             window.location.hash = "#city";
         })
         $("#runsccfcs-arinput").bind("focus",function(){
             city_class.clickHash = window.location.hash;
             city_class.click_button = "ar";
+            $("#city-wrapper-nowcity").text($("#runsccfcs-arinput").val());
             window.location.hash = "#city";
         })
     }
@@ -3530,6 +3749,40 @@ var city_class = {
                 window.location.hash = city_class.clickHash;
             });
         });
+        $("#city-wrapper-div").bind("click",function(){
+            var city_wrapper_div = $("#city-wrapper-nowcity").text();
+            if (city_wrapper_div == "" || city_wrapper_div == null ||city_wrapper_div == undefined ) {
+                return false;
+            }else {
+                if (city_class.clickHash  == "#run?diveran"){
+                    if ( city_class.click_button == "dp"){
+                         $("#runsccfcs-dpinput").val(city_wrapper_div);
+                    }else {
+                         $("#runsccfcs-arinput").val(city_wrapper_div);
+                    }
+                }else if (city_class.clickHash  == "#run?passgeran"){
+                     if ( city_class.click_button == "dp"){
+                         $("#runsccfcs-dpinput").val(city_wrapper_div);
+                     }else {
+                         $("#runsccfcs-arinput").val(city_wrapper_div);
+                     }
+                 }else if (city_class.clickHash  == "#sxxwz"  ){
+                     if ( city_class.click_button == "dp"){
+                         $("#cgz-cfcity").text(city_wrapper_div);
+                     }else {
+                         $("#cgz-mdcity").text(city_wrapper_div);
+                     }
+                 }else if ( city_class.clickHash == "#mxxwz" ){
+                     if ( city_class.click_button == "dp"){
+                         $("#cgz-cfcity").text(city_wrapper_div);
+                     }else {
+                         $("#cgz-mdcity").text(city_wrapper_div);
+                     }
+                 }
+
+                 window.location.hash = city_class.clickHash;
+            }
+        })
 
         scroll = new window.BScroll(cityWrapper, {
             probeType: 3,
@@ -3600,31 +3853,31 @@ var city_class = {
 // 依赖的数组值
 var cityData = [
 	{
-		name: "★热门城市",
+        name: "★周边城市",
 		cities: [
 			{
-				name: "北京市",
-				tags: "BEIJING,北京市",
+				name: "常州市",
+				tags: "CHANGZHOU,常州市",
 				cityid: 1
+			},
+			{
+				name: "无锡市",
+				tags: "WUXI,无锡市",
+				cityid: 4
+			},
+			{
+				name: "苏州市",
+				tags: "SUZHOU,苏州市",
+				cityid: 2
 			},
 			{
 				name: "上海市",
 				tags: "SHANGHAI,上海市",
-				cityid: 4
-			},
-			{
-				name: "深圳市",
-				tags: "SHENZHEN,深圳市",
-				cityid: 2
-			},
-			{
-				name: "广州市",
-				tags: "GUANGZHOU,广州市",
 				cityid: 3
 			},
 			{
-				name: "武汉市",
-				tags: "WUHAN,武汉市",
+				name: "南京市",
+				tags: "NANJING,南京市",
 				cityid: 6
 			}
 		]
@@ -3818,7 +4071,7 @@ var cityData = [
 				cityid: 25
 			},
 			{
-				name: "常州市",
+				name: "",
 				tags: "CHANGZHOU,常州市",
 				cityid: 45
 			},
