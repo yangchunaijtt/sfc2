@@ -373,6 +373,7 @@
             data:{
                 uid:nowusermsg.myuid,
                 froId:nowusermsg.id,	
+                userid:nowusermsg.userid,
                 utype:"Passenger",
                 vpno:paymentbttsj.billno,
                 pnum:personnum

@@ -4,6 +4,7 @@ var nowusermsg = {
     valone:'',
     myuid:111,   // 登录用户自己的uid
     uid:111,    // 是查询单号的uid，不是自己的uid。
+    userid:"",
     id:111,
     state:111,
     clickPerson:"own",   // 是那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
@@ -21,6 +22,8 @@ $(function(){
         nowusermsg.myuid = localCache("uid-kongbatong");
         nowusermsg.openid = localCache("openid-kongbatong");
         nowusermsg.phone = localCache("mobile-kongbatong");
+        nowusermsg.userid = localCache("userid-kongbatong");
+
         if(null == nowusermsg.myuid || "" == nowusermsg.myuid) {
             register("//qckj.czgdly.com/bus/MobileWeb/WxWeb-kongbatong/Register_content.html");   //返回注册登录页面
         } else {
@@ -113,6 +116,7 @@ $(function(){
             data:{
               uid:parseInt(uid),
               id:id,
+              userid:nowusermsg.userid
             },
             success:function(data){
                 console.log("获取成功的数据",data);
@@ -379,6 +383,7 @@ $(function(){
                 type:"post",
                 data:{
                     uid:nowusermsg.myuid,
+                    userid:nowusermsg.userid,
                     froId:nowusermsg.id,
                     utype:"Driver"
                 },
@@ -475,6 +480,7 @@ $(function(){
                 data:{
                     uid:nowusermsg.myuid,
                     froId:nowusermsg.id,	
+                    userid:nowusermsg.userid,
                     utype:"Passenger",
                     pnum:nowusermsg.personNumber   // 人数为选择人数
                 },
@@ -643,7 +649,7 @@ $(function(){
             if(nowusermsg.state == 0){
                 $(".sdstatusd").text("发布成功");
             }else if(nowusermsg.state == -1){
-                $(".sdstatusd").text("失效了");
+                $(".sdstatusd").text("已失效");
             }else if(nowusermsg.state == 1){
                 $(".sdstatusd").text("订单行程已完成");
             }else{
@@ -656,48 +662,48 @@ $(function(){
 /* 取消订单的操作 */
     function qxsfcxinxi( val ){
          //状态（-1:失效；0：发布；1：完结；2：接单）
-        if(nowusermsg.state===0 || nowusermsg.state=== 2){  // 发布
-            $.ajax({
-                type:"post",
-                url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
-                data:{
-                  uid:nowusermsg.myuid,
-                  id:nowusermsg.id,
-                  source:'KBT'
-                },
-                success:function(data){
-                    showMessage1btn(data.msg,"",0);
-                    if(data.result===1 ){
-                        if( val == 0 ){   // 乘客看自己对车主的订单发起的取消订单
-                            retreatMoney();
-                        }else {
-                            // 取消订单时，，如果是乘客身份要发起退款
-                             if( nowusermsg.requestData.pushType === "Passenger" ){
-                                $("#tmpbutton").empty();
-                                $(".sdstatusd").text("已失效");
-                            }else if( nowusermsg.requestData.pushType === "Driver" ){
-                                $("#tmpbutton").empty();
-                                // 操作成功，显示提示
-                                $(".sdstatusd").text("失效了");
+            if(nowusermsg.state===0 || nowusermsg.state=== 2 || nowusermsg.state === 1){  // 发布
+                $.ajax({
+                    type:"post",
+                    url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/cancelFROrders.asp",
+                    data:{
+                      uid:nowusermsg.myuid,
+                      id:nowusermsg.id,
+                      userid:nowusermsg.userid,
+                      source:'KBT'
+                    },
+                    success:function(data){
+                        if(data.result===1 ){
+                            if( val == 0 ){   // 乘客看自己对车主的订单发起的取消订单
+                                retreatMoney();
+                            }else {
+                                // 取消订单时，，如果是乘客身份要发起退款
+                                 if( nowusermsg.requestData.pushType === "Passenger" ){
+                                    $("#tmpbutton").empty();
+                                    $(".sdstatusd").text("已失效");
+                                }else if( nowusermsg.requestData.pushType === "Driver" ){
+                                    $("#tmpbutton").empty();
+                                    // 操作成功，显示提示
+                                    $(".sdstatusd").text("已失效");
+                                }
                             }
                         }
+                        showMessage1btn(data.msg,"onload_page()",0);
+                    },
+                    error:function(data){
+                        if ( null == data.msg ){
+                            showMessage1btn("网络出错,刷新在试","",0);
+                        }else {
+                            showMessage1btn(data.msg,"",0);
+                        }
+                       
                     }
-                },
-                error:function(data){
-                    if ( null == data.msg ){
-                        showMessage1btn("网络出错,刷新在试","",0);
-                    }else {
-                        showMessage1btn(data.msg,"",0);
-                    }
-                   
-                }
-            })
-        }else if(nowusermsg.state===-1){
-            showMessage1btn("订单已失效","",0);
-        }else if(nowusermsg.state===1){
-            showMessage1btn("订单已完结","",0);
-        }
-
+                })
+            }else if(nowusermsg.state===-1){
+                showMessage1btn("订单已失效","",0);
+            }
+         }
+        
         // 乘客身份发起取消订单时，退款的函数
         function retreatMoney(){
             $.ajax({
@@ -705,6 +711,7 @@ $(function(){
                 type:"post",
                 data:{
                     uid:nowusermsg.myuid,
+                    userid:nowusermsg.userid,
                     id:nowusermsg.id
                 },
                 success:function(data){
@@ -732,7 +739,7 @@ $(function(){
                 }
             })
         } 
-    }
+ 
 
 
 /* 地图的初始化 */

@@ -1,5 +1,6 @@
     var nowusermsg = {
         uid:"",         //用户id 
+        userid:"",
         openid:111,
         phone:111,   //用户的手机号 
         lyxx:""   // 存储需要用到路由的值 
@@ -17,6 +18,7 @@
             nowusermsg.uid = localCache("uid-kongbatong");
             nowusermsg.openid = localCache("openid-kongbatong");
             nowusermsg.phone = localCache("mobile-kongbatong");
+            nowusermsg.userid = localCache("userid-kongbatong");
             nowusermsg.openid = openid;
             console.log("openid",openid,nowusermsg.openid);
             if(null == nowusermsg.uid || "" == nowusermsg.uid) {
@@ -1024,7 +1026,7 @@
         cash_arr:[],
         push_arr:[],
         all_temp:'<div class="bill-time clearfix"><span class="bill-time-left" id="bill-time-month-one"></span><span class="bill-time-right iconfont iconshangcheng"></span></div><div class="bill clearfix"><div class="bill-center-total-div  clearfix" id="bill-cash-temp"><!-- 添加提现订单的地方 --></div></div><!-- 赚钱的地方 --><div class="bill clearfix"><div class="bill-center-total-div  clearfix" id="bill-push-temp"><!-- 添加赚钱订单的地方 --></div></div>',
-        tx_temp:'<!-- 添加提现订单的地方 --><div class="bill-center clearfix"><span class="bill-center-icon bill-center-icon-top iconfont icontixian"></span><div class="bill-center-div clearfix"><div class="bill-center-div-left left clearfix"><p class="bill-center-p-top" id="bill-cash-name">提现余额</p><p class="bill-center-p-bt" id="bill-cash-time"></p></div><span class="bill-center-div-right left" id="bill-cash-status"></span></div><div class="bill-center-money" id="bill-cash-money"></div></div>',     // 提现的模板
+        tx_temp:'<!-- 添加提现订单的地方 --><div class="bill-center clearfix"><span class="bill-center-icon bill-center-icon-top iconfont icontixian"></span><div class="bill-center-div clearfix"><div class="bill-center-div-left left clearfix"><p class="bill-center-p-top" id="bill-cash-name">提现余额</p><p class="bill-center-p-bt" id="bill-cash-time"></p></div><span class="bill-center-div-right left" id="bill-cash-status"></span><div class="bill-center-button-div clearfix" id="bill-center-button-div"></div></div><div class="bill-center-money" id="bill-cash-money"></div></div>',     // 提现的模板
         push_temp:' <!-- 添加赚钱订单的地方 --><div class="bill-center clearfix"><span class="bill-center-icon bill-center-icon-bottom iconfont iconshared"></span><div class="bill-center-div clearfix"><div class="bill-center-div-left left clearfix"><p class="bill-center-p-top" id="cill-push-name"></p><p class="bill-center-p-bt" id="cill-push-time"></p> </div><span class="bill-center-div-right left" id="cill-push-status"></span></div><div class="bill-center-money" id="cill-push-money"></div></div>', // 赚钱的模板
         moneydata:{},   // 钱数信息
         cashMoneyPage:function(typeval,dateRangeval,valzhi){ // 我的账单页的显示
@@ -1036,7 +1038,8 @@
                    uid:nowusermsg.uid,
                    cur:1,
                    type:typeval,
-                   datePange:dateRangeval
+                   datePange:dateRangeval,
+                   pageSize:8
                 },
                 success:function(data){
                     balanceMycash.all_bill_data = [];
@@ -1132,6 +1135,7 @@
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/saveMadeOwnerHasCashs.asp",
                 data:{
                     uid:nowusermsg.uid,
+                    userid:nowusermsg.userid,
                     price:price,
                     cashAliRelName:cashAliRelName,
                     cashAliAccount:cashAliAccount
@@ -1152,6 +1156,7 @@
         cashMoneyBackstage:function(val){
             $.ajax({
                 type:"post",
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeOwnerHasCashs/takeOwnerCashs.asp",
                 data:{
                     bizNo:val
                 },
@@ -1224,14 +1229,13 @@
                    
                     $("#bill-push-temp").append(balanceMycash.push_temp);
                     balanceMycash.push_page(push_page_data,i,balanceMycash.all_bill_data[i]);
-
                 }else if ( balanceMycash.all_bill_data[i].type == "Cash" ) {
                     // 提现
                     $("#bill-cash-temp").append(balanceMycash.tx_temp);
                     balanceMycash.cash_page(i,balanceMycash.all_bill_data[i]);
                     cash_num ++ ;
                 }
-               
+                
                 compare_year  = new Date(balanceMycash.all_bill_data[i].date).getFullYear();
                 compare_month =  new Date(balanceMycash.all_bill_data[i].date).getMonth();
                 
@@ -1258,6 +1262,7 @@
             var cill_push_status_name = "";
             if ( val.status == 0){
                 cill_push_status_name = "待提现";
+                
             } else if (val.status == 1 ) {
                 cill_push_status_name = "已提现";
             } else if (val.status == -1 ) {
@@ -1274,11 +1279,21 @@
             $("#cill-push-money").attr("id","cill-push-money"+i);
         },
         cash_page:function(i,val){
+            $("#bill-center-button-div").empty();
             var status = "";
             if (val.status == 0) {
                 status = "待提现";
+                // if ( val.price >= 0.1) {
+                    $("#bill-center-button-div").append('<span class="bill-center-button-span" id="bill-center-button-span">提现</span>');
+                    $("#bill-center-button-span").bind("touch click",function(){
+                        var cash_button_no =  balanceMycash.all_bill_data.find(function(value, indexes, arr){  if( i == indexes){return value}});
+                        balanceMycash.cashMoneyBackstage(cash_button_no.no);
+                    })
+                    $("#bill-center-button-span").attr("id","bill-center-button-span"+i);
+                // }
             }else if (val.status == 1) {
                 status = "已提现";
+                
             }else if (val.status == -1) {
                 status = "已失效";
             }
@@ -1291,6 +1306,9 @@
 
             $("#bill-cash-money").text(val.price);
             $("#bill-cash-money").attr("id","bill-cash-money"+i);
+
+            // 每一次 都把那个div添加个id
+            $("#bill-center-button-div").attr("id","bill-center-button-div"+i);
         },
         main_page:function(i,val){
             // 时间
@@ -1521,7 +1539,8 @@
                 url:"//qckj.czgdly.com/bus/MobileWeb/buyTicket/isCarOwner.asp",
                 type:"post",
                 data:{
-                    uid:nowusermsg.uid
+                    uid:nowusermsg.uid,
+                    userid:nowusermsg.userid
                 },
                 success:function(data){
                     console.log("身份成功",data);
@@ -1699,13 +1718,14 @@
             
             var routelc =parseFloat(fabuxiaoxi.routeMileage) ;
             if  ( fabuxiaoxi.cfdcity == fabuxiaoxi.mddcity) {
-                if (fabuxiaoxi.personNum <3 ){
-                    pay_route = 1 ;
-                    qs_money =  4;
-                }else {
-                    qs_money =  4.8;
-                    pay_route = 1.2;
-                }
+                pay_route = 1 ;
+                qs_money =  4;
+                // if (fabuxiaoxi.personNum <3 ){
+                    
+                // }else {
+                //     qs_money =  4.8;
+                //     pay_route = 1.2;
+                // }
             } else {
                 qs_money =   15 ;
                 if ( routelc >5 && routelc <=30) {
@@ -1868,7 +1888,7 @@
         //全部行程中车主
         runvownerDiv:"<div class='circle clearfix' id='runvownerDiv'><a href='#ownshowdata' id='arunvownerDiv'   target='_parent'  class='arunvownerDivclass clearfix'><div class='left runvownerleft  clearfix' ><div class='time'><span class='data' id='rvdata'>14号</span><div class='rq'><span class='hours' id='rvdhours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rvdcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rvdf'></div></div></div><input type='submit' class='ricon left btn btn-success ' value='查看' style='margin-top:22px;'></div></a></div>",
         // 支付页的模板 
-        paymentpage:'<a href="#payment" class="pass-aqkpayment clearfix" id="pmaqkpayment"><div id="myorder-od" class="tjorder clearfix"><div class="tjorder-hd clearfix"> <div class="tjorder-hdleft clearfix"><span class="tjorder-hdlefticon iconfont iconkeche"></span><span id="myorder-oddistance"  class="tjorder-hdleftnr">市内</span></div><p id="myorder-odstatus" class="tjorder-hdright">出票成功</p></div><div  class="tjorder-ct clearfix"><span  id="myorder-oddpcity" class="tjorder-ctleft"></span><span class="tjorder-ctcenter">-</span><span  id="myorder-odarcity"  class="tjorder-ctright"></span></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">出发时间:</span><span id="myorder-oddptime" class="tjorder-datelefttime"></span></div><div class="tjorder-dateright clearfix"><span class="tjorder-daterighticon">&yen;</span><span id="myorder-odprice" class="tjorder-daterightmoney"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">添加时间:</span><span id="myorder-odartime" class="tjorder-datelefttime"></span></div></div><div id="myorder-odbutton" class="tjorder-button clearfix"></div></div></a>',
+        paymentpage:'<a href="#payment" class="pass-aqkpayment clearfix" id="pmaqkpayment" style="display:block;"><div id="myorder-od" class="tjorder clearfix"><div class="tjorder-hd clearfix"> <div class="tjorder-hdleft clearfix"><span class="tjorder-hdlefticon iconfont iconkeche"></span><span id="myorder-oddistance"  class="tjorder-hdleftnr"></span></div><p id="myorder-odstatus" class="tjorder-hdright"></p></div><div  class="tjorder-ct clearfix"><div   class="tjorder-ctleft"><span  id="myorder-newdpcity"></span><span id="myorder-oddpcity"></span></div><div class="tjorder-ctcenter">--</div><div   class="tjorder-ctright"><span id="myorder-newarcity"></span><span id="myorder-odarcity"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">出发时间:</span><span id="myorder-oddptime" class="tjorder-datelefttime"></span></div><div class="tjorder-dateright clearfix"><span class="tjorder-daterighticon iconfont iconrenminbi1688"></span><span id="myorder-odprice" class="tjorder-daterightmoney"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">返程时间:</span><span id="myorder-odartime" class="tjorder-datelefttime"></span></div></div></a><div id="myorder-odbutton" class="tjorder-button clearfix"></div></div>',
         // 车主接单页模板
         ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>出发时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>始发地:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
         // 账单页数据
@@ -2789,6 +2809,7 @@
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeFreeRideOrders/saveMadeFROrders.asp",
                 data:{
                     uid	:nowusermsg.uid,        // 用户id  
+                    userid:nowusermsg.userid,
                     departure:departure.trim(),   // 出发地 
                     dLng :dLng ,    // 出发地经度 
                     dLat: dLat,   // 出发地纬度 
@@ -2976,6 +2997,16 @@
             // 到达
             $("#myorder-odarcity").text(sj.arrival);
             $("#myorder-odarcity").attr("id","myorder-odarcity"+sj.id);
+
+            // 起点城市
+            $("#myorder-newdpcity").text(sj.dpCity);
+            var myorder_newdpcity = "myorder-newdpcity"+sj.id;
+            $("#myorder-newdpcity").attr("id",myorder_newdpcity);
+            // 终点城市
+            $("#myorder-newarcity").text(sj.arCity);
+            var myorder_newarcity = "myorder-newarcity"+sj.id;
+            $("#myorder-newarcity").attr("id",myorder_newarcity);
+            
                 // 添加时间
             $("#myorder-odartime").text(sj.insertDate);
             $("#myorder-odartime").attr("id","myorder-odartime"+sj.id);
@@ -3106,22 +3137,20 @@
                 $("#details-passenger-num").text(val.pnum);
 
             if ( nowusermsg.uid == val.puid && val.pushType =='Driver' ){
-                    $("#details-paymoney").empty();
+                $("#details-paymoney").empty();
             }else {
-                if ( Date.parse(new Date()) > (Date.parse(val.dpTime)+86400000)) {
-                    // 失效了  车主失效没有按钮
-                    $("#details-paymoney").empty();
-                    $("#details-paymoney").append('<div class="details-paymontext">已失效</div>');
-                }else {
-                    if(val.payState === 1){
-                    
+                    if ( Date.parse(new Date()) > (Date.parse(val.dpTime)+86400000)) {
+                        // 失效了  车主失效没有按钮
+                        $("#details-paymoney").empty();
+                    }
+                    if(val.payState === 1){ 
                         jg ="已支付";
                         $("#details-passengerState").text(jg);
-    
                         // 已支付则显示
                         $("#details-oddNumber").show();
                         if(Date.parse(new Date()) < (Date.parse(val.dpTime)+86400000)){
-                            if (val.pushType == "Passenger") {
+                            
+                            if (val.pushType == "Driver") {
                                 // 没过规定时间  有取消和立即支付按钮
                                 $("#details-paymoney").append('<div style="width:200px;height:100%;margin:0 auto;" class="clearfix"><span class="details-paymorebutton" id="details-payquxiao" style="margin:6px auto;display:block;">取消订单</span></div>');
                                 // 取消操作
@@ -3138,15 +3167,15 @@
                             $("#details-paymaypay").bind("touch click",function(){
                                 paymentModule.payMoney(val.price,val.pnum);
                             })
-                            var details_paymaypay = "details-paymaypay"+1;
-                            $("#details-paymaypay").attr("id",details_paymaypay);
+                            
                         }else {
+                            jg="已支付";
+                            $("#details-passengerState").text(jg);
                             // 过了规定时间
-                            $("#details-paymoney").append('<div class="details-paymontext">支付成功,等待上车</div>')
+                            $("#details-paymoney").append('<div class="details-paymontext">祝您旅途愉快</div>')
                         }
                     }else if (val.payState === -1){
                         jg="已取消"
-                        $("#details-paymoney").append('<div class="details-paymontext">已取消</div>');
                         $("#details-passengerState").text(jg);
                     }else {
                         jg = "未支付";
@@ -3160,7 +3189,7 @@
                             })
                         }else {
                             jg="已取消";
-                            $("#details-paymoney").append('<div class="details-paymontext">已取消</div>');
+                            
                             $("#details-passengerState").text(jg);
                         }
     
@@ -3174,9 +3203,7 @@
                         var details_paymaypay = "details-paymaypay"+1;
                         $("#details-paymaypay").attr("id",details_paymaypay);
                     }
-                }
                 
-
             }
                
             // 填充 
@@ -3255,6 +3282,7 @@ function retreatMoney(uid,id){
         data:{
             uid:uid,
             id:id,
+            userid:nowusermsg.userid,
             source:"KBT"
         },
         success:function(data){
@@ -3263,12 +3291,12 @@ function retreatMoney(uid,id){
                 $("#details-paymoney").empty();
                 showMessage1btn(data.msg,"",0);
                     // 操作成功，显示提示
-                    $("#details-paymoney").append('<div class="details-paymontext">已取消发布,该订单未付钱</div>');
+                    $("#details-paymoney").append('<div class="details-paymontext">取消成功</div>');
             }else {
                 $("#details-paymoney").empty();
                 showMessage1btn(data.msg,"",0);
                 // 操作成功，显示提示
-                $("#details-paymoney").append('<div class="details-paymontext">取消成功,正在退款</div>');
+                $("#details-paymoney").append('<div class="details-paymontext">取消成功</div>');
             };
         },
         error:function(data){

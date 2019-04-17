@@ -2576,33 +2576,48 @@ body {
 }
 /* 中间设置 */
 .tjorder .tjorder-ct{
-    height: 24px;
-    line-height: 24px;
-    color: #111010;
+  height: 24px;
+  line-height: 24px;
+  color: #111010;
 }
 .tjorder .tjorder-ct .tjorder-ctleft{
-    width: 42%;
-    float: left;
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-left: -34px;
+  width: 46%;
+  float: left;
+  text-align: center;
+}
+.tjorder .tjorder-ct .tjorder-ctleft span{
+  line-height: 30px;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
 }
 .tjorder .tjorder-ct .tjorder-ctcenter{
-    float: left;
-    width: 6%;
-    font-weight: bolder;
-    font-size: 19px;
-    text-align: center;
+  float: left;
+  width: 8%;
+  font-weight: bolder;
+  font-size: 19px;
+  text-align: center;
+  line-height: 60px;
+}
+/* 第一个 maigin-left */
+.pass-phdiconfyq  .tjorder  .tjorder-ct .tjorder-ctleft{
+  margin-left: -15%;
 }
 .tjorder .tjorder-ct .tjorder-ctright{
-    width: 32%;
-    float: left;
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  width: 46%;
+  float: left;
+  display: inline-block;
+  text-align: center;
+}
+.tjorder .tjorder-ct .tjorder-ctright span{
+  line-height: 30px;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
 }
 /* 提交的时间设置 */
 .tjorder-date{
@@ -2613,7 +2628,7 @@ body {
 .tjorder-date .tjorder-dateleft {
     margin-left: 2px;
     display: inline-block;
-    width: 69%;
+    width: 70%;
     float: left;
     text-indent: 0px;
 }   
@@ -2629,7 +2644,7 @@ body {
 }
 .tjorder-date .tjorder-dateright{
     display: inline-block;
-    width: 30%;
+    width: 29%;
     float: right;
     text-align: right;
     color: #090909;
@@ -3016,7 +3031,7 @@ body {
 }
 /* 循环添加的地方 */
 .bill-center-total-div{
-  padding: 0px 30px;
+  padding: 0px 10px;
 }
 .bill-center-total-div .bill-center{
   height: 60px;
@@ -3025,20 +3040,20 @@ body {
 }
 .bill-center-total-div .bill-center .bill-center-icon{
   float: left;
-  width: 20%;
+  width: 14%;
   height: 100%;
   text-align: left;
   font-size: 26px;
 }
 
 .bill-center-total-div .bill-center .bill-center-div{
-  width: 60%;
+  width: 72%;
   float: left;
 }
 /* 左边 */
 .bill-center-total-div .bill-center .bill-center-div .bill-center-div-left{
   line-height: 30px;
-  width: 110px;
+  width: 46%;
 }
 .bill-center-total-div .bill-center .bill-center-div .bill-center-div-left .bill-center-p-top{
   font-size: 15px;
@@ -3051,10 +3066,28 @@ body {
 
 .bill-center-total-div .bill-center .bill-center-div .bill-center-div-right{
   line-height: 36px;
+  width: 20%;
+}
+/* 按钮的div样式 */
+.bill-center-total-div .bill-center .bill-center-div .bill-center-button-div{
+  float: left;
+  width: 34%;
+  text-align: center;
+  height: 60px;
+}
+.bill-center-total-div .bill-center .bill-center-div .bill-center-button-div .bill-center-button-span{
+      border: 1px solid orange;
+      color: orange;
+      width: 43px;
+      display: block;
+      margin: 0 auto;
+      line-height: 30px;
+      margin-top: 15px;
+      border-radius: 2px;
 }
 
 .bill-center-total-div .bill-center  .bill-center-money{
-  width: 20%;
+  width: 14%;
   float: right;
   text-align: center;
   color: #000;
