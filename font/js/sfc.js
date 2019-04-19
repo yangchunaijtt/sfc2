@@ -3,7 +3,9 @@
         userid:"",
         openid:111,
         phone:111,   //用户的手机号 
-        lyxx:""   // 存储需要用到路由的值 
+        lyxx:"",   // 存储需要用到路由的值 
+        newPageHash:"",  // 初始化页面获取到的hash值。
+        secrecy:""         // 存储
     }
     // 禁用效果 
     $(document.body).css({
@@ -15,6 +17,15 @@
     $(function(){
         // 后台给的先调用下 这段js 
         getOpenid(function(openid){
+            // nowusermsg.newPageHash = window.location.hash;
+            // nowusermsg.secrecy = urlToObj(nowusermsg.newPageHash);
+            // if ( nowusermsg.newPageHash == "#passenger" || nowusermsg.newPageHash == "" || nowusermsg.secrecy == "" ) {
+                
+            // } else {
+            //     localStorage.setItem("uid-kongbatong",nowusermsg.secrecy.uid);
+            //     localStorage.setItem("mobile-kongbatong",nowusermsg.secrecy.mobile);
+            //     localStorage.setItem("userid-kongbatong",nowusermsg.secrecy.userid);
+            // }
             nowusermsg.uid = localCache("uid-kongbatong");
             nowusermsg.openid = localCache("openid-kongbatong");
             nowusermsg.phone = localCache("mobile-kongbatong");
@@ -89,6 +100,8 @@
                 paymentBinding.newPage();
                 paymentBinding.passnewPage();
                 runsccfcs.newPage();
+                // 地图页高度
+                $(".chufadi-total").outerHeight($(document.body).outerHeight()-$(".header").outerHeight()-$("#container").outerHeight());
             }
         },location.search);
         
@@ -622,6 +635,7 @@
             var val = parseInt($(".pnum-ftinput").val());
             var valone = "";
             if( NaN == val  ||  "" == val ||  undefined == val ){
+                valone = 1 ;
                 $(".pnum-ctnumber").text(valone);
                 $(".pnum-ftinput").val(valone);
                 $(".pnum-rdnum").text(valone+"人乘车");
@@ -926,7 +940,7 @@
         dwsj:"",     // 定位得到的数据 
         cftime:"",      // 出发时间
         mdtime:"",      // 到达时间
-        personNum:0,     // 出发人数,默认为0。
+        personNum:1,     // 出发人数,默认为1。
         amoney:0,       // 钱数
         routeMileage:0,   // 路线里程
         locationnam:"",   // 定位地址名
@@ -1114,7 +1128,7 @@
                 },
                 error:function(data){
                     console.log("车组失败",data);
-                    if ( null == data.msg ) {
+                    if ( null == data.msg || "" == data.msg  ) {
                         showMessage1btn("网络出错,稍后再试","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -1145,7 +1159,7 @@
                     balanceMycash.cashMoneyBackstage(data.obj.cashNo);
                 },
                 error:function(data){
-                    if ( null == data.msg){
+                    if ( null == data.msg || "" == data.msg){
                         showMessage1btn("网络出错,稍后再试","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -1168,7 +1182,7 @@
                     
                 },
                 error:function(data){
-                    if ( null == data.msg ) {
+                    if (  null == data.msg || "" == data.msg ) {
                         showMessage1btn("网络出错,稍后再试","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -1370,7 +1384,7 @@
                 },  
                 error:function(data){
                     console.log("车主接单获取失败",data);
-                    if ( null == data.msg ){
+                    if ( null == data.msg || "" == data.msg ){
                         showMessage1btn("网络出错,获取我的订单失败","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -1514,7 +1528,7 @@
                 error:function(data){
                     /* 加载成功，取消提示按钮 */
                     clearDialog();
-                    if (null == data.msg) {
+                    if (null == data.msg|| "" == data.msg) {
                         showMessage1btn("发生错误,请重试","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -1601,6 +1615,10 @@
                 zoomToAccuracy: true  //定位成功后是否自动调整地图视野到定位点
             });
             map.addControl(geolocation);
+
+            //监听按钮事件
+            AMap.event.addListener(geolocation, 'complete', onComplete);
+            
             geolocation.getCurrentPosition(function(status,result){
                 if(status=='complete'){
                     onComplete(result)
@@ -1705,49 +1723,73 @@
             }
             var p1 = [dLng,dLat];   // [经度,纬度]
             var p2 = [mdata.location.lng,mdata.location.lat];
-            var dis = AMap.GeometryUtil.distanceOfLine([p1,p2]);
+            
             // 返回结果为米
-           
-            fabuxiaoxi.routeMileage =parseFloat((dis/1000).toFixed(1)) ;
-            console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
-            $(".mileage-price").text(fabuxiaoxi.routeMileage);
-        // 钱数简单计算下
-            // 钱啥时候都计算一下
-            var pay_route = 1;
-            var qs_money =  4;
-            
-            var routelc =parseFloat(fabuxiaoxi.routeMileage) ;
-            if  ( fabuxiaoxi.cfdcity == fabuxiaoxi.mddcity) {
-                pay_route = 1 ;
-                qs_money =  4;
-                // if (fabuxiaoxi.personNum <3 ){
-                    
-                // }else {
-                //     qs_money =  4.8;
-                //     pay_route = 1.2;
-                // }
-            } else {
-                qs_money =   15 ;
-                if ( routelc >5 && routelc <=30) {
-                    pay_route = 1;
-                
-                }else if ( routelc >30 &&  routelc <= 150) {
-                    pay_route = 0.5;
-                }else {
-                    pay_route = 0.4;
-                }
-            
+            var dis = 0;
+            // 计算一下公里数
+            showLodding("计算价钱中...");
+            function get_path () {
+				var get_url = '//restapi.amap.com/v3/direction/driving?key=f2ac4e16093bd03c67c74b39e765b244&originid=&destinationid=&extensions=base&strategy=2&waypoints=&avoidpolygons=&avoidroad=&origin='+p1+'&destination='+p2;
+				$.get(get_url,function(data,status){
+					if (data.status == 1 || data.status=="1" ) {
+                        dis = parseFloat((parseFloat(data.route.paths[0].distance)/1000).toFixed(1)) ;
+                        fabuxiaoxi.routeMileage = dis ;
+                        $(".mileage-price").text(fabuxiaoxi.routeMileage);
+                        console.log("距离一共多少公里",fabuxiaoxi.routeMileage);
+                        Calculation();
+                        // 清除
+                        clearDialog();
+					}else {
+                        get_path ();
+                        // 清除
+                        clearDialog();
+					}
+                   console.log("请求距离",data,status);
+                    // 清除
+                    clearDialog();
+				});
             }
-            if ( settleAccounts.rendertimes != 10 ){
-                if ( locationqjval.val == "a=p" ) {
-                    fabuxiaoxi.amoney = parseFloat(fabuxiaoxi.personNum*((qs_money + routelc*pay_route).toFixed(0)));
-                    $(".completed-pprice").text(fabuxiaoxi.amoney/fabuxiaoxi.personNum);
-                }else if ( locationqjval.val == "b=v") {
-                    fabuxiaoxi.amoney = parseFloat((qs_money + routelc*pay_route).toFixed(0));
+            get_path ();
+            //  计算一下钱数
+            function Calculation(){
+                    // 钱数简单计算下
+                // 钱啥时候都计算一下
+                var pay_route = 1;
+                var qs_money =  4;
+                
+                var routelc =parseFloat(fabuxiaoxi.routeMileage) ;
+                if  ( fabuxiaoxi.cfdcity == fabuxiaoxi.mddcity) {
+                    pay_route = 1 ;
+                    qs_money =  4;
+                    // if (fabuxiaoxi.personNum <3 ){
+                        
+                    // }else {
+                    //     qs_money =  4.8;
+                    //     pay_route = 1.2;
+                    // }
+                } else {
+                    qs_money =   15 ;
+                    if ( routelc >5 && routelc <=30) {
+                        pay_route = 1;
+                    
+                    }else if ( routelc >30 &&  routelc <= 150) {
+                        pay_route = 0.5;
+                    }else {
+                        pay_route = 0.4;
+                    }
+                
+                }
+                if ( settleAccounts.rendertimes != 10 ){
+                    if ( locationqjval.val == "a=p" ) {
+                        fabuxiaoxi.amoney = parseFloat(fabuxiaoxi.personNum*((qs_money + routelc*pay_route).toFixed(0)));
+                        $(".completed-pprice").text(fabuxiaoxi.amoney/fabuxiaoxi.personNum);
+                    }else if ( locationqjval.val == "b=v") {
+                        fabuxiaoxi.amoney = parseFloat((qs_money + routelc*pay_route).toFixed(0));
+                        $(".completed-pprice").text(fabuxiaoxi.amoney);
+                    }
+                }else {
                     $(".completed-pprice").text(fabuxiaoxi.amoney);
                 }
-            }else {
-                $(".completed-pprice").text(fabuxiaoxi.amoney);
             }
         },
         clear:function(){   //清空操作
@@ -1888,7 +1930,7 @@
         //全部行程中车主
         runvownerDiv:"<div class='circle clearfix' id='runvownerDiv'><a href='#ownshowdata' id='arunvownerDiv'   target='_parent'  class='arunvownerDivclass clearfix'><div class='left runvownerleft  clearfix' ><div class='time'><span class='data' id='rvdata'>14号</span><div class='rq'><span class='hours' id='rvdhours'></span></div></div><div class='mdd clearfix'><div class='cfd' id='rvdcfd'></div><span class='glyphicon glyphicon-arrow-right mdd-icon'></span><div class='df' id='rvdf'></div></div></div><input type='submit' class='ricon left btn btn-success ' value='查看' style='margin-top:22px;'></div></a></div>",
         // 支付页的模板 
-        paymentpage:'<a href="#payment" class="pass-aqkpayment clearfix" id="pmaqkpayment" style="display:block;"><div id="myorder-od" class="tjorder clearfix"><div class="tjorder-hd clearfix"> <div class="tjorder-hdleft clearfix"><span class="tjorder-hdlefticon iconfont iconkeche"></span><span id="myorder-oddistance"  class="tjorder-hdleftnr"></span></div><p id="myorder-odstatus" class="tjorder-hdright"></p></div><div  class="tjorder-ct clearfix"><div   class="tjorder-ctleft"><span  id="myorder-newdpcity"></span><span id="myorder-oddpcity"></span></div><div class="tjorder-ctcenter">--</div><div   class="tjorder-ctright"><span id="myorder-newarcity"></span><span id="myorder-odarcity"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">出发时间:</span><span id="myorder-oddptime" class="tjorder-datelefttime"></span></div><div class="tjorder-dateright clearfix"><span class="tjorder-daterighticon iconfont iconrenminbi1688"></span><span id="myorder-odprice" class="tjorder-daterightmoney"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">返程时间:</span><span id="myorder-odartime" class="tjorder-datelefttime"></span></div></div></a><div id="myorder-odbutton" class="tjorder-button clearfix"></div></div>',
+        paymentpage:'<div id="myorder-od" class="tjorder clearfix"><a href="#payment" class="pass-aqkpayment clearfix" id="pmaqkpayment" style="display:block;"><div class="tjorder-hd clearfix"> <div class="tjorder-hdleft clearfix"><span class="tjorder-hdlefticon iconfont iconkeche"></span><span id="myorder-oddistance"  class="tjorder-hdleftnr"></span></div><p id="myorder-odstatus" class="tjorder-hdright"></p></div><div  class="tjorder-ct clearfix"><div   class="tjorder-ctleft"><span  id="myorder-newdpcity"></span><span id="myorder-oddpcity"></span></div><div   class="tjorder-ctright"><span id="myorder-newarcity"></span><span id="myorder-odarcity"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">出发时间:</span><span id="myorder-oddptime" class="tjorder-datelefttime"></span></div><div class="tjorder-dateright clearfix"><span class="tjorder-daterighticon iconfont iconrenminbi1688"></span><span id="myorder-odprice" class="tjorder-daterightmoney"></span></div></div><div class="tjorder-date clearfix"><div class="tjorder-dateleft clearfix"><span class="tjorder-dateleftts">返程时间:</span><span id="myorder-odartime" class="tjorder-datelefttime"></span></div></div></a><div id="myorder-odbutton" class="tjorder-button clearfix"></div></div>',
         // 车主接单页模板
         ownerpaymentpage:"<a href='#payment' class='aqkpayment clearfix' id='pmaqkpayment'><div class='paymentbody clearfix'><div class='paydate clearfix'><span class='paydateicon'>出发时间:</span><div class='paytime' id='pmpaytime'></div></div><div class='paymoney clearfix'><div class='pmsl'>订单金额:</div><div class='payyiyuan' id='pmpayyiyuan'></div></div><div class='paystate'><span class='payszfjg'>始发地:</span><span class='payssuc' id='pmpayssuc'></span></div></div></a>",
         // 账单页数据
@@ -2897,7 +2939,7 @@
                     paymentModular.olddpcity = "" ;
                     paymentModular.oldartime = "";
                     paymentModular.olddptime = "";
-                    if (null == data.msg ) {
+                    if ( null == data.msg || "" == data.msg ) {
                         showMessage1btn("网络出错,请重试","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -3126,14 +3168,31 @@
             $("#details-arcity").text(val.arCity);
 
             
-                $("#details-oddNumber").hide();
-           
+                
                 // 价格 
                 $("#details-pricedh").text(val.price);
                 // 单号
-                $("#details-oddsz").text(val.vpNo);
-                // 服务费比率
-                $("#details-pricefeedata").text(val.feeRate+"%");
+               
+                if ( (null != val.vpNo && "" != val.vpNo) ||  (null != val.feeRate && "" != val.feeRate)){
+                    // 已支付则显示
+                    $("#details-oddNumber").show();
+                    // 服务费比率
+                    if ( null != val.feeRate && "" != val.feeRate) {
+                        $("#details-pricefeedata").text(val.feeRate+"%");  // 服务费比率
+                    }else {
+                        $("#details-pricefeedata").text("");  // 服务费比率
+                    }
+                    // 支付单号
+                    if ( null != val.vpNo && "" != val.vpNo) {
+                        $("#details-oddsz").text(val.vpNo); // 支付单号
+                    }else {
+                        $("#details-oddsz").text("无支付信息"); // 支付单号
+                    }
+                }else {
+                    $("#details-oddNumber").hide();
+                }
+                
+
                 $("#details-passenger-num").text(val.pnum);
 
             if ( nowusermsg.uid == val.puid && val.pushType =='Driver' ){
@@ -3146,8 +3205,7 @@
                     if(val.payState === 1){ 
                         jg ="已支付";
                         $("#details-passengerState").text(jg);
-                        // 已支付则显示
-                        $("#details-oddNumber").show();
+                        
                         if(Date.parse(new Date()) < (Date.parse(val.dpTime)+86400000)){
                             
                             if (val.pushType == "Driver") {
@@ -3165,7 +3223,7 @@
                             }
                             // 支付
                             $("#details-paymaypay").bind("touch click",function(){
-                                paymentModule.payMoney(val.price,val.pnum);
+                                paymentModule.payMoney(val.price,val.pnum,val.id);
                             })
                             
                         }else {
@@ -3198,7 +3256,7 @@
                         
                         // 支付
                         $("#details-paymaypay").bind("touch click",function(){
-                            paymentModule.payMoney(val.price,val.pnum);
+                            paymentModule.payMoney(val.price,val.pnum,val.id);
                         })
                         var details_paymaypay = "details-paymaypay"+1;
                         $("#details-paymaypay").attr("id",details_paymaypay);
@@ -3301,7 +3359,7 @@ function retreatMoney(uid,id){
         },
         error:function(data){
             console.log("退款失败",data);
-            if ( null == data.msg ) {
+            if ( null == data.msg || "" == data.msg ) {
                 showMessage1btn("退款失败,请联系客服","",0);
             }else {
                 showMessage1btn(data.msg,"",0);
@@ -5798,6 +5856,14 @@ var cityData = [
 ];
 
 
-
-
-
+    // url转成obj形式
+    function urlToObj(str){
+        　　var obj = {};
+        　　var arr1 = str.split("?");
+        　　var arr2 = arr1[1].split("&");
+        　　for(var i=0 ; i < arr2.length; i++){
+        　　　　var res = arr2[i].split("=");
+        　　　　obj[res[0]] = res[1];
+        　　}
+        　　return obj;
+    }

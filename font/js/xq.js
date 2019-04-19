@@ -5,6 +5,7 @@ var nowusermsg = {
     myuid:111,   // 登录用户自己的uid
     uid:111,    // 是查询单号的uid，不是自己的uid。
     userid:"",
+    payId:0,    //支付的id信息
     id:111,
     state:111,
     clickPerson:"own",   // 是那个点击的，默认是自己点击的。other代表其他人点击的，被查看了
@@ -14,7 +15,6 @@ var nowusermsg = {
     singnUpNum:0,      // 可以报名的人数
     unPayNum:0,         // 剩余未付款人数
 }
-
 
 $(function(){
     basepath = "../../../../MobileWeb/";
@@ -122,6 +122,11 @@ $(function(){
                 console.log("获取成功的数据",data);
                 //  本地化数据
                 nowusermsg.requestData = data.obj;
+                // 赋值 支付需要的id号
+                if ( null != data.obj.id && "" != data.obj.id) {
+                    nowusermsg.payId = data.obj.id;
+                }
+
                 rendering(data);
                 
                 if( data.obj.pushType === "Passenger" ){    // 乘客身份
@@ -148,7 +153,7 @@ $(function(){
                 /* 加载失败，取消提示按钮 */
                 clearDialog();
                 /* 弹出提示信息 */
-                if ( null == data.msg ) {
+                if ( null == data.msg || "" == data.msg ) {
                     showMessage1btn("网络故障,刷新在试","",0);
                 }else {
                     showMessage1btn(data.msg,"",0);
@@ -395,7 +400,7 @@ $(function(){
                     }
                 },
                 error:function(data){
-                    if ( null == data.msg ) {
+                    if ( null == data.msg || "" == data.msg ) {
                         showMessage1btn("接单失败,请重试","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -448,150 +453,174 @@ $(function(){
             FROID:111     // 发布单号，取当前信息的id值 
         },
         payMoney:function(moneyVal,pdval,psersonnumber){  // 只有乘客报名车主的行程才需要付钱 
-           var paymentbttsj =  paymentModule.paymentbttsj;
-           
-            if (pdval=="报名"){
-                paymentbttsj.title = "乘客报名";
-            }else if (pdval=="成交"){
-                paymentbttsj.title = "乘客成交";
-            }
-            
-            var bSign = "";
-            var rand = "";
-            for(var i = 0; i < 3; i++){
-                var r = Math.floor(Math.random() * 10);
-                rand += r;
-            }
-            // 生成时间戳 "yyyyMMddhhmmss" 格式
-            function pad2(n) { return n < 10 ? '0' + n : n };
-            function generateTimeReqestNumber() {
-                var date = new Date();
-                return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
-            }
 
-            var sjc = generateTimeReqestNumber();
-            paymentbttsj.billno = "FRO";
-            paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
-            // 这里调用后那个 函数，发布单号，接受单号后，后面再继续
-            // 向后台请求 id 
-            $.ajax({
-                url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/saveMadeFROVPayments.asp",
-                type:"post",
+            ajax_post({
+                url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/getFROVPaymentDetails.asp",
                 data:{
-                    uid:nowusermsg.myuid,
-                    froId:nowusermsg.id,	
-                    userid:nowusermsg.userid,
-                    utype:"Passenger",
-                    pnum:nowusermsg.personNumber   // 人数为选择人数
-                },
-                success:function(data){
+                    id:nowusermsg.payId,       	//支付信息id
+                    uid:nowusermsg.myuid,       	 //当前用户id
+                    userid:nowusermsg.userid,  		//当前用户用户名userid
+                }
+            },function(success){
+                console.log("是否可以支付-成功",success);
+                if ( success.obj.payState == -1 ) {
+                    showMessage1btn("订单已取消无法支付","",0);
+                }else if (success.obj.payState == 1 ) {
+                    showMessage1btn("订单已支付","",0);
+                }else if ( null == success.obj.payState  ) {
+                    // 为null 时才可以执行下面的支付流程
+                    payLower ();
+                }
 
-                    console.log("支付的id",data);
-                    // 返回数据库中生成的 id 号
-                   
-                    var paymentbttsj =  paymentModule.paymentbttsj;
-                    paymentbttsj.FROID   =  data.result;
-                        // 参数
-                    paymentbttsj.amount   = moneyVal*100*psersonnumber;
-                    var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
-                    // 地址
-                    var url = "../../../common/getBSign-kongbatong.asp";
-                    // sfcsj.passenger 存储着用户的信息 
+            },function(error){
+                console.log("是否可以支付-失败",error)
+                showMessage1btn("网络出错,稍后再试","",0);
+            })
+            function payLower (){
+                var paymentbttsj =  paymentModule.paymentbttsj;
+           
+                if (pdval=="报名"){
+                    paymentbttsj.title = "乘客报名";
+                }else if (pdval=="成交"){
+                    paymentbttsj.title = "乘客成交";
+                }
                 
-                    
-                    paymentbttsj.openid = {
+                var bSign = "";
+                var rand = "";
+                for(var i = 0; i < 3; i++){
+                    var r = Math.floor(Math.random() * 10);
+                    rand += r;
+                }
+                // 生成时间戳 "yyyyMMddhhmmss" 格式
+                function pad2(n) { return n < 10 ? '0' + n : n };
+                function generateTimeReqestNumber() {
+                    var date = new Date();
+                    return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
+                }
+    
+                var sjc = generateTimeReqestNumber();
+                paymentbttsj.billno = "FRO";
+                paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
+                // 这里调用后那个 函数，发布单号，接受单号后，后面再继续
+                // 向后台请求 id 
+                $.ajax({
+                    url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/saveMadeFROVPayments.asp",
+                    type:"post",
+                    data:{
                         uid:nowusermsg.myuid,
-                        phone:nowusermsg.phone,
-                        usource:paymentbttsj.usource,
-                        FROVPID:paymentbttsj.FROID,
-                        utype:"Passenger"   // 付钱的是当前身份
-                    };
-                    console.log(param);
-                    $.post(url,param,function(data){
-
-                        if (!((typeof (data) == 'object') && data.constructor == Object)) {
-                            data = eval("(" + data + ")");
-                        }
-                        if(data.BSign) {
-                            bSign = data.BSign;
-                        BC.err = function(data) {
-                            console.log(data);
-                            //注册错误信息接受
-                            showMessage1btn(data["ERROR"],"",0);
-                        }
-                        console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
-                    BC.click({
-                        //"instant_channel" : paymentbttsj.instant_channel,
-                        "debug" : false,
-                        "need_ali_guide" : true,
-                        "use_app" : true,
-                        "title" : paymentbttsj.title, //商品名
-                        "amount" : moneyVal*100*psersonnumber,  //总价（分）
-                        "out_trade_no" : paymentbttsj.billno, //自定义订单号
-                        "sign" : bSign, //商品信息hash值，含义和生成方式见下文
-                        "openid" : nowusermsg.openid,
-                        "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
+                        froId:nowusermsg.id,	
+                        userid:nowusermsg.userid,
+                        utype:"Passenger",
+                        pnum:nowusermsg.personNumber   // 人数为选择人数
                     },
-                    {
-                        wxJsapiFinish : function(res) {
-                            //jsapi接口调用完成后
-                            //showMessage1btn(JSON.stringify(res),"",0);
-                            switch(res.err_msg){
-                                case "get_brand_wcpay_request:ok":
-                                    if (pdval=="报名") {
-                                            //报名成功要付报名费给我们,
-                                       
-
-                                        // 成功了要把电话显示出来   
-                                        $("#sfvaldiv-fb").text(nowusermsg.requestData.userInfo);
-                                        $("#sfvaldiv-fb").attr("href","tel:"+nowusermsg.requestData.userInfo);
+                    success:function(data){
+    
+                        console.log("支付的id",data);
+                        // 返回数据库中生成的 id 号
+                       
+                        var paymentbttsj =  paymentModule.paymentbttsj;
+                        paymentbttsj.FROID   =  data.result;
+                            // 参数
+                        paymentbttsj.amount   = moneyVal*100*psersonnumber;
+                        var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
+                        // 地址
+                        var url = "../../../common/getBSign-kongbatong.asp";
+                        // sfcsj.passenger 存储着用户的信息 
+                    
+                        
+                        paymentbttsj.openid = {
+                            uid:nowusermsg.myuid,
+                            phone:nowusermsg.phone,
+                            usource:paymentbttsj.usource,
+                            FROVPID:paymentbttsj.FROID,
+                            utype:"Passenger"   // 付钱的是当前身份
+                        };
+                        console.log(param);
+                        $.post(url,param,function(data){
+    
+                            if (!((typeof (data) == 'object') && data.constructor == Object)) {
+                                data = eval("(" + data + ")");
+                            }
+                            if(data.BSign) {
+                                bSign = data.BSign;
+                            BC.err = function(data) {
+                                console.log(data);
+                                //注册错误信息接受
+                                showMessage1btn(data["ERROR"],"",0);
+                            }
+                            console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
+                        BC.click({
+                            //"instant_channel" : paymentbttsj.instant_channel,
+                            "debug" : false,
+                            "need_ali_guide" : true,
+                            "use_app" : true,
+                            "title" : paymentbttsj.title, //商品名
+                            "amount" : moneyVal*100*psersonnumber,  //总价（分）
+                            "out_trade_no" : paymentbttsj.billno, //自定义订单号
+                            "sign" : bSign, //商品信息hash值，含义和生成方式见下文
+                            "openid" : nowusermsg.openid,
+                            "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
+                        },
+                        {
+                            wxJsapiFinish : function(res) {
+                                //jsapi接口调用完成后
+                                //showMessage1btn(JSON.stringify(res),"",0);
+                                switch(res.err_msg){
+                                    case "get_brand_wcpay_request:ok":
+                                        if (pdval=="报名") {
+                                                //报名成功要付报名费给我们,
+                                           
+    
+                                            // 成功了要把电话显示出来   
+                                            $("#sfvaldiv-fb").text(nowusermsg.requestData.userInfo);
+                                            $("#sfvaldiv-fb").attr("href","tel:"+nowusermsg.requestData.userInfo);
+                                            // 成功后初始化
+                                            nowusermsg.personNumber  = 0 ;
+                                            $("#person-jtnumber").text(nowusermsg.personNumber);
+    
+                                            $("#tmpbutton").empty();
+                                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
+                                            $(".sdstatusd").text("报名成功");
+                                            showMessage1btn("支付报名成功,请联系车主","xqHref_tosfc()",0);
+                                        }else if (pdval=="成交") {
+                                            console.log("点击成交",data);
+                                            $("#tmpbutton").empty();
+                                            $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
+                                            $(".sdstatusd").text("已成交");
+                                            showMessage1btn("已成交,祝您旅途愉快！","xqHref_tosfc()",0);
+                                        }
+                                        
+                                        break;
+                                    case "get_brand_wcpay_request:fail":
+                                        showMessage1btn("系统出错，请联系我们！","xqHref_tosfc()",0);
+                                        break;
+                                    case "get_brand_wcpay_request:cancel":
+                                        
                                         // 成功后初始化
                                         nowusermsg.personNumber  = 0 ;
                                         $("#person-jtnumber").text(nowusermsg.personNumber);
-
-                                        $("#tmpbutton").empty();
-                                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">报名成功,请您电联车主</div>');
-                                        $(".sdstatusd").text("报名成功");
-                                        showMessage1btn("支付报名成功,请联系车主","xqHref_tosfc()",0);
-                                    }else if (pdval=="成交") {
-                                        console.log("点击成交",data);
-                                        $("#tmpbutton").empty();
-                                        $("#tmpbutton").append('<div style="text-align: center;line-height: 36px;font-size: 18px;color: #1badd8;">祝您旅途愉快,请您注意安全</div>');
-                                        $(".sdstatusd").text("已成交");
-                                        showMessage1btn("已成交,祝您旅途愉快！","xqHref_tosfc()",0);
+                                        showMessage1btn("已取消支付！","xqHref_tosfc()",0);
+                                        break;
                                     }
-                                    
-                                    break;
-                                case "get_brand_wcpay_request:fail":
-                                    showMessage1btn("系统出错，请联系我们！","xqHref_tosfc()",0);
-                                    break;
-                                case "get_brand_wcpay_request:cancel":
-                                    
-                                    // 成功后初始化
-                                    nowusermsg.personNumber  = 0 ;
-                                    $("#person-jtnumber").text(nowusermsg.personNumber);
-                                    showMessage1btn("已取消支付！","xqHref_tosfc()",0);
-                                    break;
                                 }
-                            }
-                            });
-                            BC.err = function(err) {
-                                //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
-                                showMessage1btn(err.ERROR,"xqHref_tosfc()",0);
-                            }
-                        }else{
-                            showMessage1btn("后台参数错误！","xqHref_tosfc()",0);
-                        }                                           
-                            // 删除dialog
-                            clearDialog();
-                        },"json")
-
-                    },
-                error:function(data){
-                    showMessage1btn("网络出错,请重试!","",0);
-                }
-            })
-
+                                });
+                                BC.err = function(err) {
+                                    //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
+                                    showMessage1btn(err.ERROR,"xqHref_tosfc()",0);
+                                }
+                            }else{
+                                showMessage1btn("后台参数错误！","xqHref_tosfc()",0);
+                            }                                           
+                                // 删除dialog
+                                clearDialog();
+                            },"json")
+    
+                        },
+                    error:function(data){
+                        showMessage1btn("网络出错,请重试!","",0);
+                    }
+                })
+            }
             }
         }
     function xqHref_tosfc(){
@@ -602,9 +631,9 @@ $(function(){
         var sj = data.obj;
         if(data.result>0){
             /* 出发地 */
-                $(".cfdsdmdiv").text(sj.departure.trim());
+                $(".cfdsdmdiv").text(sj.dpCity.trim()+sj.departure.trim());
             /* 目的地 */
-                $(".mddsdmdiv").text(sj.arrival.trim());
+                $(".mddsdmdiv").text(sj.arCity.trim()+sj.arrival.trim());
             /*出发时间  */
                 $(".cftimesdmd").text(sj.departureTime);
             /* 期望时间 */
@@ -691,7 +720,7 @@ $(function(){
                         showMessage1btn(data.msg,"onload_page()",0);
                     },
                     error:function(data){
-                        if ( null == data.msg ){
+                        if ( null == data.msg || "" == data.msg ){
                             showMessage1btn("网络出错,刷新在试","",0);
                         }else {
                             showMessage1btn(data.msg,"",0);
@@ -730,7 +759,7 @@ $(function(){
                 },
                 error:function(data){
                     console.log("取消支付失败",data);
-                    if ( null == data.msg) {
+                    if ( null == data.msg || "" == data.msg ) {
                         showMessage1btn("取消支付失败,请联系客服","",0);
                     }else {
                         showMessage1btn(data.msg,"",0);
@@ -769,7 +798,7 @@ $(function(){
             document.getElementById('lnglat').value = {};
             regeoCode();
         }
-        document.getElementById('lnglat').value = result;
+        // document.getElementById('lnglat').value = result;
         regeoCode(result);
     }
     /* 设置中心点函数 */
@@ -788,24 +817,36 @@ $(function(){
                 radius: 1000 //范围，默认：500
             });
         }
-        var lnglat  = document.getElementById('lnglat').value.split(',');
+        // var lnglat  = document.getElementById('lnglat').value.split(',');
         marker = new AMap.Marker({
             position: result
         });
         map.add(marker);
        
-        marker.setPosition(lnglat);
+        // marker.setPosition(lnglat);
         
-        geocoder.getAddress(lnglat, function(status, result) {
-            if (status === 'complete'&&result.regeocode) {
-            }else{alert(JSON.stringify(result))}
-        });
+        // geocoder.getAddress(lnglat, function(status, result) {
+        //     if (status === 'complete'&&result.regeocode) {
+        //     }else{alert(JSON.stringify(result))}
+        // });
     }
     /* 判断 */
-    document.getElementById('lnglat').onkeydown = function(e) {
-        if (e.keyCode === 13) {
-            regeoCode();
-            return false;
-        }
-        return true;
-    }; 
+    // document.getElementById('lnglat').onkeydown = function(e) {
+    //     if (e.keyCode === 13) {
+    //         regeoCode();
+    //         return false;
+    //     }
+    //     return true;
+    // }; 
+
+
+     // 复用的ajax_post提交方法
+     function ajax_post(data,success,error){
+        $.ajax({
+            type:"post",
+            url:data.url,
+            data:data.data,
+            success:success,
+            error:error
+        })
+    }

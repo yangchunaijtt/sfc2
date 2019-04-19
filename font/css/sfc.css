@@ -2576,14 +2576,15 @@ body {
 }
 /* 中间设置 */
 .tjorder .tjorder-ct{
-  height: 24px;
   line-height: 24px;
   color: #111010;
+  position: relative;
+  height: 60px;
 }
 .tjorder .tjorder-ct .tjorder-ctleft{
   width: 46%;
-  float: left;
-  text-align: center;
+  left: 0;
+  position: absolute;
 }
 .tjorder .tjorder-ct .tjorder-ctleft span{
   line-height: 30px;
@@ -2601,15 +2602,19 @@ body {
   text-align: center;
   line-height: 60px;
 }
-/* 第一个 maigin-left */
-.pass-phdiconfyq  .tjorder  .tjorder-ct .tjorder-ctleft{
-  margin-left: -15%;
-}
+
 .tjorder .tjorder-ct .tjorder-ctright{
   width: 46%;
-  float: left;
-  display: inline-block;
-  text-align: center;
+  right: 0;
+  position: absolute;
+}
+.tjorder .tjorder-ct:after {
+  content: "--";
+  position: absolute;
+  font-weight: bold;
+  top: 16px;
+  left: calc(50% - 12px);
+  font-size: 20px;
 }
 .tjorder .tjorder-ct .tjorder-ctright span{
   line-height: 30px;
@@ -2622,7 +2627,6 @@ body {
 /* 提交的时间设置 */
 .tjorder-date{
     line-height: 30px;
-    height: 30px;
     font-size: 13px;
 }
 .tjorder-date .tjorder-dateleft {
