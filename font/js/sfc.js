@@ -880,14 +880,7 @@
         $(".cashmongy-hdreturn").bind("touch click",function(){
             window.location.hash = "#ddxq?diver";
         })
-        // 刷新返回
-        $("#cashMoneyPage-refresh").bind("touch click",function(){
-            balanceMycash.cashMoneyPage("","",0);
-        })
-        $("#cashMoneyPage-return").bind("touch click",function(){
-            window.location.hash = "#run?passger";
-        })
-    
+        
         
     // 提现页的事件
         // 全部提现
@@ -1085,13 +1078,11 @@
                                 cashMange_click.lastShow();
                             }
                         }
-                    }else { // 小于等于0
-                        $("#cashMoneyPage-nosj").show();
-                        $(".cashmongy-header").hide();
-                        $("#cashm-footer").hide();
-                        if(valzhi == 1){
-                            cashMange_click.errShow();
-                        }
+                    }else { 
+                      cashMange_click.errShow();
+                      // if(valzhi == 1){
+                      //     cashMange_click.errShow();
+                      // }
                     }
 
                     /* 加载成功，取消提示按钮 */
@@ -1192,7 +1183,6 @@
             })
         },
         newPage:function(data){
-            $("#cashMoneyPage-nosj").hide();
             $(".cashmongy-header").show();
             $("#cashm-footer").show();
             
@@ -1585,7 +1575,7 @@
 // 选择人数页操作模块
     var personnum = {
         iconstates:1,
-        personnumber:1,   // 人数默认为0
+        personnumber:0,   // 人数默认为0
         // 清空操作
         updated:function(val){
             $(".pnum-rdnum").text(val+"人乘车");
@@ -1882,7 +1872,7 @@
     function register(val){
         var nowhref = window.location.href;
         localCache("page",nowhref);     // 存储在本地的地址
-        window.location.href = "Register_content.html";		// 发送给他的地址 	
+        window.location.href = val;		// 发送给他的地址 	
     }  
 
     function hashlycolorsz(){
@@ -2844,7 +2834,7 @@
                 return false;
             }
 
-            showLodding("请稍等，上传中...");
+            showLodding("请稍等，发布中...");
 
             $.ajax({
                 type:"post",
@@ -3329,11 +3319,11 @@
     }
 /* 取消订单的操作 */
 function qxsfcxinxi(uid,id,sftuimonry){
-    retreatMoney(uid,id);
+    showMessage2btn("确认取消订单吗?",'retreatMoney('+uid+','+id+','+sftuimonry+')');
 }
 
 // 乘客身份在已付款时，点击取消，要退钱。
-function retreatMoney(uid,id){
+function retreatMoney(uid,id,sftuimonry){
     $.ajax({
         url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/cancelFROVPayments.asp",
         type:"post",

@@ -345,37 +345,45 @@
         FROID:111     // 发布单号，取当前信息的id值 
     },
     payMoney:function(moneyVal,personnum,payId){  // 只有乘客报名车主的行程才需要付钱 
-
-            ajax_post({
+            $.ajax({
+                type:"post",
                 url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/getFROVPaymentDetails.asp",
                 data:{
                     id:payId,       	//支付信息id
                     uid:nowusermsg.uid,       	 //当前用户id
                     userid:nowusermsg.userid,  		//当前用户用户名userid
+                },
+                success:function(success){
+                    console.log("是否可以支付-成功",success);
+                    if ( success.result > 0 ) {
+                        if ( success.obj.payState == -1 ) {
+                            showMessage1btn("订单已取消无法支付","",0);
+                        }else if (success.obj.payState == 1 ) {
+                            showMessage1btn("订单已支付","",0);
+                        }else if ( null == success.obj.payState  ) {
+                            // 为null 时才可以执行下面的支付流程
+                            payLower(success.obj.id);
+                        }
+                    }else {
+                      if ( null == success.msg || "" == success.msg ) {
+                        showMessage1btn("网络故障,稍后在试","",0);
+                      }else {
+                          showMessage1btn(success.msg,"",0);
+                      }
+                    }
+                },
+                error:function(error){
+                    console.log("是否可以支付-失败",error)
+                    showMessage1btn("网络出错,稍后再试","",0);
                 }
-            },function(success){
-                console.log("是否可以支付-成功",success);
-                if ( success.obj.payState == -1 ) {
-                    showMessage1btn("订单已取消无法支付","",0);
-                }else if (success.obj.payState == 1 ) {
-                    showMessage1btn("订单已支付","",0);
-                }else if ( null == success.obj.payState  ) {
-                    // 为null 时才可以执行下面的支付流程
-                    payLower ();
-                }
-
-            },function(error){
-                console.log("是否可以支付-失败",error)
-                showMessage1btn("网络出错,稍后再试","",0);
             })
-
+            
             // 下一步的支付流程
-            function payLower () {
+            function payLower (froid) {
                 var paymentbttsj =  paymentModule.paymentbttsj;
                 paymentbttsj.title = "乘客支付";
         
-                // 单号：等下取用户数据表里的id号
-                paymentbttsj.FROID = nowusermsg.uid ; 
+                
             
                 var bSign = "";
                 var rand = "";
@@ -393,119 +401,109 @@
                 var sjc = generateTimeReqestNumber();
                 paymentbttsj.billno = "FRO";
                 paymentbttsj.billno = paymentbttsj.billno + sjc + rand;
-                $.ajax({
-                    url:"//qckj.czgdly.com/bus/MobileWeb/madeFROViewPayments/saveMadeFROVPayments.asp",
-                    type:"post",
-                    data:{
-                        uid:nowusermsg.myuid,
-                        froId:nowusermsg.id,	
-                        userid:nowusermsg.userid,
-                        utype:"Passenger",
-                        vpno:paymentbttsj.billno,
-                        pnum:personnum
-                    },
-                    success:function(data){
-                            var paymentbttsj =  paymentModule.paymentbttsj;
-                            paymentbttsj.FROID   =  data.result;
-                                // 参数
-                            paymentbttsj.amount   = moneyVal*100*personnum;
-                            var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
-                            // 地址
-                            var url = "../common/getBSign-kongbatong.asp";
-                            // sfcsj.passenger 存储着用户的信息 
-                            // openid 需要传入的数据的定义
-                            
-                            paymentbttsj.openid = {
-                                uid:nowusermsg.uid,
-                                phone:nowusermsg.phone,
-                                usource:paymentbttsj.usource,
-                                FROID:paymentbttsj.FROID,
-                                utype:"Passenger"
-                            };
-                            console.log(param);
-                            $.post(url,param,function(data){
-        
-                                if (!((typeof (data) == 'object') && data.constructor == Object)) {
-                                    data = eval("(" + data + ")");
-                                }
-                                if(data.BSign) {
-                                    bSign = data.BSign;
-                                BC.err = function(data) {
-                                    console.log(data);
-                                    //注册错误信息接受
-                                    showMessage1btn(data["ERROR"],"",0);
-                                }
-                                console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
-                            BC.click({
-                                // "instant_channel" : paymentbttsj.instant_channel,
-                                "debug" : false,
-                                "need_ali_guide" : true,
-                                "use_app" : true,
-                                "title" : paymentbttsj.title, //商品名
-                                "amount" : moneyVal*100,  //总价（分）
-                                "out_trade_no" : paymentbttsj.billno, //自定义订单号
-                                "sign" : bSign, //商品信息hash值，含义和生成方式见下文
-                                "openid" : nowusermsg.openid,
-                                "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
-                            },
-                            {
-                                wxJsapiFinish : function(res) {
-                                    //jsapi接口调用完成后
-                                    //showMessage1btn(JSON.stringify(res),"",0);
-                                    switch(res.err_msg){
-                                        case "get_brand_wcpay_request:ok":
-                                            paymentBinding.phdiconDivNew();
-                                            // 点击我的支付时，调用的函数
-                                            paymentpage(nowusermsg.uid,"Passenger",1,"");
-                                            showMessage1btn("支付成功！","hash_topddxq()",0);
-                                            break;
-                                        case "get_brand_wcpay_request:fail":
-                                            paymentModular.oldarcity = "";
-                                            paymentModular.olddpcity = "" ;
-                                            paymentModular.oldartime = "";
-                                            paymentModular.olddptime = "";
-                                            // div 里的值赋为空
-                                            $("#address").text("");
-                                            $("#cgz-mdd").val("");
-                                            paymentBinding.phdiconDivNew();
-                                            // 点击我的支付时，调用的函数
-                                            paymentpage(nowusermsg.uid,"Passenger",1,"");
-                                            showMessage1btn("系统出错，请联系我们！","hash_topddxq()",0);
-                                            break;
-                                        case "get_brand_wcpay_request:cancel":
-                                            
-                                            paymentModular.oldarcity = "";
-                                            paymentModular.olddpcity = "" ;
-                                            paymentModular.oldartime = "";
-                                            paymentModular.olddptime = "";
-                                            // div 里的值赋为空
-                                            $("#address").text("");
-                                            $("#cgz-mdd").val("");
-                                            showMessage1btn("已取消支付！","hash_topddxq()",0);
-                                            break;
-                                        }
-                                    }
-                                    });
-                                    BC.err = function(err) {
-                                        paymentBinding.phdiconDivNew();
-                                        // 点击我的支付时，调用的函数
-                                        paymentpage(nowusermsg.uid,"Passenger",1,"");
-                                        //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
-                                        showMessage1btn(err.ERROR,"hash_topddxq()",0);
-                                    
-                                    }
-                                }else{
-                                
-                                    showMessage1btn("后台参数错误！","",0);
-                                }                                           
-                                    // 删除dialog
-                                    clearDialog();
-                                },"json")
-                    },
-                    error:function(data){
-                        showMessage1btn("支付失败,刷新在试","hash_topddxq()",0);
+                // paymentModule.payMoney(val.price,val.pnum,val.id);
+                
+                  
+                var paymentbttsj =  paymentModule.paymentbttsj;
+                paymentbttsj.FROID   =  froid;
+                    // 参数
+                paymentbttsj.amount   = moneyVal*100*personnum;
+                var param = {"title" : paymentbttsj.title,"amount" : paymentbttsj.amount,"outtradeno" : paymentbttsj.billno};
+                // 地址
+                var url = "../common/getBSign-kongbatong.asp";
+                // sfcsj.passenger 存储着用户的信息 
+                // openid 需要传入的数据的定义
+
+                // 直接支付
+                paymentbttsj.openid = {
+                    uid:nowusermsg.uid,
+                    phone:nowusermsg.phone,
+                    usource:paymentbttsj.usource,
+                    FROVPID:paymentbttsj.FROID,
+                    // FROID:paymentbttsj.FROID,
+                    // utype:"Passenger"
+                };
+                console.log(param);
+                $.post(url,param,function(data){
+
+                    if (!((typeof (data) == 'object') && data.constructor == Object)) {
+                        data = eval("(" + data + ")");
                     }
-                }) 
+                    if(data.BSign) {
+                        bSign = data.BSign;
+                    BC.err = function(data) {
+                        console.log(data);
+                        //注册错误信息接受
+                        showMessage1btn(data["ERROR"],"",0);
+                    }
+                    console.log("aaaa",bSign,"aaaa",nowusermsg.openid,"aaaa",paymentbttsj.openid);
+                    
+                BC.click({
+                    // "instant_channel" : paymentbttsj.instant_channel,
+                    "debug" : false,
+                    "need_ali_guide" : true,
+                    "use_app" : true,
+                    "title" : paymentbttsj.title, //商品名
+                    "amount" : moneyVal*100,  //总价（分）
+                    "out_trade_no" : paymentbttsj.billno, //自定义订单号
+                    "sign" : bSign, //商品信息hash值，含义和生成方式见下文
+                    "openid" : nowusermsg.openid,
+                    "optional" : paymentbttsj.openid //可选，自定义webhook的optional回调参数
+                },
+                {
+                    wxJsapiFinish : function(res) {
+                        //jsapi接口调用完成后
+                        //showMessage1btn(JSON.stringify(res),"",0);
+                        switch(res.err_msg){
+                            case "get_brand_wcpay_request:ok":
+                                paymentBinding.phdiconDivNew();
+                                // 点击我的支付时，调用的函数
+                                paymentpage(nowusermsg.uid,"Passenger",1,"");
+                                showMessage1btn("支付成功！","hash_topddxq()",0);
+                                break;
+                            case "get_brand_wcpay_request:fail":
+                                paymentModular.oldarcity = "";
+                                paymentModular.olddpcity = "" ;
+                                paymentModular.oldartime = "";
+                                paymentModular.olddptime = "";
+                                // div 里的值赋为空
+                                $("#address").text("");
+                                $("#cgz-mdd").val("");
+                                paymentBinding.phdiconDivNew();
+                                // 点击我的支付时，调用的函数
+                                paymentpage(nowusermsg.uid,"Passenger",1,"");
+                                showMessage1btn("系统出错，请联系我们！","hash_topddxq()",0);
+                                break;
+                            case "get_brand_wcpay_request:cancel":
+                                
+                                paymentModular.oldarcity = "";
+                                paymentModular.olddpcity = "" ;
+                                paymentModular.oldartime = "";
+                                paymentModular.olddptime = "";
+                                // div 里的值赋为空
+                                $("#address").text("");
+                                $("#cgz-mdd").val("");
+                                showMessage1btn("已取消支付！","hash_topddxq()",0);
+                                break;
+                            }
+                        }
+                        });
+                        BC.err = function(err) {
+                            paymentBinding.phdiconDivNew();
+                            // 点击我的支付时，调用的函数
+                            paymentpage(nowusermsg.uid,"Passenger",1,"");
+                            //err 为object, 例 ｛”ERROR“ : "xxxx"｝;
+                            showMessage1btn(err.ERROR,"hash_topddxq()",0);
+                        
+                        }
+                    }else{
+                    
+                        showMessage1btn("后台参数错误！","",0);
+                    }                                           
+                        // 删除dialog
+                        clearDialog();
+                    },"json")
+                      
             }
     }
 }
@@ -866,9 +864,9 @@ function cashMoneyPageline(typeval,dateRangeval){
             showLodding("请稍等，加载中...");
             balanceMycash.newPage(data);
         }else { // 小于等于0
-            $("#cashMoneyPage-nosj").show();
-            $(".cashmongy-header").hide();
-            $("#cashm-footer").hide();
+            // $("#cashMoneyPage-nosj").show();
+            // $(".cashmongy-header").hide();
+            // $("#cashm-footer").hide();
         }
 }
 
@@ -1482,13 +1480,4 @@ var pass_payment_click = {
             }
         })
     
-    // 复用的ajax_post提交方法
-    function ajax_post(data,success,error){
-        $.ajax({
-            type:"post",
-            url:data.url,
-            data:data.data,
-            success:success,
-            error:error
-        })
-    }
+    
