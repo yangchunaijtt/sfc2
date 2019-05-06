@@ -1423,7 +1423,10 @@
 
             console.log("压缩比率",compressionRatio);
 
-            lrz(fileSize, [{ width: 200  },{quality:compressionRatio}])
+            lrz(fileSize, { 
+                width: 800,
+                quality:compressionRatio
+            })
             .then(function (rst) {
               
                 imgbase64 = rst.base64;
